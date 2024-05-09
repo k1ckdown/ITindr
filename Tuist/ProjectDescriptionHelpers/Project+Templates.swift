@@ -9,7 +9,7 @@ import ProjectDescription
 
 extension Project {
 
-    public static func coreFramework(name: String, dependencies: [TargetDependency] = [], includeResources: Bool = true) -> Project {
+    public static func coreFramework(name: String, dependencies: [TargetDependency] = [], includeResources: Bool = false) -> Project {
         Project(
             name: name,
             targets: [
