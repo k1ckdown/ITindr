@@ -16,6 +16,7 @@ let project = Project(
             bundleId: "com.ITindr",
             deploymentTargets: .iOS("15.0"),
             infoPlist: .extendingDefault(with: [
+                "UILaunchStoryboardName": "LaunchScreen.storyboard",
                 "UISupportedInterfaceOrientations": .array([
                     .string("UIInterfaceOrientationPortrait")
                 ])
