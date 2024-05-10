@@ -10,9 +10,11 @@ import SwiftUI
 @main
 struct ITindrApp: App {
 
+    private let appFactory = AppFactory()
+
     var body: some Scene {
         WindowGroup {
-            Text("Tindr")
+            Text("ITindrApp")
         }
     }
 }

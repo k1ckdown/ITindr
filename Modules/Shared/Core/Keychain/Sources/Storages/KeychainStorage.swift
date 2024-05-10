@@ -19,6 +19,8 @@ public final class KeychainStorage {
 
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+
+    public init() {}
 }
 
 // MARK: - Public methods

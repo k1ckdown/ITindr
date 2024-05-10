@@ -28,17 +28,60 @@ extension Project {
         )
     }
 
+    public static func domainFramework(name: String) -> Project {
+        let projectName = "\(name)Domain"
+
+        return Project(
+            name: projectName,
+            targets: [
+                .target(
+                    name: projectName,
+                    destinations: .iOS,
+                    product: .staticFramework,
+                    bundleId: "\(Constants.bundleId).\(projectName)",
+                    deploymentTargets: .iOS(Constants.iOSVersion),
+                    infoPlist: .default,
+                    sources: Constants.sources
+                )
+            ]
+        )
+    }
+
+    public static func dataFramework(name: String, dependencies: [TargetDependency] = [], includeResources: Bool = false) -> Project {
+        let dataProject = "\(name)Data"
+        let domainProject = "\(name)Domain"
+
+        return Project(
+            name: dataProject,
+            targets: [
+                .target(
+                    name: dataProject,
+                    destinations: .iOS,
+                    product: .staticFramework,
+                    bundleId: "\(Constants.bundleId).\(dataProject)",
+                    deploymentTargets: .iOS(Constants.iOSVersion),
+                    infoPlist: .default,
+                    sources: Constants.sources,
+                    resources: includeResources ? Constants.resources : nil,
+                    dependencies: dependencies + [
+                        .project(target: domainProject, path: "../../Domain/\(domainProject)")
+                    ]
+                )
+            ]
+        )
+    }
+
     public static func featureFramework(name: String, dependencies: [TargetDependency] = []) -> Project {
-        let interfaceName = "\(name)Interface"
+        let interfaceProject = "\(name)Interface"
 
         return Project(
             name: name,
             targets: [
                 .target(
-                    name: interfaceName,
+                    name: interfaceProject,
                     destinations: .iOS,
                     product: .staticFramework,
-                    bundleId: "\(Constants.bundleId).\(interfaceName)",
+                    bundleId: "\(Constants.bundleId).\(interfaceProject)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
                     sources: "Interface/**"
@@ -53,7 +96,7 @@ extension Project {
                     sources: Constants.sources,
                     resources: Constants.resources,
                     dependencies: dependencies + [
-                        .project(target: interfaceName, path: "../\(name)")
+                        .project(target: interfaceProject, path: "../\(name)")
                     ]
                 )
             ]
