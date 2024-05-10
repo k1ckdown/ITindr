@@ -18,7 +18,7 @@ final class AppFactory {
     private lazy var authRepository: AuthRepository = {
         let repository = AuthRepository(
             networkService: networkService,
-            authCredentialsStorage: keychainStorage
+            credentialsLocalDataSource: keychainStorage
         )
 
         authInterceptor.delegate = repository

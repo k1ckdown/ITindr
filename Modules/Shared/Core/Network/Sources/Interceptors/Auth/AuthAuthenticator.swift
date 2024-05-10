@@ -41,16 +41,16 @@ public final class AuthInterceptor: RequestInterceptor {
 
 private extension AuthInterceptor {
 
+    func isRefreshRequest(_ urlRequest: URLRequest) -> Bool {
+        guard let url = urlRequest.url else { return false }
+        return url.absoluteString.hasSuffix(Constants.refreshPath)
+    }
+
     func addAuthorization(to urlRequest: URLRequest, token: String) -> URLRequest {
         var request = urlRequest
         request.headers.add(.authorization(bearerToken: token))
 
         return request
-    }
-
-    func isRefreshRequest(_ urlRequest: URLRequest) -> Bool {
-        guard let url = urlRequest.url else { return false }
-        return url.absoluteString.hasSuffix(Constants.refreshPath)
     }
 
     func getAccessToken(isRefreshing: Bool) async throws -> String? {

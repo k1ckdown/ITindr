@@ -16,11 +16,11 @@ public final class AuthRepository {
 
     var logOutHandler: (() -> Void)?
     private let networkService: NetworkServiceProtocol
-    private let authCredentialsStorage: AuthCredentialsStorageProtocol
+    private let credentialsLocalDataSource: AuthCredentialsLocalDataSourceProtocol
 
-    public init(networkService: NetworkServiceProtocol, authCredentialsStorage: AuthCredentialsStorageProtocol) {
+    public init(networkService: NetworkServiceProtocol, credentialsLocalDataSource: AuthCredentialsLocalDataSourceProtocol) {
         self.networkService = networkService
-        self.authCredentialsStorage = authCredentialsStorage
+        self.credentialsLocalDataSource = credentialsLocalDataSource
     }
 }
 
@@ -63,7 +63,7 @@ extension AuthRepository: AuthInterceptorDelegate {
     }
 
     public func retrieveCredentials() throws -> AuthCredentials {
-        try authCredentialsStorage.retrieve()
+        try credentialsLocalDataSource.retrieve()
     }
 
     public func refresh() async throws -> AuthCredentials {
@@ -79,13 +79,13 @@ extension AuthRepository: AuthInterceptorDelegate {
 private extension AuthRepository {
 
     func handleLogout() throws {
-        try authCredentialsStorage.delete()
+        try credentialsLocalDataSource.delete()
         logOutHandler?()
     }
 
     func authenticate<T: NetworkConfig>(networkConfig: T) async throws {
         let authCredential: AuthCredentials = try await networkService.request(config: networkConfig, authorized: false)
-        try authCredentialsStorage.save(authCredential)
+        try credentialsLocalDataSource.save(authCredential)
     }
 
     func refresh(_ token: String) async throws -> AuthCredentials {
@@ -93,7 +93,7 @@ private extension AuthRepository {
         let networkConfig = AuthNetworkConfig.refresh(refreshTokenDto)
 
         let authCredentials: AuthCredentials = try await networkService.request(config: networkConfig, authorized: true)
-        try authCredentialsStorage.update(authCredentials)
+        try credentialsLocalDataSource.update(authCredentials)
 
         return authCredentials
     }

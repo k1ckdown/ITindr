@@ -1,23 +1,23 @@
 //
-//  TokenStorage.swift
-//  Network
+//  AuthCredentialsLocalDataSource.swift
+//  AuthData
 //
-//  Created by Ivan Semenov on 09.05.2024.
+//  Created by Ivan Semenov on 9.05.2024.
 //
 
-import Keychain
 import Network
+import Keychain
 
-public protocol AuthCredentialsStorageProtocol: AnyObject {
+public protocol AuthCredentialsLocalDataSourceProtocol: AnyObject {
     func delete() throws
     func retrieve() throws -> AuthCredentials
     func save(_ credential: AuthCredentials) throws
     func update(_ credential: AuthCredentials) throws
 }
 
-// MARK: - KeychainStorage + AuthCredentialsStorageProtocol
+// MARK: - KeychainStorage + AuthCredentialsLocalDataSourceProtocol
 
-extension KeychainStorage: AuthCredentialsStorageProtocol {
+extension KeychainStorage: AuthCredentialsLocalDataSourceProtocol {
 
     private enum Key: String {
         case authCredentials
