@@ -28,7 +28,7 @@ extension Project {
         )
     }
 
-    public static func domainFramework(name: String) -> Project {
+    public static func domainFramework(name: String, dependencies: [String] = []) -> Project {
         let projectName = "\(name)Domain"
 
         return Project(
@@ -41,7 +41,11 @@ extension Project {
                     bundleId: "\(Constants.bundleId).\(projectName)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
-                    sources: Constants.sources
+                    sources: Constants.sources,
+                    dependencies: dependencies.map {
+                        let projectName = "\($0)Domain"
+                        return .project(target: projectName, path: "../\(projectName)")
+                    }
                 )
             ]
         )
