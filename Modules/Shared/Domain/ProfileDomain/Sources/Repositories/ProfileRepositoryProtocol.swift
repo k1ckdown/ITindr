@@ -9,7 +9,7 @@ import Foundation
 
 public protocol ProfileRepositoryProtocol: AnyObject {
     func deleteAvatar() async throws
-    func updateAvatar(_ data: Data) async throws
+    func saveAvatar(data: Data, fileName: String) async throws
     func getProfile() async throws -> UserProfile
     func updateProfile(_ profile: UserProfileEdit) async throws
 }

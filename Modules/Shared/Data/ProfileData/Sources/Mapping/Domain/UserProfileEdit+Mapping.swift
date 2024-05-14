@@ -7,13 +7,11 @@
 
 import ProfileDomain
 
-extension UserProfile {
-    
-    func toDto() -> UserProfileDTO {
-        UserProfileDTO(
-            id: id,
+extension UserProfileEdit {
+
+    func toDto() -> UserProfileEditDTO {
+        UserProfileEditDTO(
             name: name,
-            avatarUrl: avatarUrl,
             aboutMyself: aboutMyself,
             topics: topics.toDto()
         )
