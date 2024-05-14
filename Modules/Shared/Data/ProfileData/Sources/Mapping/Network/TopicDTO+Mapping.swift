@@ -8,14 +8,14 @@
 import TopicDomain
 
 extension [TopicDTO] {
-    
+
     func toDomain() -> [Topic] {
         map { $0.toDomain() }
     }
 }
 
 extension TopicDTO {
-    
+
     func toDomain() -> Topic {
         Topic(id: id, title: title)
     }
