@@ -21,8 +21,8 @@ final class TopicRepository {
 extension TopicRepository: TopicRepositoryProtocol {
 
     func getAllTopics() async throws -> [Topic] {
-        let remotePosts = try await remoteDataSource.fetchAllTopics()
-        return remotePosts.toDomain()
+        let postDtos = try await remoteDataSource.fetchAllTopics()
+        return postDtos.toDomain()
     }
 }
 
