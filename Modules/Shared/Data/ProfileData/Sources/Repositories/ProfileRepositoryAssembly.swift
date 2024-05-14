@@ -20,11 +20,11 @@ public struct ProfileRepositoryAssembly {
 
     private let dependencies: ModuleDependencies
 
-    init(dependencies: ModuleDependencies) {
+    public init(dependencies: ModuleDependencies) {
         self.dependencies = dependencies
     }
 
-    func assemble() -> ProfileRepositoryProtocol{
+    public func assemble() -> ProfileRepositoryProtocol {
         let remoteDataSource = ProfileRemoteDataSource(networkService: dependencies.networkService)
         let repository = ProfileRepository(remoteDataSource: remoteDataSource)
 
