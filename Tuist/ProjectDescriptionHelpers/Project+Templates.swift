@@ -9,7 +9,11 @@ import ProjectDescription
 
 extension Project {
 
-    public static func coreFramework(name: String, dependencies: [TargetDependency] = [], includeResources: Bool = false) -> Project {
+    public static func coreFramework(
+        name: String,
+        dependencies: [TargetDependency] = [],
+        includeResources: Bool = false
+    ) -> Project {
         Project(
             name: name,
             targets: [
@@ -28,7 +32,10 @@ extension Project {
         )
     }
 
-    public static func domainFramework(name: String, dependencies: [String] = []) -> Project {
+    public static func domainFramework(
+        name: String,
+        dependencies: [String] = []
+    ) -> Project {
         let projectName = "\(name)Domain"
 
         return Project(
@@ -51,7 +58,11 @@ extension Project {
         )
     }
 
-    public static func dataFramework(name: String, dependencies: [TargetDependency] = [], includeResources: Bool = false) -> Project {
+    public static func dataFramework(
+        name: String,
+        dependencies: [TargetDependency] = [],
+        includeResources: Bool = false
+    ) -> Project {
         let dataProject = "\(name)Data"
         let domainProject = "\(name)Domain"
 
@@ -75,7 +86,10 @@ extension Project {
         )
     }
 
-    public static func featureFramework(name: String, dependencies: [TargetDependency] = []) -> Project {
+    public static func featureFramework(
+        name: String,
+        dependencies: [TargetDependency] = []
+    ) -> Project {
         let interfaceProject = "\(name)Interface"
 
         return Project(
