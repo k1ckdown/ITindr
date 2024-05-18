@@ -80,7 +80,8 @@ private extension NetworkService {
             multipartFormData: { formData in
                 formData.append(config.data, withName: config.key, fileName: config.fileName)
             },
-            to: config.absolutePath
+            to: config.absolutePath,
+            interceptor: interceptor
         )
     }
     
