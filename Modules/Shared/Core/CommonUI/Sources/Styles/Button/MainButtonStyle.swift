@@ -9,12 +9,13 @@ import SwiftUI
 
 struct MainButtonStyle: ButtonStyle {
 
+    let isProminent: Bool
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(Fonts.bold16)
-            .foregroundStyle(Colors.appWhite.swiftUIColor)
+            .foregroundStyle(textColor)
             .frame(height: Constants.height)
             .frame(maxWidth: .infinity)
             .background(background)
@@ -28,14 +29,28 @@ struct MainButtonStyle: ButtonStyle {
             }
             .scaleEffect(configuration.isPressed ? Constants.scaleEffectPressed : Constants.scaleEffect)
             .animation(.easeOut(duration: Constants.animationDuration), value: configuration.isPressed)
+            .shadow(
+                color: Constants.shadowColor,
+                radius: isProminent ? 0 : Constants.shadowRadius,
+                y: isProminent ? 0 : Constants.shadowY
+            )
     }
 
-    private var background: LinearGradient {
-        LinearGradient(
-            colors: [Colors.accentColor.swiftUIColor, Colors.appPurple.swiftUIColor],
-            startPoint: .leading,
-            endPoint: .trailing
-        )
+    private var textColor: Color {
+        (isProminent ? Colors.appWhite : Colors.accentColor).swiftUIColor
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        if isProminent {
+            LinearGradient(
+                colors: [Colors.accentColor.swiftUIColor, Colors.appPurple.swiftUIColor],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+        } else {
+            Colors.appWhite.swiftUIColor
+        }
     }
 }
 
@@ -54,12 +69,16 @@ private extension MainButtonStyle {
         static let opacityDisabled = 0.85
         static let opacityEnabled: Double = 1
 
+        static let shadowY: CGFloat = 10
+        static let shadowRadius: CGFloat = 20
+        static let shadowColor = Color.black.opacity(0.15)
+
         static let animationDuration: TimeInterval = 0.1
     }
 }
 
 public extension View {
-    func mainButtonStyle() -> some View {
-        self.buttonStyle(MainButtonStyle())
+    func mainButtonStyle(isProminent: Bool = true) -> some View {
+        self.buttonStyle(MainButtonStyle(isProminent: isProminent))
     }
 }
