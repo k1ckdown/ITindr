@@ -5,7 +5,9 @@
 //  Created by Ivan Semenov on 18.05.2024.
 //
 
-extension Fonts {
+import SwiftUI
+
+public extension Fonts {
     static let medium10 = Fonts.medium.swiftUIFont(size: 10)
     static let semibold16 = Fonts.semiBold.swiftUIFont(size: 16)
     

@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Auth
+
+  Created by Ivan Semenov on 19.05.2024.
+  
+*/
+
+"Login" = "Log in";
+"Register" = "Register";
+"AppSlogan" = "You will find someone who\nwill review your code";
