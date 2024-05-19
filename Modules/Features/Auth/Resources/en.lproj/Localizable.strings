@@ -9,7 +9,8 @@
 "Email" = "E-mail";
 "Back" = "Go Back";
 "Password" = "Password";
-"Login" = "Log in";
+"LogIn" = "Log In";
+"Login" = "Login";
 "Register" = "Register";
 "Registration" = "Registration";
 "RepeatPassword" = "Repeat the password";

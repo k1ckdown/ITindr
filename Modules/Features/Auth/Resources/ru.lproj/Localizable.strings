@@ -9,7 +9,8 @@
 "Email" = "E-mail";
 "Back" = "Назад";
 "Password" = "Пароль";
-"Login" = "Войти";
+"LogIn" = "Войти";
+"Login" = "Авторизация";
 "Register" = "Зарегистрироваться";
 "Registration" = "Регистрация";
 "RepeatPassword" = "Повторите пароль";

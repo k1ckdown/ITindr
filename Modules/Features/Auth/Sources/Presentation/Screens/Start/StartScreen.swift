@@ -36,7 +36,7 @@ struct StartScreen: View {
                 }
                 .mainButtonStyle()
 
-                Button(AuthStrings.login) {
+                Button(AuthStrings.logIn) {
 
                 }
                 .mainButtonStyle(isProminent: false)
