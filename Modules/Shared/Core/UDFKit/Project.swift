@@ -2,4 +2,4 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.coreFramework(name: "UDF")
+let project = Project.coreFramework(name: "UDFKit")

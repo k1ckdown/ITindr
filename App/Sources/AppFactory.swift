@@ -5,9 +5,12 @@
 //  Created by Ivan Semenov on 10.05.2024.
 //
 
+import Auth
+import AuthInterface
+import AuthData
 import Network
 import Keychain
-import AuthData
+import Navigation
 
 final class AppFactory {
 
@@ -24,4 +27,16 @@ final class AppFactory {
         authInterceptor.delegate = repository
         return repository
     }()
+}
+
+// MARK: - Public methods
+
+extension AppFactory {
+
+    func makeAuthCoordinator(navigationController: NavigationController) -> AuthCoordinatorProtocol {
+        let dependencies = Auth.ModuleDependencies(authRepository: authRepository, navigationController: navigationController)
+        let assembly = AuthCoordinatorAssembly(dependencies: dependencies)
+
+        return assembly.assemble()
+    }
 }

@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import UDFKit
 import CommonUI
 
 struct StartScreen: View {
+
+    @StateObject private var store: StoreOf<StartReducer>
+
+    init(store: StoreOf<StartReducer>) {
+        _store = StateObject(wrappedValue: store)
+    }
 
     var body: some View {
         VStack {
@@ -32,12 +39,12 @@ struct StartScreen: View {
 
             VStack(spacing: Constants.buttonSpacing) {
                 Button(AuthStrings.register) {
-
+                    store.dispatch(.registerTapped)
                 }
                 .mainButtonStyle()
 
                 Button(AuthStrings.logIn) {
-
+                    store.dispatch(.loginTapped)
                 }
                 .mainButtonStyle(isProminent: false)
             }
@@ -58,8 +65,4 @@ private extension StartScreen {
         static let sloganInsetTop: CGFloat = 12
         static let contentInsetTop: CGFloat = 85
     }
-}
-
-#Preview {
-    StartScreen()
 }

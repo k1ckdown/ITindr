@@ -39,6 +39,7 @@ let project = Project(
             sources: Constants.sources,
             resources: Constants.resources,
             dependencies: [
+                .project(target: "Auth", path: "../Modules/Features/Auth"),
                 .project(target: "Network", path: "../Modules/Shared/Core/Network"),
                 .project(target: "AuthData", path: "../Modules/Shared/Data/AuthData"),
                 .project(target: "Navigation", path: "../Modules/Shared/Core/Navigation")
