@@ -6,6 +6,11 @@
   
 */
 
+"Email" = "E-mail";
+"Back" = "Назад";
+"Password" = "Пароль";
 "Login" = "Войти";
 "Register" = "Зарегистрироваться";
+"Registration" = "Регистрация";
+"RepeatPassword" = "Повторите пароль";
 "AppSlogan" = "Ты найдешь того, кто\nпоревьюит твой код";

@@ -1,5 +1,5 @@
 //
-//  StartView.swift
+//  StartScreen.swift
 //  AuthInterface
 //
 //  Created by Ivan Semenov on 19.05.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CommonUI
 
-struct StartView: View {
+struct StartScreen: View {
 
     var body: some View {
         VStack {
@@ -48,7 +48,7 @@ struct StartView: View {
 
 // MARK: - Constants
 
-private extension StartView {
+private extension StartScreen {
 
     enum Constants {
         static let logoHeight: CGFloat = 48
@@ -61,5 +61,5 @@ private extension StartView {
 }
 
 #Preview {
-    StartView()
+    StartScreen()
 }

@@ -6,6 +6,11 @@
   
 */
 
+"Email" = "E-mail";
+"Back" = "Go Back";
+"Password" = "Password";
 "Login" = "Log in";
 "Register" = "Register";
+"Registration" = "Registration";
+"RepeatPassword" = "Repeat the password";
 "AppSlogan" = "You will find someone who\nwill review your code";
