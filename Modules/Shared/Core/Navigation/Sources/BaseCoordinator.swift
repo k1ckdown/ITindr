@@ -7,10 +7,10 @@
 
 import UIKit
 
-public class BaseCoordinator: Coordinator {
+open class BaseCoordinator: Coordinator {
 
     public weak var parentCoordinator: Coordinator?
-    private let navigationController: NavigationController
+    public private(set) var navigationController: NavigationController
 
     private var childCoordinators = [Coordinator]()
 
@@ -18,7 +18,7 @@ public class BaseCoordinator: Coordinator {
         self.navigationController = navigationController
     }
 
-    public func start() {
+    open func start() {
         fatalError("Start method should be implemented")
     }
 

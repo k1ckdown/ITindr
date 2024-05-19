@@ -24,13 +24,24 @@ let project = Project(
                 ]),
                 "NSAppTransportSecurity": .dictionary([
                     "NSAllowsArbitraryLoads": .boolean(true)
+                ]),
+                "UIApplicationSceneManifest": .dictionary([
+                    "UISceneConfigurations": .dictionary([
+                        "UIWindowSceneSessionRoleApplication": .array([
+                            .dictionary([
+                                "UISceneConfigurationName": .string("Default Configuration"),
+                                "UISceneDelegateClassName": .string("$(PRODUCT_MODULE_NAME).SceneDelegate")
+                            ])
+                        ])
+                    ])
                 ])
             ]),
             sources: Constants.sources,
             resources: Constants.resources,
             dependencies: [
                 .project(target: "Network", path: "../Modules/Shared/Core/Network"),
-                .project(target: "AuthData", path: "../Modules/Shared/Data/AuthData")
+                .project(target: "AuthData", path: "../Modules/Shared/Data/AuthData"),
+                .project(target: "Navigation", path: "../Modules/Shared/Core/Navigation")
             ]
         )
     ]
