@@ -107,7 +107,7 @@ extension Project {
                 .target(
                     name: name,
                     destinations: .iOS,
-                    product: .framework,
+                    product: .staticLibrary,
                     bundleId: "\(Constants.bundleId).\(name)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,

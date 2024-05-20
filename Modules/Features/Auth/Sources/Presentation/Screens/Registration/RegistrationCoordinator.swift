@@ -10,14 +10,15 @@ import Navigation
 
 final class RegistrationCoordinator: BaseCoordinator {
     typealias Factory = RegistrationCoordinatorFactory
+    typealias Content = (RegistrationMiddlewareDelegate) -> UIViewController
 
     private let factory: Factory
-    private let content: (RegistrationMiddlewareDelegate) -> UIViewController
+    private let content: Content
 
     init(
         factory: Factory,
         navigationController: NavigationController,
-        content: @escaping (RegistrationMiddlewareDelegate) -> UIViewController
+        content: @escaping Content
     ) {
         self.factory = factory
         self.content = content

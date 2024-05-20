@@ -21,7 +21,7 @@ final class CoordinatorFactory {
 
 extension CoordinatorFactory: RegistrationCoordinatorFactory {
     func makeRegistrationCoordinator(navigationController: NavigationController) -> RegistrationCoordinator {
-        let content: (RegistrationMiddlewareDelegate) -> UIViewController = { [weak self] middlewareDelegate in
+        let content: RegistrationCoordinator.Content = { [weak self] middlewareDelegate in
             let screen = self?.screenFactory.makeRegistrationScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
@@ -35,7 +35,7 @@ extension CoordinatorFactory: RegistrationCoordinatorFactory {
 
 extension CoordinatorFactory: StartCoordinatorFactory {
     func makeStartCoordinator(navigationController: NavigationController) -> StartCoordinator {
-        let content: (StartMiddlewareDelegate) -> UIViewController = { [weak self] middlewareDelegate in
+        let content: StartCoordinator.Content = { [weak self] middlewareDelegate in
             let screen = self?.screenFactory.makeStartScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }

@@ -11,14 +11,15 @@ import Navigation
 
 final class StartCoordinator: BaseCoordinator {
     typealias Factory = RegistrationCoordinatorFactory
+    typealias Content = (StartMiddlewareDelegate) -> UIViewController
 
     private let factory: Factory
-    private let content: (StartMiddlewareDelegate) -> UIViewController
+    private let content: Content
 
     init(
         factory: Factory,
         navigationController: NavigationController,
-        content: @escaping (StartMiddlewareDelegate) -> UIViewController
+        content: @escaping Content
     ) {
         self.factory = factory
         self.content = content

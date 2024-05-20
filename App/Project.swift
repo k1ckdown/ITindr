@@ -18,6 +18,7 @@ let project = Project(
             bundleId: Constants.bundleId,
             deploymentTargets: .iOS(Constants.iOSVersion),
             infoPlist: .extendingDefault(with: [
+                "CFBundleAllowMixedLocalizations": .boolean(true),
                 "UILaunchStoryboardName": "LaunchScreen.storyboard",
                 "UISupportedInterfaceOrientations": .array([
                     .string("UIInterfaceOrientationPortrait")
