@@ -29,7 +29,7 @@ final class StartCoordinator: BaseCoordinator {
     override func start() {
         let content = content(self)
 
-        setupPopHandler(for: content)
+        addPopHandler(for: content)
         navigationController.setViewControllers([content], animated: false)
     }
 }

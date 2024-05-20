@@ -39,7 +39,7 @@ open class BaseCoordinator: Coordinator {
         childCoordinators.remove(at: index)
     }
 
-    public func setupPopHandler(for viewController: UIViewController) {
+    public func addPopHandler(for viewController: UIViewController) {
         let popHandler: PopHandler = { [weak self, weak viewController] fromViewController in
             guard let self, fromViewController === viewController else { return true }
 

@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 19.05.2024.
 //
 
-import UIKit
+import SwiftUI
 
 typealias PopHandler = (UIViewController) -> Bool
 
@@ -35,6 +35,11 @@ extension NavigationController {
 // MARK: - UINavigationControllerDelegate
 
 extension NavigationController: UINavigationControllerDelegate {
+
+    public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        let isNavigationBarHidden = viewController is NavigationBarHidden
+        navigationController.setNavigationBarHidden(isNavigationBarHidden, animated: false)
+    }
 
     public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         guard

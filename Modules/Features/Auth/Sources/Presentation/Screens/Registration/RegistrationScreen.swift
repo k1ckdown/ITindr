@@ -8,8 +8,9 @@
 import UDFKit
 import SwiftUI
 import CommonUI
+import Navigation
 
-struct RegistrationScreen: View {
+struct RegistrationScreen: View, NavigationBarHidden {
 
     private enum Field {
         case email, password, repeatPassword

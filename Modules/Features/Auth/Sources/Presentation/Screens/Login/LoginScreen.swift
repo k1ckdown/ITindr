@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import Navigation
 
-struct LoginScreen: View {
+struct LoginScreen: View, NavigationBarHidden {
 
     private enum Field {
         case email, password

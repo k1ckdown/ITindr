@@ -14,7 +14,7 @@ final class LoginCoordinator: BaseCoordinator {
         let rootView = LoginScreen()
         let hostingController = UIHostingController(rootView: rootView)
 
-        setupPopHandler(for: hostingController)
+        addPopHandler(for: hostingController)
         navigationController.pushViewController(hostingController, animated: true)
     }
 }

@@ -28,9 +28,8 @@ final class RegistrationCoordinator: BaseCoordinator {
     override func start() {
         let content = content(self)
 
-        setupPopHandler(for: content)
+        addPopHandler(for: content)
         navigationController.pushViewController(content, animated: true)
-        navigationController.setNavigationBarHidden(true, animated: false)
     }
 }
 
