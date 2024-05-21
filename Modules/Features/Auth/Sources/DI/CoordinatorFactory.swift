@@ -21,8 +21,8 @@ final class CoordinatorFactory {
 
 extension CoordinatorFactory: RegistrationCoordinatorFactory {
     func makeRegistrationCoordinator(navigationController: NavigationController) -> RegistrationCoordinator {
-        let content: RegistrationCoordinator.Content = { [unowned self] middlewareDelegate in
-            let screen = screenFactory.makeRegistrationScreen(middlewareDelegate: middlewareDelegate)
+        let content: RegistrationCoordinator.Content = { middlewareDelegate in
+            let screen = self.screenFactory.makeRegistrationScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
 
@@ -35,8 +35,8 @@ extension CoordinatorFactory: RegistrationCoordinatorFactory {
 
 extension CoordinatorFactory: StartCoordinatorFactory {
     func makeStartCoordinator(navigationController: NavigationController) -> StartCoordinator {
-        let content: StartCoordinator.Content = { [unowned self] middlewareDelegate in
-            let screen = screenFactory.makeStartScreen(middlewareDelegate: middlewareDelegate)
+        let content: StartCoordinator.Content = { middlewareDelegate in
+            let screen = self.screenFactory.makeStartScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
 
