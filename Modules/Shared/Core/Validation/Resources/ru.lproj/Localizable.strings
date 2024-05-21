@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  Validation
+
+  Created by Ivan Semenov on 21.05.2024.
+  
+*/
+
+"InvalidPassword" = "Должно быть не менее %d символов";
+"InvalidUsername" = "Может содержать только буквы и цифры";
+
+"MissingKeySign" = "Отсутствует знак @";
+"InvalidEmailUsername" = "Недопустимое имя";
+"InvalidDomainPart" = "Недопустимая часть домена";
+"InvalidTopLevelDomain" = "Недопустимый домен верхнего уровня";

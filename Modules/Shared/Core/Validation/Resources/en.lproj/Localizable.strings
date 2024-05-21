@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  Validation
+
+  Created by Ivan Semenov on 21.05.2024.
+  
+*/
+
+"InvalidPassword" = "Must be at least %d characters";
+"InvalidUsername" = "Invalid, can only contain letters or digits";
+
+"MissingKeySign" = "Missing @ sign";
+"InvalidEmailUsername" = "Invalid username";
+"InvalidDomainPart" = "Invalid domain part";
+"InvalidTopLevelDomain" = "Invalid top-level domain";
