@@ -7,21 +7,31 @@
 
 import UDFKit
 import AuthDomain
+import Validation
 
 @MainActor
 protocol RegistrationMiddlewareDelegate: AnyObject, Sendable {
     func goBack()
-    //    func showError()
     func showProfileEditor()
+    func showError(_ message: String)
 }
 
 final class RegistrationMiddleware: Middleware {
 
     private let registerUseCase: RegisterUseCase
+    private let validateEmailUseCase: ValidateEmailUseCase
+    private let validatePasswordUseCase: ValidatePasswordUseCase
     private weak var delegate: RegistrationMiddlewareDelegate?
 
-    init(registerUseCase: RegisterUseCase, delegate: RegistrationMiddlewareDelegate?) {
+    init(
+        registerUseCase: RegisterUseCase,
+        validateEmailUseCase: ValidateEmailUseCase,
+        validatePasswordUseCase: ValidatePasswordUseCase,
+        delegate: RegistrationMiddlewareDelegate?
+    ) {
         self.registerUseCase = registerUseCase
+        self.validateEmailUseCase = validateEmailUseCase
+        self.validatePasswordUseCase = validatePasswordUseCase
         self.delegate = delegate
     }
 
@@ -32,25 +42,17 @@ final class RegistrationMiddleware: Middleware {
         case .registerTapped:
             await handleRegisterTap(state)
         case .emailChanged:
-            break
+            if let error = validateEmail(state.email.content) { return .emailFailed(error) }
         case .passwordChanged:
-            break
+            if let error = validatePassword(state.password.content) { return .passwordFailed(error) }
         case .repeatPasswordChanged:
-            break
+            guard state.password == state.repeatPassword else {
+                return .repeatPasswordFailed(AuthStrings.invalidConfirmPassword)
+            }
         default: break
         }
-        
+
         return nil
-    }
-}
-
-
-// MARK: - Validation
-
-private extension RegistrationMiddleware {
-
-    func validateEmail(_ email: String) {
-
     }
 }
 
@@ -66,5 +68,32 @@ private extension RegistrationMiddleware {
     func handleRegisterTap(_ state: RegistrationState) async {
         try? await register(email: state.email.content, password: state.password.content)
         await delegate?.showProfileEditor()
+    }
+}
+
+
+// MARK: - Validation
+
+private extension RegistrationMiddleware {
+
+    func validateEmail(_ email: String) -> String? {
+        validate {
+            try validateEmailUseCase.execute(email)
+        }
+    }
+
+    func validatePassword(_ password: String) -> String? {
+        validate {
+            try validatePasswordUseCase.execute(password)
+        }
+    }
+
+    func validate(_ block: () throws -> Void) -> String? {
+        do {
+            try block()
+            return nil
+        } catch {
+            return error.localizedDescription
+        }
     }
 }

@@ -9,6 +9,8 @@ import Foundation
 
 public final class ValidateEmailUseCase {
 
+    public init() {}
+
     public func execute(_ email: String) throws {
         guard isUsernameValid(email) else {
             throw EmailValidationError.invalidUsername

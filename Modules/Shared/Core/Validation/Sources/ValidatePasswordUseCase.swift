@@ -9,6 +9,8 @@ import Foundation
 
 public final class ValidatePasswordUseCase {
 
+    public init() {}
+
     public func execute(_ password: String) throws {
         guard password.count >= Constants.minPasswordLength else {
             throw PasswordValidationError.invalidPassword

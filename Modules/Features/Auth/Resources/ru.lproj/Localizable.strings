@@ -14,4 +14,5 @@
 "Register" = "Зарегистрироваться";
 "Registration" = "Регистрация";
 "RepeatPassword" = "Повторите пароль";
+"InvalidConfirmPassword" = "Пароли не совпадают";
 "AppSlogan" = "Ты найдешь того, кто\nпоревьюит твой код";
