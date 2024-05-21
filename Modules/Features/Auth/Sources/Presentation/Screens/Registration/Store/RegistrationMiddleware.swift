@@ -6,9 +6,12 @@
 //
 
 import UDFKit
+import AuthDomain
 
-protocol RegistrationMiddlewareDelegate: AnyObject {
+@MainActor
+protocol RegistrationMiddlewareDelegate: AnyObject, Sendable {
     func goBack()
+    //    func showError()
     func showProfileEditor()
 }
 
@@ -22,20 +25,46 @@ final class RegistrationMiddleware: Middleware {
         self.delegate = delegate
     }
 
-    func handle(state: RegistrationState, intent: RegistrationIntent) -> RegistrationIntent? {
+    func handle(state: RegistrationState, intent: RegistrationIntent) async -> RegistrationIntent? {
         switch intent {
         case .goBackTapped:
-            delegate?.goBack()
+            await delegate?.goBack()
         case .registerTapped:
-            delegate?.showProfileEditor()
+            await handleRegisterTap(state)
         case .emailChanged:
             break
         case .passwordChanged:
             break
         case .repeatPasswordChanged:
             break
+        default: break
         }
-
+        
         return nil
+    }
+}
+
+
+// MARK: - Validation
+
+private extension RegistrationMiddleware {
+
+    func validateEmail(_ email: String) {
+
+    }
+}
+
+// MARK: - Register
+
+private extension RegistrationMiddleware {
+
+    func register(email: String, password: String) async throws {
+        let user = UserRegister(email: email, password: password)
+        try await registerUseCase.execute(user)
+    }
+
+    func handleRegisterTap(_ state: RegistrationState) async {
+        try? await register(email: state.email.content, password: state.password.content)
+        await delegate?.showProfileEditor()
     }
 }

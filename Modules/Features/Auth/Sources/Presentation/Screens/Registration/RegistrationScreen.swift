@@ -31,7 +31,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
             } goBackHandler: {
                 store.dispatch(.goBackTapped)
             } textFields: {
-                TextField(AuthStrings.email, text: .constant(""))
+                TextField(AuthStrings.email, text: email)
                     .submitLabel(.next)
                     .autocorrectionDisabled()
                     .textContentType(.emailAddress)
@@ -39,7 +39,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .focused($focusedField, equals: .email)
                     .onSubmit { focusedField = .password }
 
-                TextField(AuthStrings.password, text: .constant(""))
+                TextField(AuthStrings.password, text: password)
                     .submitLabel(.next)
                     .autocorrectionDisabled()
                     .textContentType(.password)
@@ -47,12 +47,35 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .focused($focusedField, equals: .password)
                     .onSubmit { focusedField = .repeatPassword }
 
-                TextField(AuthStrings.repeatPassword, text: .constant(""))
+                TextField(AuthStrings.repeatPassword, text: repeatPassword)
                     .submitLabel(.return)
                     .autocorrectionDisabled()
                     .textContentType(.password)
                     .textInputAutocapitalization(.never)
                     .focused($focusedField, equals: .repeatPassword)
             }
+    }
+}
+
+// MARK: - Bindings
+
+private extension RegistrationScreen {
+
+    var email: Binding<String> {
+        Binding(store.state.email.content) {
+            store.dispatch(.emailChanged($0))
+        }
+    }
+
+    var password: Binding<String> {
+        Binding(store.state.password.content) {
+            store.dispatch(.passwordChanged($0))
+        }
+    }
+
+    var repeatPassword: Binding<String> {
+        Binding(store.state.repeatPassword.content) {
+            store.dispatch(.repeatPasswordChanged($0))
+        }
     }
 }

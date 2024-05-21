@@ -5,14 +5,7 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
-struct TextFieldState: Equatable {
-    var content = ""
-    var error: String?
-
-    var isErrorShowing: Bool {
-        self.error != nil
-    }
-}
+import CommonUI
 
 struct RegistrationState: Equatable {
     var isLoading = false
@@ -21,14 +14,18 @@ struct RegistrationState: Equatable {
     var password = TextFieldState()
     var repeatPassword = TextFieldState()
 
-    var isRegisterDisabled: Bool {
-        false
+    var isRegisterEnabled: Bool {
+        email.isValid && password.isValid && repeatPassword.isValid
     }
 }
 
 enum RegistrationIntent: Equatable {
     case goBackTapped
     case registerTapped
+
+    case emailFailed(String)
+    case passwordFailed(String)
+    case repeatPasswordFailed(String)
 
     case emailChanged(String)
     case passwordChanged(String)

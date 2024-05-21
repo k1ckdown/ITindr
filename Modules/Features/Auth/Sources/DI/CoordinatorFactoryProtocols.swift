@@ -7,10 +7,12 @@
 
 import Navigation
 
+@MainActor
 protocol StartCoordinatorFactory {
     func makeStartCoordinator(navigationController: NavigationController) -> StartCoordinator
 }
 
+@MainActor
 protocol RegistrationCoordinatorFactory {
     func makeRegistrationCoordinator(navigationController: NavigationController) -> RegistrationCoordinator
 }

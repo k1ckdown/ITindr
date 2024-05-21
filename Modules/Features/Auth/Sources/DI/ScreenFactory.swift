@@ -18,6 +18,7 @@ final class ScreenFactory {
 
 // MARK: - Public methods
 
+@MainActor
 extension ScreenFactory {
 
     func makeStartScreen(middlewareDelegate: StartMiddlewareDelegate?) -> StartScreen {

@@ -9,5 +9,5 @@ public protocol Middleware<State, Intent> {
     associatedtype State
     associatedtype Intent
     
-    func handle(state: State, intent: Intent) -> Intent?
+    func handle(state: State, intent: Intent) async -> Intent?
 }

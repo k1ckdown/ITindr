@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 19.05.2024.
 //
 
+@MainActor
 public protocol Coordinator: AnyObject {
     var parentCoordinator: Coordinator? { get set }
 

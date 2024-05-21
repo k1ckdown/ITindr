@@ -31,6 +31,7 @@ final class AppFactory {
 
 // MARK: - Public methods
 
+@MainActor
 extension AppFactory {
 
     func makeAuthCoordinator(navigationController: NavigationController) -> AuthCoordinatorProtocol {

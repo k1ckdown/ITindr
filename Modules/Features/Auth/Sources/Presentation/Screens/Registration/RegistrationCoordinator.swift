@@ -42,6 +42,6 @@ extension RegistrationCoordinator: RegistrationMiddlewareDelegate {
     }
 
     func showProfileEditor() {
-
+        print("Profile Editor")
     }
 }

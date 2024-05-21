@@ -9,5 +9,6 @@ public protocol Reducer<State, Intent> {
     associatedtype State
     associatedtype Intent
     
+    @MainActor
     func reduce(state: inout State, intent: Intent)
 }

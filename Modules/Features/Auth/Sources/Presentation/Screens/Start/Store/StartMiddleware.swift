@@ -7,7 +7,8 @@
 
 import UDFKit
 
-protocol StartMiddlewareDelegate: AnyObject {
+@MainActor
+protocol StartMiddlewareDelegate: AnyObject, Sendable {
     func showLogin()
     func showRegistration()
 }
@@ -20,10 +21,10 @@ final class StartMiddleware: Middleware {
         self.delegate = delegate
     }
 
-    func handle(state: StartState, intent: StartIntent) -> StartIntent? {
+    func handle(state: StartState, intent: StartIntent) async -> StartIntent? {
         switch intent {
-        case .loginTapped: delegate?.showLogin()
-        case .registerTapped: delegate?.showRegistration()
+        case .loginTapped: await delegate?.showLogin()
+        case .registerTapped: await delegate?.showRegistration()
         }
 
         return nil

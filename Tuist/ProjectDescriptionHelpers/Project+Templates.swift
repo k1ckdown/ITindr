@@ -88,6 +88,7 @@ extension Project {
 
     public static func featureFramework(
         name: String,
+        hasNavigation: Bool = true,
         dependencies: [TargetDependency] = []
     ) -> Project {
         let interfaceProject = "\(name)Interface"
@@ -102,7 +103,8 @@ extension Project {
                     bundleId: "\(Constants.bundleId).\(interfaceProject)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
-                    sources: "Interface/**"
+                    sources: "Interface/**",
+                    dependencies: hasNavigation ? [.project(target: "Navigation", path: "../../Shared/Core/Navigation")] : []
                 ),
                 .target(
                     name: name,
