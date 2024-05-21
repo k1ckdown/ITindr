@@ -17,7 +17,7 @@ public struct TextFieldState: Equatable {
     }
     
     public var isErrorShowing: Bool {
-        error != nil
+        error != nil && content.isEmpty == false
     }
 
     public var isValid: Bool {

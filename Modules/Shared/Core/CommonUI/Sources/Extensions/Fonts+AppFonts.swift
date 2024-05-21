@@ -9,6 +9,7 @@ import SwiftUI
 
 public extension Fonts {
     static let medium10 = Fonts.medium.swiftUIFont(size: 10)
+    static let medium15 = Fonts.medium.swiftUIFont(size: 15)
     static let semibold16 = Fonts.semiBold.swiftUIFont(size: 16)
     
     static let regular12 = Fonts.regular.swiftUIFont(size: 12)

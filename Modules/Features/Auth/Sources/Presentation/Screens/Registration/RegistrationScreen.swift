@@ -37,6 +37,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .textContentType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .focused($focusedField, equals: .email)
+                    .errorFooter(store.state.email)
                     .onSubmit { focusedField = .password }
 
                 TextField(AuthStrings.password, text: password)
@@ -45,6 +46,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .textContentType(.password)
                     .textInputAutocapitalization(.never)
                     .focused($focusedField, equals: .password)
+                    .errorFooter(store.state.password)
                     .onSubmit { focusedField = .repeatPassword }
 
                 TextField(AuthStrings.repeatPassword, text: repeatPassword)
@@ -52,6 +54,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .autocorrectionDisabled()
                     .textContentType(.password)
                     .textInputAutocapitalization(.never)
+                    .errorFooter(store.state.repeatPassword)
                     .focused($focusedField, equals: .repeatPassword)
             }
     }

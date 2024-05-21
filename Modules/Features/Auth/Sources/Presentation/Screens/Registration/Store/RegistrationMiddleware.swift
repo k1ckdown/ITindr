@@ -42,13 +42,14 @@ final class RegistrationMiddleware: Middleware {
         case .registerTapped:
             await handleRegisterTap(state)
         case .emailChanged:
-            if let error = validateEmail(state.email.content) { return .emailFailed(error) }
+            return .emailValidated(validateEmail(state.email.content))
         case .passwordChanged:
-            if let error = validatePassword(state.password.content) { return .passwordFailed(error) }
+            return .passwordValidated(validatePassword(state.password.content))
         case .repeatPasswordChanged:
-            guard state.password == state.repeatPassword else {
-                return .repeatPasswordFailed(AuthStrings.invalidConfirmPassword)
-            }
+            return .repeatPasswordValidated(matchPasswords(
+                password: state.password.content,
+                repeatPassword: state.repeatPassword.content
+            ))
         default: break
         }
 
@@ -76,12 +77,16 @@ private extension RegistrationMiddleware {
 
 private extension RegistrationMiddleware {
 
+    func matchPasswords(password: String, repeatPassword: String) -> String? {
+        password == repeatPassword ? nil : AuthStrings.invalidConfirmPassword
+    }
+
     func validateEmail(_ email: String) -> String? {
         validate {
             try validateEmailUseCase.execute(email)
         }
     }
-
+    
     func validatePassword(_ password: String) -> String? {
         validate {
             try validatePasswordUseCase.execute(password)

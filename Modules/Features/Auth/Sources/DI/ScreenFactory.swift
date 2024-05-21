@@ -29,12 +29,14 @@ extension ScreenFactory {
         let store = Store(initialState: initialState, reducer: reducer, middleware: middleware)
         return StartScreen(store: store)
     }
-
+    
     func makeRegistrationScreen(middlewareDelegate: RegistrationMiddlewareDelegate?) -> RegistrationScreen {
         let reducer = RegistrationReducer()
         let initialState = RegistrationState()
         let middleware = RegistrationMiddleware(
             registerUseCase: useCaseFactory.makeRegisterUseCase(),
+            validateEmailUseCase: useCaseFactory.makeValidateEmailUseCase(),
+            validatePasswordUseCase: useCaseFactory.makeValidatePasswordUseCase(),
             delegate: middlewareDelegate
         )
 

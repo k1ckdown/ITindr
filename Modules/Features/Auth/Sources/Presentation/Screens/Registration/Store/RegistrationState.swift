@@ -23,9 +23,9 @@ enum RegistrationIntent: Equatable {
     case goBackTapped
     case registerTapped
 
-    case emailFailed(String)
-    case passwordFailed(String)
-    case repeatPasswordFailed(String)
+    case emailValidated(String?)
+    case passwordValidated(String?)
+    case repeatPasswordValidated(String?)
 
     case emailChanged(String)
     case passwordChanged(String)
