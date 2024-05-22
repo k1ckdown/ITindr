@@ -10,8 +10,10 @@ import CommonUI
 
 struct AuthView<Content: View>: View {
 
+    let isLoading: Bool
     let screenTitle: String
     let buttonTitle: String
+    let buttonEnabled: Bool
 
     let authHandler: () -> Void
     let goBackHandler: () -> Void
@@ -22,6 +24,10 @@ struct AuthView<Content: View>: View {
         VStack {
             VStack(spacing: Constants.textFieldSpacing) {
                 textFields()
+
+                if isLoading {
+                    ProgressView().tintColor()
+                }
             }
             .mainTextFieldStyle()
             .screenTitle(screenTitle)
@@ -30,6 +36,7 @@ struct AuthView<Content: View>: View {
             VStack(spacing: Constants.buttonSpacing) {
                 Button(buttonTitle, action: authHandler)
                     .mainButtonStyle()
+                    .disabled(buttonEnabled == false)
 
                 Button(AuthStrings.back, action: goBackHandler)
                     .mainButtonStyle(isProminent: false)

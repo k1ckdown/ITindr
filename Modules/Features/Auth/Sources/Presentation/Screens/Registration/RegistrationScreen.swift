@@ -25,8 +25,10 @@ struct RegistrationScreen: View, NavigationBarHidden {
 
     var body: some View {
         AuthView(
+            isLoading: store.state.isLoading,
             screenTitle: AuthStrings.registration,
-            buttonTitle: AuthStrings.register) {
+            buttonTitle: AuthStrings.register,
+            buttonEnabled: store.state.isRegisterEnabled) {
                 store.dispatch(.registerTapped)
             } goBackHandler: {
                 store.dispatch(.goBackTapped)

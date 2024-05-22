@@ -9,7 +9,6 @@ import CommonUI
 
 struct RegistrationState: Equatable {
     var isLoading = false
-
     var email = TextFieldState()
     var password = TextFieldState()
     var repeatPassword = TextFieldState()
@@ -20,14 +19,17 @@ struct RegistrationState: Equatable {
 }
 
 enum RegistrationIntent: Equatable {
+    case registered
+    case registrationFailed
+
     case goBackTapped
     case registerTapped
-
-    case emailValidated(String?)
-    case passwordValidated(String?)
-    case repeatPasswordValidated(String?)
 
     case emailChanged(String)
     case passwordChanged(String)
     case repeatPasswordChanged(String)
+
+    case emailValidated(String?)
+    case repeatPasswordValidated(Bool)
+    case passwordValidated(error: String?, isMatch: Bool)
 }

@@ -13,6 +13,11 @@ protocol StartCoordinatorFactory {
 }
 
 @MainActor
+protocol LoginCoordinatorFactory {
+    func makeLoginCoordinator(navigationController: NavigationController) -> LoginCoordinator
+}
+
+@MainActor
 protocol RegistrationCoordinatorFactory {
     func makeRegistrationCoordinator(navigationController: NavigationController) -> RegistrationCoordinator
 }

@@ -10,7 +10,7 @@ import SwiftUI
 import Navigation
 
 final class StartCoordinator: BaseCoordinator {
-    typealias Factory = RegistrationCoordinatorFactory
+    typealias Factory = RegistrationCoordinatorFactory & LoginCoordinatorFactory
     typealias Content = (StartMiddlewareDelegate) -> UIViewController
 
     private let factory: Factory
@@ -39,7 +39,7 @@ final class StartCoordinator: BaseCoordinator {
 extension StartCoordinator: StartMiddlewareDelegate {
 
     func showLogin() {
-        let coordinator = LoginCoordinator(navigationController: navigationController)
+        let coordinator = factory.makeLoginCoordinator(navigationController: navigationController)
         coordinate(to: coordinator)
     }
 

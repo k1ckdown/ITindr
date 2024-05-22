@@ -21,6 +21,6 @@ public struct TextFieldState: Equatable {
     }
 
     public var isValid: Bool {
-        error != nil && (isRequired == false || isRequired && content.isEmpty == false)
+        error == nil && (isRequired == false || isRequired && content.isEmpty == false)
     }
 }

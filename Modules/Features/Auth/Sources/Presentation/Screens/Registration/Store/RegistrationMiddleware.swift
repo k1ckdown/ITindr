@@ -8,12 +8,12 @@
 import UDFKit
 import AuthDomain
 import Validation
+import Navigation
 
 @MainActor
-protocol RegistrationMiddlewareDelegate: AnyObject, Sendable {
+protocol RegistrationMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
     func goBack()
     func showProfileEditor()
-    func showError(_ message: String)
 }
 
 final class RegistrationMiddleware: Middleware {
@@ -40,65 +40,43 @@ final class RegistrationMiddleware: Middleware {
         case .goBackTapped:
             await delegate?.goBack()
         case .registerTapped:
-            await handleRegisterTap(state)
+            return await register(email: state.email.content, password: state.password.content)
         case .emailChanged:
-            return .emailValidated(validateEmail(state.email.content))
+            return .emailValidated(message(try validateEmailUseCase.execute(state.email.content)))
         case .passwordChanged:
-            return .passwordValidated(validatePassword(state.password.content))
+            return .passwordValidated(
+                error: message(try validatePasswordUseCase.execute(state.password.content)),
+                isMatch: matchPasswords(password: state.password.content, repeatPassword: state.repeatPassword.content)
+            )
         case .repeatPasswordChanged:
             return .repeatPasswordValidated(matchPasswords(
                 password: state.password.content,
                 repeatPassword: state.repeatPassword.content
             ))
-        default: break
+        case .registered, .registrationFailed, .emailValidated, .repeatPasswordValidated, .passwordValidated: break
         }
-
         return nil
     }
 }
 
-// MARK: - Register
+// MARK: - Private methods
 
 private extension RegistrationMiddleware {
 
-    func register(email: String, password: String) async throws {
+    func matchPasswords(password: String, repeatPassword: String) -> Bool {
+        password == repeatPassword
+    }
+
+    func register(email: String, password: String) async -> RegistrationIntent {
         let user = UserRegister(email: email, password: password)
-        try await registerUseCase.execute(user)
-    }
 
-    func handleRegisterTap(_ state: RegistrationState) async {
-        try? await register(email: state.email.content, password: state.password.content)
-        await delegate?.showProfileEditor()
-    }
-}
-
-
-// MARK: - Validation
-
-private extension RegistrationMiddleware {
-
-    func matchPasswords(password: String, repeatPassword: String) -> String? {
-        password == repeatPassword ? nil : AuthStrings.invalidConfirmPassword
-    }
-
-    func validateEmail(_ email: String) -> String? {
-        validate {
-            try validateEmailUseCase.execute(email)
-        }
-    }
-    
-    func validatePassword(_ password: String) -> String? {
-        validate {
-            try validatePasswordUseCase.execute(password)
-        }
-    }
-
-    func validate(_ block: () throws -> Void) -> String? {
         do {
-            try block()
-            return nil
+            try await registerUseCase.execute(user)
+            await delegate?.showProfileEditor()
+            return .registered
         } catch {
-            return error.localizedDescription
+            await delegate?.showError(error.localizedDescription)
+            return .registrationFailed
         }
     }
 }

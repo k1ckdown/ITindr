@@ -17,20 +17,6 @@ final class CoordinatorFactory {
     }
 }
 
-// MARK: RegistrationCoordinatorFactory
-
-extension CoordinatorFactory: RegistrationCoordinatorFactory {
-    func makeRegistrationCoordinator(navigationController: NavigationController) -> RegistrationCoordinator {
-        let content: RegistrationCoordinator.Content = { middlewareDelegate in
-            let screen = self.screenFactory.makeRegistrationScreen(middlewareDelegate: middlewareDelegate)
-            return UIHostingController(rootView: screen)
-        }
-
-        let coordinator = RegistrationCoordinator(factory: self, navigationController: navigationController, content: content)
-        return coordinator
-    }
-}
-
 // MARK: StartCoordinatorFactory
 
 extension CoordinatorFactory: StartCoordinatorFactory {
@@ -41,6 +27,34 @@ extension CoordinatorFactory: StartCoordinatorFactory {
         }
 
         let coordinator = StartCoordinator(factory: self, navigationController: navigationController, content: content)
+        return coordinator
+    }
+}
+
+// MARK: - LoginCoordinatorFactory
+
+extension CoordinatorFactory: LoginCoordinatorFactory {
+    func makeLoginCoordinator(navigationController: NavigationController) -> LoginCoordinator {
+        let content: LoginCoordinator.Content = { middlewareDelegate in
+            let screen = self.screenFactory.makeLoginScreen(middlewareDelegate: middlewareDelegate)
+            return UIHostingController(rootView: screen)
+        }
+
+        let coordinator = LoginCoordinator(content: content, factory: self, navigationController: navigationController)
+        return coordinator
+    }
+}
+
+// MARK: RegistrationCoordinatorFactory
+
+extension CoordinatorFactory: RegistrationCoordinatorFactory {
+    func makeRegistrationCoordinator(navigationController: NavigationController) -> RegistrationCoordinator {
+        let content: RegistrationCoordinator.Content = { middlewareDelegate in
+            let screen = self.screenFactory.makeRegistrationScreen(middlewareDelegate: middlewareDelegate)
+            return UIHostingController(rootView: screen)
+        }
+
+        let coordinator = RegistrationCoordinator(content: content, factory: self, navigationController: navigationController)
         return coordinator
     }
 }
