@@ -5,9 +5,9 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
-struct StartState {}
+struct StartState: Equatable {}
 
-enum StartIntent {
+enum StartIntent: Equatable {
     case loginTapped
     case registerTapped
 }
