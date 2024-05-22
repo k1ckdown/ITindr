@@ -48,6 +48,7 @@ struct StartScreen: View {
                 }
                 .mainButtonStyle(isProminent: false)
             }
+            .padding(.bottom)
         }
         .padding(.horizontal)
     }
@@ -63,6 +64,6 @@ private extension StartScreen {
         static let buttonSpacing: CGFloat = 20
         static let imageInsetTop: CGFloat = 70
         static let sloganInsetTop: CGFloat = 12
-        static let contentInsetTop: CGFloat = 85
+        static let contentInsetTop: CGFloat = 50
     }
 }

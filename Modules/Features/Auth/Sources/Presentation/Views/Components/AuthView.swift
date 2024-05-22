@@ -41,6 +41,7 @@ struct AuthView<Content: View>: View {
                 Button(AuthStrings.back, action: goBackHandler)
                     .mainButtonStyle(isProminent: false)
             }
+            .padding(.bottom)
         }
         .padding(.horizontal)
         .appLogo()
