@@ -100,7 +100,7 @@ extension Project {
                 .target(
                     name: interfaceProject,
                     destinations: .iOS,
-                    product: .staticFramework,
+                    product: .framework,
                     bundleId: "\(Constants.bundleId).\(interfaceProject)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
