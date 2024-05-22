@@ -42,8 +42,10 @@ let project = Project(
             dependencies: [
                 .project(target: "Auth", path: "../Modules/Features/Auth"),
                 .project(target: "Network", path: "../Modules/Shared/Core/Network"),
+                .project(target: "Navigation", path: "../Modules/Shared/Core/Navigation"),
                 .project(target: "AuthData", path: "../Modules/Shared/Data/AuthData"),
-                .project(target: "Navigation", path: "../Modules/Shared/Core/Navigation")
+                .project(target: "TopicData", path: "../Modules/Shared/Data/TopicData"),
+                .project(target: "ProfileData", path: "../Modules/Shared/Data/ProfileData"),
             ]
         )
     ]

@@ -92,6 +92,7 @@ extension Project {
         dependencies: [TargetDependency] = []
     ) -> Project {
         let interfaceProject = "\(name)Interface"
+        let navigation: [TargetDependency] = hasNavigation ? [.project(target: "Navigation", path: "../../Shared/Core/Navigation")] : []
 
         return Project(
             name: name,
@@ -104,7 +105,7 @@ extension Project {
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
                     sources: "Interface/**",
-                    dependencies: hasNavigation ? [.project(target: "Navigation", path: "../../Shared/Core/Navigation")] : []
+                    dependencies: navigation
                 ),
                 .target(
                     name: name,
@@ -115,7 +116,7 @@ extension Project {
                     infoPlist: .default,
                     sources: Constants.sources,
                     resources: Constants.resources,
-                    dependencies: dependencies + [
+                    dependencies: dependencies + navigation + [
                         .project(target: interfaceProject, path: "../\(name)")
                     ]
                 )
