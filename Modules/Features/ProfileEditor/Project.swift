@@ -7,6 +7,7 @@ let project = Project.featureFramework(
     dependencies: [
         .project(target: "ProfileDomain", path: "../../Shared/Domain/ProfileDomain"),
         .project(target: "CommonUI", path: "../../Shared/Core/CommonUI"),
-        .project(target: "UDFKit", path: "../../Shared/Core/UDFKit")
+        .project(target: "UDFKit", path: "../../Shared/Core/UDFKit"),
+        .external(name: "Kingfisher")
     ]
 )

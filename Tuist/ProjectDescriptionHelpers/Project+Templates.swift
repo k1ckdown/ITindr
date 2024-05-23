@@ -100,7 +100,7 @@ extension Project {
                 .target(
                     name: interfaceProject,
                     destinations: .iOS,
-                    product: .framework,
+                    product: .staticFramework,
                     bundleId: "\(Constants.bundleId).\(interfaceProject)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
@@ -110,7 +110,7 @@ extension Project {
                 .target(
                     name: name,
                     destinations: .iOS,
-                    product: .staticFramework,
+                    product: .framework,
                     bundleId: "\(Constants.bundleId).\(name)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,

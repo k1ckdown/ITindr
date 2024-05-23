@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  ProfileEditor
+
+  Created by Ivan Semenov on 23.05.2024.
+  
+*/
+
+"Name" = "Имя";
+"Save" = "Сохранить";
+"Photos" = "Фото";
+"Camera" = "Камера";
+"Cancel" = "Отмена";
+"AboutMyself" = "О себе";
+"DeletePhoto" = "Удалить фото";
+"ChoosePhoto" = "Выбрать фото";
+"ChooseInterests" = "Укажи интересы";
+"TellAboutYourself" = "Расскажи о себе";
+"SelectSourceType" = "Выберите тип источника";
