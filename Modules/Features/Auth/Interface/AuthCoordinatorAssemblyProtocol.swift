@@ -9,5 +9,9 @@ import Navigation
 
 @MainActor
 public protocol AuthCoordinatorAssemblyProtocol {
-    func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol
+    func assemble(
+        navigationController: NavigationController,
+        loginFinishedHandler: (() -> Void)?,
+        registrationFinishedHandler: (() -> Void)?
+    ) -> AuthCoordinatorProtocol
 }

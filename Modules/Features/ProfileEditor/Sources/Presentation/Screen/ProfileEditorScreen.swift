@@ -47,7 +47,7 @@ struct ProfileEditorScreen: View {
             .frame(maxHeight: .infinity, alignment: .top)
 
             Button(Strings.save) {
-
+                store.dispatch(.saveTapped)
             }
             .mainButtonStyle()
             .padding(.bottom)

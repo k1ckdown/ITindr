@@ -12,17 +12,17 @@ import Navigation
 
 @MainActor
 protocol RegistrationMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
+    func finish()
     func goBack()
-    func showProfileEditor()
 }
 
 final class RegistrationMiddleware: Middleware {
-
+    
     private let registerUseCase: RegisterUseCase
     private let validateEmailUseCase: ValidateEmailUseCase
     private let validatePasswordUseCase: ValidatePasswordUseCase
     private weak var delegate: RegistrationMiddlewareDelegate?
-
+    
     init(
         registerUseCase: RegisterUseCase,
         validateEmailUseCase: ValidateEmailUseCase,
@@ -34,7 +34,7 @@ final class RegistrationMiddleware: Middleware {
         self.validatePasswordUseCase = validatePasswordUseCase
         self.delegate = delegate
     }
-
+    
     func handle(state: RegistrationState, intent: RegistrationIntent) async -> RegistrationIntent? {
         switch intent {
         case .goBackTapped:
@@ -62,17 +62,17 @@ final class RegistrationMiddleware: Middleware {
 // MARK: - Private methods
 
 private extension RegistrationMiddleware {
-
+    
     func matchPasswords(password: String, repeatPassword: String) -> Bool {
         password == repeatPassword
     }
-
+    
     func register(email: String, password: String) async -> RegistrationIntent {
         let user = UserRegister(email: email, password: password)
-
+        
         do {
             try await registerUseCase.execute(user)
-            await delegate?.showProfileEditor()
+            await delegate?.finish()
             return .registered
         } catch {
             await delegate?.showError(error.localizedDescription)

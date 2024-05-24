@@ -14,12 +14,12 @@ final class LoginCoordinator: BaseCoordinator {
 
     private let factory: Factory
     private let content: Content
-    private let flowFinishHandler: (() -> Void)?
+    private let loginFinishedHandler: (() -> Void)?
 
-    init(content: @escaping Content, factory: Factory, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
+    init(content: @escaping Content, factory: Factory, loginFinishedHandler: (() -> Void)?, navigationController: NavigationController) {
         self.content = content
         self.factory = factory
-        self.flowFinishHandler = flowFinishHandler
+        self.loginFinishedHandler = loginFinishedHandler
         super.init(navigationController: navigationController)
     }
 
@@ -34,12 +34,12 @@ final class LoginCoordinator: BaseCoordinator {
 // MARK: - LoginMiddlewareDelegate
 
 extension LoginCoordinator: LoginMiddlewareDelegate {
-    
-    func goBack() {
-        navigationController.popViewController(animated: true)
+
+    func finish() {
+        loginFinishedHandler?()
     }
 
-    func showProfileEditor() {
-        print("ProfileEditor")
+    func goBack() {
+        navigationController.popViewController(animated: true)
     }
 }

@@ -18,6 +18,7 @@ public struct AuthFlowCoordinatorAssembly: AuthFlowCoordinatorAssemblyProtocol {
 
     public func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> AuthFlowCoordinatorProtocol {
         AuthFlowCoordinator(
+            flowFinishHandler: flowFinishHandler,
             authCoordinatorAssembly: dependencies.authCoordinatorAssembly,
             profileEditorCoordinatorAssembly: dependencies.profileEditorCoordinatorAssembly,
             navigationController: navigationController

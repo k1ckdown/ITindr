@@ -5,7 +5,6 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
-import Auth
 import Navigation
 
 final class AppCoordinator: BaseCoordinator {
@@ -13,7 +12,7 @@ final class AppCoordinator: BaseCoordinator {
     private let appFactory = AppFactory()
     
     override func start() {
-        showAuth()
+        goToAuthFlow()
     }
 }
 
@@ -21,14 +20,24 @@ final class AppCoordinator: BaseCoordinator {
 
 private extension AppCoordinator {
     
-    func showAuth() {
-        let authCoordinator = appFactory.makeAuthCoordinator(navigationController: navigationController)
-        coordinate(to: authCoordinator)
+    func goToMainTabBar() {
+        print("Main Tab Bar")
+    }
+    
+    func goToAuthFlow() {
+        resetNavigation()
+        
+        let authFlowCoordinator = appFactory.makeAuthFlowCoordinatorAssembly().assemble(
+            navigationController: navigationController,
+            flowFinishHandler: goToMainTabBar
+        )
+        coordinate(to: authFlowCoordinator)
     }
     
     func resetNavigation() {
         removeChildCoordinators()
         navigationController.dismiss(animated: false)
+        navigationController.removeAllPopHandlers()
         navigationController.viewControllers.removeAll()
     }
 }

@@ -16,16 +16,23 @@ public struct AuthCoordinatorAssembly: AuthCoordinatorAssemblyProtocol {
         self.dependencies = dependencies
     }
 
-    public func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol {
+    public func assemble(
+        navigationController: NavigationController,
+        loginFinishedHandler: (() -> Void)?,
+        registrationFinishedHandler: (() -> Void)?
+    ) -> AuthCoordinatorProtocol {
         let useCaseFactory = UseCaseFactory(authRepository: dependencies.authRepository)
         let screenFactory = ScreenFactory(useCaseFactory: useCaseFactory)
-        let coordinatorFactory = CoordinatorFactory(screenFactory: screenFactory, flowFinishHandler: flowFinishHandler)
+        let coordinatorFactory = CoordinatorFactory(
+            screenFactory: screenFactory,
+            loginFinishedHandler: loginFinishedHandler,
+            registrationFinishedHandler: registrationFinishedHandler
+        )
 
-        let coordinator = AuthCoordinator(
+
+        return AuthCoordinator(
             factory: coordinatorFactory,
-            flowFinishHandler: flowFinishHandler,
             navigationController: navigationController
         )
-        return coordinator
     }
 }

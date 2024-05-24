@@ -12,14 +12,17 @@ import AuthFlowInterface
 
 final class AuthFlowCoordinator: BaseCoordinator, AuthFlowCoordinatorProtocol {
 
+    private let flowFinishHandler: (() -> Void)?
     private let authCoordinatorAssembly: AuthCoordinatorAssemblyProtocol
     private let profileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssemblyProtocol
 
     init(
+        flowFinishHandler: (() -> Void)?,
         authCoordinatorAssembly: AuthCoordinatorAssemblyProtocol,
         profileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssemblyProtocol,
         navigationController: NavigationController
     ) {
+        self.flowFinishHandler = flowFinishHandler
         self.authCoordinatorAssembly = authCoordinatorAssembly
         self.profileEditorCoordinatorAssembly = profileEditorCoordinatorAssembly
         super.init(navigationController: navigationController)
@@ -37,7 +40,8 @@ private extension AuthFlowCoordinator {
     func goToAuth() {
         let authCoordinator = authCoordinatorAssembly.assemble(
             navigationController: navigationController,
-            flowFinishHandler: goToProfileEditor
+            loginFinishedHandler: flowFinishHandler,
+            registrationFinishedHandler: goToProfileEditor
         )
         coordinate(to: authCoordinator)
     }
@@ -45,7 +49,7 @@ private extension AuthFlowCoordinator {
     func goToProfileEditor() {
         let profileEditorCoordinator = profileEditorCoordinatorAssembly.assemble(
             navigationController: navigationController,
-            flowFinishHandler: goToAuth
+            flowFinishHandler: flowFinishHandler
         )
         coordinate(to: profileEditorCoordinator)
     }

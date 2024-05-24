@@ -12,8 +12,8 @@ import Navigation
 
 @MainActor
 protocol LoginMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
+    func finish()
     func goBack()
-    func showProfileEditor()
 }
 
 final class LoginMiddleware: Middleware {
@@ -60,7 +60,7 @@ private extension LoginMiddleware {
 
         do {
             try await loginUseCase.execute(credentials)
-            await delegate?.showProfileEditor()
+            await delegate?.finish()
             return .loggedIn
         } catch {
             await delegate?.showError(error.localizedDescription)

@@ -30,7 +30,7 @@ final class StartCoordinator: BaseCoordinator {
         let content = content(self)
 
         addPopHandler(for: content)
-        navigationController.setViewControllers([content], animated: false)
+        navigationController.pushViewController(content, animated: false)
     }
 }
 

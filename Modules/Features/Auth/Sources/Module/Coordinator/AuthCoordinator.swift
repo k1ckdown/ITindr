@@ -12,16 +12,14 @@ import AuthInterface
 final class AuthCoordinator: BaseCoordinator, AuthCoordinatorProtocol {
 
     private let factory: CoordinatorFactory
-    private let flowFinishHandler: (() -> Void)?
 
-    init(factory: CoordinatorFactory, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
+    init(factory: CoordinatorFactory, navigationController: NavigationController) {
         self.factory = factory
-        self.flowFinishHandler = flowFinishHandler
         super.init(navigationController: navigationController)
     }
 
     override func start() {
-        showStart()
+        goToStart()
     }
 }
 
@@ -29,7 +27,7 @@ final class AuthCoordinator: BaseCoordinator, AuthCoordinatorProtocol {
 
 private extension AuthCoordinator {
 
-    func showStart() {
+    func goToStart() {
         let startCoordinator = factory.makeStartCoordinator(navigationController: navigationController)
         coordinate(to: startCoordinator)
     }

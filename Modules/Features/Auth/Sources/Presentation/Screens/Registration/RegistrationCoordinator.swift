@@ -11,21 +11,21 @@ import Navigation
 final class RegistrationCoordinator: BaseCoordinator {
     typealias Factory = RegistrationCoordinatorFactory
     typealias Content = (RegistrationMiddlewareDelegate) -> UIViewController
-    
+
     private let factory: Factory
     private let content: Content
-    private let flowFinishHandler: (() -> Void)?
+    private let registrationFinishedHandler: (() -> Void)?
 
-    init(content: @escaping Content, factory: Factory, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
+    init(content: @escaping Content, factory: Factory, registrationFinishedHandler: (() -> Void)?, navigationController: NavigationController) {
         self.content = content
         self.factory = factory
-        self.flowFinishHandler = flowFinishHandler
+        self.registrationFinishedHandler = registrationFinishedHandler
         super.init(navigationController: navigationController)
     }
-    
+
     override func start() {
         let content = content(self)
-        
+
         addPopHandler(for: content)
         navigationController.pushViewController(content, animated: true)
     }
@@ -34,12 +34,12 @@ final class RegistrationCoordinator: BaseCoordinator {
 // MARK: - RegistrationMiddlewareDelegate
 
 extension RegistrationCoordinator: RegistrationMiddlewareDelegate {
-    
+
+    func finish() {
+        registrationFinishedHandler?()
+    }
+
     func goBack() {
         navigationController.popViewController(animated: true)
-    }
-    
-    func showProfileEditor() {
-        print("Profile Editor")
     }
 }

@@ -11,11 +11,13 @@ import Navigation
 final class CoordinatorFactory {
     
     private let screenFactory: ScreenFactory
-    private let flowFinishHandler: (() -> Void)?
+    private let loginFinishedHandler: (() -> Void)?
+    private let registrationFinishedHandler: (() -> Void)?
     
-    init(screenFactory: ScreenFactory, flowFinishHandler: (() -> Void)?) {
+    init(screenFactory: ScreenFactory, loginFinishedHandler: (() -> Void)?, registrationFinishedHandler: (() -> Void)?) {
         self.screenFactory = screenFactory
-        self.flowFinishHandler = flowFinishHandler
+        self.loginFinishedHandler = loginFinishedHandler
+        self.registrationFinishedHandler = registrationFinishedHandler
     }
 }
 
@@ -44,7 +46,7 @@ extension CoordinatorFactory: LoginCoordinatorFactory {
         return LoginCoordinator(
             content: content,
             factory: self,
-            flowFinishHandler: flowFinishHandler,
+            loginFinishedHandler: loginFinishedHandler,
             navigationController: navigationController
         )
     }
@@ -62,7 +64,7 @@ extension CoordinatorFactory: RegistrationCoordinatorFactory {
         return RegistrationCoordinator(
             content: content,
             factory: self,
-            flowFinishHandler: flowFinishHandler,
+            registrationFinishedHandler: registrationFinishedHandler,
             navigationController: navigationController
         )
     }

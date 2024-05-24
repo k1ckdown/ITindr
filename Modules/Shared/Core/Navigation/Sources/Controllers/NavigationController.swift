@@ -23,12 +23,12 @@ public final class NavigationController: UINavigationController {
 
 extension NavigationController {
 
-    func removeAllPopHandlers() {
-        popHandlers.removeAll()
-    }
-
     func addPopHandler(_ handler: @escaping PopHandler) {
         popHandlers.append(handler)
+    }
+
+    public func removeAllPopHandlers() {
+        popHandlers.removeAll()
     }
 }
 
