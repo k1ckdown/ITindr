@@ -7,4 +7,4 @@
 
 import Navigation
 
-protocol AuthFlowCoordinatorProtocol: Coordinator {}
+public protocol AuthFlowCoordinatorProtocol: Coordinator {}

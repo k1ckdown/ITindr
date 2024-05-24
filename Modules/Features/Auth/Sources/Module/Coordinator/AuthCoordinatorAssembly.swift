@@ -5,8 +5,8 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
-import AuthInterface
 import Navigation
+import AuthInterface
 
 public struct AuthCoordinatorAssembly: AuthCoordinatorAssemblyProtocol {
 
@@ -16,7 +16,7 @@ public struct AuthCoordinatorAssembly: AuthCoordinatorAssemblyProtocol {
         self.dependencies = dependencies
     }
 
-    public func assemble(flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol {
+    public func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol {
         let useCaseFactory = UseCaseFactory(authRepository: dependencies.authRepository)
         let screenFactory = ScreenFactory(useCaseFactory: useCaseFactory)
         let coordinatorFactory = CoordinatorFactory(screenFactory: screenFactory, flowFinishHandler: flowFinishHandler)
@@ -24,7 +24,7 @@ public struct AuthCoordinatorAssembly: AuthCoordinatorAssemblyProtocol {
         let coordinator = AuthCoordinator(
             factory: coordinatorFactory,
             flowFinishHandler: flowFinishHandler,
-            navigationController: dependencies.navigationController
+            navigationController: navigationController
         )
         return coordinator
     }

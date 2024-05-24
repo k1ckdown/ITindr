@@ -10,10 +10,8 @@ import ProfileDomain
 
 public struct ModuleDependencies {
     let profileRepository: ProfileRepositoryProtocol
-    let navigationController: NavigationController
 
-    public init(profileRepository: ProfileRepositoryProtocol, navigationController: NavigationController) {
+    public init(profileRepository: ProfileRepositoryProtocol) {
         self.profileRepository = profileRepository
-        self.navigationController = navigationController
     }
 }

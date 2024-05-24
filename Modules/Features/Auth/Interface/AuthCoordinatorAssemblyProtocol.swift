@@ -5,7 +5,9 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
+import Navigation
+
 @MainActor
 public protocol AuthCoordinatorAssemblyProtocol {
-    func assemble(flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol
+    func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol
 }

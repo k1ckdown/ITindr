@@ -35,9 +35,9 @@ final class AppFactory {
 extension AppFactory {
 
     func makeAuthCoordinator(navigationController: NavigationController) -> AuthCoordinatorProtocol {
-        let dependencies = Auth.ModuleDependencies(authRepository: authRepository, navigationController: navigationController)
+        let dependencies = Auth.ModuleDependencies(authRepository: authRepository)
         let assembly = AuthCoordinatorAssembly(dependencies: dependencies)
 
-        return assembly.assemble()
+        return assembly.assemble(navigationController: navigationController, flowFinishHandler: nil)
     }
 }

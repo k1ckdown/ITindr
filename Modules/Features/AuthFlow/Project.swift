@@ -6,7 +6,7 @@ let project = Project.featureFramework(
     name: "AuthFlow",
     hasResources: false,
     dependencies: [
-        .project(target: "Auth", path: "../Auth"),
-        .project(target: "ProfileEditor", path: "../ProfileEditor")
+        .project(target: "AuthInterface", path: "../Auth"),
+        .project(target: "ProfileEditorInterface", path: "../ProfileEditor")
     ]
 )

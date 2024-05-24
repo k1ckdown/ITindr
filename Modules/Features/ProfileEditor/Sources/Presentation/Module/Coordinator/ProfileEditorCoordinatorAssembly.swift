@@ -7,6 +7,7 @@
 
 import UDFKit
 import SwiftUI
+import Navigation
 import ProfileEditorInterface
 
 public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssemblyProtocol {
@@ -17,7 +18,7 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         self.dependencies = dependencies
     }
 
-    public func assemble(flowFinishHandler: (() -> Void)?) -> ProfileEditorCoordinatorProtocol {
+    public func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> ProfileEditorCoordinatorProtocol {
         let content: ProfileEditorCoordinator.Content = { middlewareDelegate in
             let screen = makeScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
@@ -26,7 +27,7 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         return ProfileEditorCoordinator(
             content: content,
             flowFinishHandler: flowFinishHandler,
-            navigationController: dependencies.navigationController
+            navigationController: navigationController
         )
     }
 

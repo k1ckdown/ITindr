@@ -10,10 +10,8 @@ import Navigation
 
 public struct ModuleDependencies {
     let authRepository: AuthRepositoryProtocol
-    let navigationController: NavigationController
 
-    public init(authRepository: AuthRepositoryProtocol, navigationController: NavigationController) {
+    public init(authRepository: AuthRepositoryProtocol) {
         self.authRepository = authRepository
-        self.navigationController = navigationController
     }
 }
