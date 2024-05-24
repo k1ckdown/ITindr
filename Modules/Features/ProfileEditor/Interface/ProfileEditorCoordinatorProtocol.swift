@@ -7,4 +7,4 @@
 
 import Navigation
 
-protocol ProfileEditorCoordinatorProtocol: Coordinator {}
+public protocol ProfileEditorCoordinatorProtocol: Coordinator {}

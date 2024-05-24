@@ -7,12 +7,8 @@
 
 import SwiftUI
 import CommonUI
+import UDFKit
 import Kingfisher
-
-enum SourceType {
-    case camera
-    case library
-}
 
 typealias Strings = ProfileEditorStrings
 
@@ -21,8 +17,14 @@ struct ProfileEditorScreen: View {
     @State private var aboutMyself = Strings.aboutMyself
     @State private var selectedImage: ImageDetails?
 
-    @State private var sourceType: SourceType?
+    @State private var sourceType: PhotoSourceType?
     @State private var isSourceTypeAlertPresented = false
+
+    @StateObject private var store: StoreOf<ProfileEditorReducer>
+
+    init(store: StoreOf<ProfileEditorReducer>) {
+        _store = StateObject(wrappedValue: store)
+    }
 
     var body: some View {
         VStack {
@@ -171,8 +173,4 @@ private extension ProfileEditorScreen {
             set: { _ in sourceType = nil }
         )
     }
-}
-
-#Preview {
-    ProfileEditorScreen()
 }
