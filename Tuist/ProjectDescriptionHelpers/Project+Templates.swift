@@ -8,11 +8,11 @@
 import ProjectDescription
 
 extension Project {
-
+    
     public static func coreFramework(
         name: String,
         dependencies: [TargetDependency] = [],
-        includeResources: Bool = false
+        hasResources: Bool = false
     ) -> Project {
         Project(
             name: name,
@@ -25,19 +25,19 @@ extension Project {
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
                     sources: Constants.sources,
-                    resources: includeResources ? Constants.resources : nil,
+                    resources: getResourceFileElements(hasResources),
                     dependencies: dependencies
                 )
             ]
         )
     }
-
+    
     public static func domainFramework(
         name: String,
         dependencies: [String] = []
     ) -> Project {
         let projectName = "\(name)Domain"
-
+        
         return Project(
             name: projectName,
             targets: [
@@ -57,15 +57,15 @@ extension Project {
             ]
         )
     }
-
+    
     public static func dataFramework(
         name: String,
         dependencies: [TargetDependency] = [],
-        includeResources: Bool = false
+        hasResources: Bool = false
     ) -> Project {
         let dataProject = "\(name)Data"
         let domainProject = "\(name)Domain"
-
+        
         return Project(
             name: dataProject,
             targets: [
@@ -77,7 +77,7 @@ extension Project {
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
                     sources: Constants.sources,
-                    resources: includeResources ? Constants.resources : nil,
+                    resources:  getResourceFileElements(hasResources),
                     dependencies: dependencies + [
                         .project(target: domainProject, path: "../../Domain/\(domainProject)")
                     ]
@@ -85,15 +85,16 @@ extension Project {
             ]
         )
     }
-
+    
     public static func featureFramework(
         name: String,
         hasNavigation: Bool = true,
+        hasResources: Bool = true,
         dependencies: [TargetDependency] = []
     ) -> Project {
         let interfaceProject = "\(name)Interface"
         let navigation: [TargetDependency] = hasNavigation ? [.project(target: "Navigation", path: "../../Shared/Core/Navigation")] : []
-
+        
         return Project(
             name: name,
             targets: [
@@ -110,17 +111,21 @@ extension Project {
                 .target(
                     name: name,
                     destinations: .iOS,
-                    product: .framework,
+                    product: .staticFramework,
                     bundleId: "\(Constants.bundleId).\(name)",
                     deploymentTargets: .iOS(Constants.iOSVersion),
                     infoPlist: .default,
                     sources: Constants.sources,
-                    resources: Constants.resources,
+                    resources: getResourceFileElements(hasResources),
                     dependencies: dependencies + navigation + [
                         .project(target: interfaceProject, path: "../\(name)")
                     ]
                 )
             ]
         )
+    }
+    
+    private static func getResourceFileElements(_ include: Bool) -> ResourceFileElements? {
+        include ? Constants.resources : nil
     }
 }
