@@ -9,11 +9,13 @@ import SwiftUI
 import Navigation
 
 final class CoordinatorFactory {
-
+    
     private let screenFactory: ScreenFactory
-
-    init(screenFactory: ScreenFactory) {
+    private let flowFinishHandler: (() -> Void)?
+    
+    init(screenFactory: ScreenFactory, flowFinishHandler: (() -> Void)?) {
         self.screenFactory = screenFactory
+        self.flowFinishHandler = flowFinishHandler
     }
 }
 
@@ -25,9 +27,8 @@ extension CoordinatorFactory: StartCoordinatorFactory {
             let screen = self.screenFactory.makeStartScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
-
-        let coordinator = StartCoordinator(factory: self, navigationController: navigationController, content: content)
-        return coordinator
+        
+        return StartCoordinator(factory: self, navigationController: navigationController, content: content)
     }
 }
 
@@ -39,9 +40,13 @@ extension CoordinatorFactory: LoginCoordinatorFactory {
             let screen = self.screenFactory.makeLoginScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
-
-        let coordinator = LoginCoordinator(content: content, factory: self, navigationController: navigationController)
-        return coordinator
+        
+        return LoginCoordinator(
+            content: content,
+            factory: self,
+            flowFinishHandler: flowFinishHandler,
+            navigationController: navigationController
+        )
     }
 }
 
@@ -53,8 +58,12 @@ extension CoordinatorFactory: RegistrationCoordinatorFactory {
             let screen = self.screenFactory.makeRegistrationScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
-
-        let coordinator = RegistrationCoordinator(content: content, factory: self, navigationController: navigationController)
-        return coordinator
+        
+        return RegistrationCoordinator(
+            content: content,
+            factory: self,
+            flowFinishHandler: flowFinishHandler,
+            navigationController: navigationController
+        )
     }
 }

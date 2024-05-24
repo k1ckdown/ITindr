@@ -14,10 +14,12 @@ final class RegistrationCoordinator: BaseCoordinator {
     
     private let factory: Factory
     private let content: Content
-    
-    init(content: @escaping Content, factory: Factory, navigationController: NavigationController) {
+    private let flowFinishHandler: (() -> Void)?
+
+    init(content: @escaping Content, factory: Factory, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
         self.content = content
         self.factory = factory
+        self.flowFinishHandler = flowFinishHandler
         super.init(navigationController: navigationController)
     }
     

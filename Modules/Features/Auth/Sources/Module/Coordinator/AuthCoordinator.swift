@@ -12,9 +12,11 @@ import AuthInterface
 final class AuthCoordinator: BaseCoordinator, AuthCoordinatorProtocol {
 
     private let factory: CoordinatorFactory
+    private let flowFinishHandler: (() -> Void)?
 
-    init(factory: CoordinatorFactory, navigationController: NavigationController) {
+    init(factory: CoordinatorFactory, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
         self.factory = factory
+        self.flowFinishHandler = flowFinishHandler
         super.init(navigationController: navigationController)
     }
 

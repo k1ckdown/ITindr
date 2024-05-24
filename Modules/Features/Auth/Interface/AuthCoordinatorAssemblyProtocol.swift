@@ -7,5 +7,5 @@
 
 @MainActor
 public protocol AuthCoordinatorAssemblyProtocol {
-    func assemble() -> AuthCoordinatorProtocol
+    func assemble(flowFinishHandler: (() -> Void)?) -> AuthCoordinatorProtocol
 }
