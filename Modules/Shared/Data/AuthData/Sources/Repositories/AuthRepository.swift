@@ -21,7 +21,6 @@ public final class AuthRepository {
     public init(networkService: NetworkServiceProtocol, credentialsLocalDataSource: AuthCredentialsLocalDataSourceProtocol) {
         self.networkService = networkService
         self.credentialsLocalDataSource = credentialsLocalDataSource
-        try? credentialsLocalDataSource.delete()
     }
 }
 

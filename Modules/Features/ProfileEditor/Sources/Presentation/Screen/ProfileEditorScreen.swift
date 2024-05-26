@@ -33,7 +33,7 @@ struct ProfileEditorScreen: View {
 
                 VStack {
                     HStack {
-
+                        // TODO: Tags
                     }
                     .screenTitle(Strings.chooseInterests)
                 }
@@ -107,6 +107,7 @@ private extension ProfileEditorScreen {
                 .textContentType(.username)
                 .autocorrectionDisabled()
 
+            // TODO: Placeholder
             TextEditor(text: aboutMyself)
                 .tintColor()
                 .font(Fonts.regular16)

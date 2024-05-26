@@ -45,6 +45,7 @@ final class ProfileEditorMiddleware: Middleware {
 private extension ProfileEditorMiddleware {
 
     func handleSaveTap(state: ProfileEditorState) async {
+        // TODO: Show error that field is required
         guard state.name.isValid else { return }
 
         let profile = UserProfileEdit(name: state.name.content, aboutMyself: state.aboutMyself, topics: [])
