@@ -12,7 +12,7 @@ public struct UserProfileEdit {
     public let aboutMyself: String?
     public let topics: [Topic]
     
-    init(name: String, aboutMyself: String?, topics: [Topic]) {
+    public init(name: String, aboutMyself: String?, topics: [Topic]) {
         self.name = name
         self.aboutMyself = aboutMyself
         self.topics = topics

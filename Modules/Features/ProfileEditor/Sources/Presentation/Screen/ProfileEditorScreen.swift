@@ -5,21 +5,16 @@
 //  Created by Ivan Semenov on 23.05.2024.
 //
 
+import UDFKit
 import SwiftUI
 import CommonUI
-import UDFKit
 import Kingfisher
 
 typealias Strings = ProfileEditorStrings
 
 struct ProfileEditorScreen: View {
 
-    @State private var aboutMyself = Strings.aboutMyself
-    @State private var selectedImage: ImageDetails?
-
-    @State private var sourceType: PhotoSourceType?
-    @State private var isSourceTypeAlertPresented = false
-
+    @State private var selectedPhoto: PhotoDetails?
     @StateObject private var store: StoreOf<ProfileEditorReducer>
 
     init(store: StoreOf<ProfileEditorReducer>) {
@@ -30,7 +25,7 @@ struct ProfileEditorScreen: View {
         VStack {
             VStack(alignment: .leading, spacing: .zero) {
                 HStack(spacing: .zero) {
-                    photoView
+                    avatarView
                     choosePhotoButton
                 }
 
@@ -56,8 +51,16 @@ struct ProfileEditorScreen: View {
         .padding(.horizontal)
         .appLogo()
         .sheet(isPresented: isPhotoPickerPresented) { photoPicker }
-        .alert(Strings.selectSourceType, isPresented: $isSourceTypeAlertPresented) {
+        .alert(Strings.selectSourceType, isPresented: isSourceTypeAlertPresented) {
             alertActions
+        }
+        .onChange(of: selectedPhoto) {
+            guard
+                let photo = $0,
+                let data = photo.image.jpegData(compressionQuality: 0.5)
+            else { return }
+
+            store.dispatch(.avatarChosen(.init(data: data, fileName: photo.fileName)))
         }
     }
 }
@@ -66,15 +69,17 @@ struct ProfileEditorScreen: View {
 
 private extension ProfileEditorScreen {
 
-    var photoView: some View {
+    var avatarView: some View {
         Group {
-            if let selectedImage {
-                Image(uiImage: selectedImage.image)
+            if let selectedPhoto, store.state.isAvatarChosen {
+                Image(uiImage: selectedPhoto.image)
                     .resizable()
-            } else {
-                KFImage.url(URL(string: "http://itindr.mcenter.pro:8092/static/avatar_b4f7ab2c-a3a0-46c0-bb27-1072fb903ec9.jpeg"))
+            } else if let avatarUrl = store.state.avatarUrl {
+                KFImage.url(URL(string: avatarUrl))
                     .placeholder { Images.avatarPlaceholder.swiftUIImage }
                     .resizable()
+            } else {
+                Images.avatarPlaceholder.swiftUIImage
             }
         }
         .frame(width: Constants.photoSize, height: Constants.photoSize)
@@ -82,11 +87,11 @@ private extension ProfileEditorScreen {
     }
 
     var choosePhotoButton: some View {
-        Button(selectedImage == nil ? Strings.choosePhoto : Strings.deletePhoto) {
-            if selectedImage == nil {
-                isSourceTypeAlertPresented = true
+        Button(store.state.hasAvatar ? Strings.deletePhoto : Strings.choosePhoto) {
+            if store.state.hasAvatar {
+                store.dispatch(.deletePhotoTapped)
             } else {
-                selectedImage = nil
+                store.dispatch(.choosePhotoTapped)
             }
         }
         .font(Fonts.bold16)
@@ -96,13 +101,13 @@ private extension ProfileEditorScreen {
 
     var textFields: some View {
         VStack(spacing: .zero) {
-            TextField(Strings.name, text: .constant(""))
+            TextField(Strings.name, text: name)
                 .mainTextFieldStyle()
                 .submitLabel(.next)
                 .textContentType(.username)
                 .autocorrectionDisabled()
 
-            TextEditor(text: $aboutMyself)
+            TextEditor(text: aboutMyself)
                 .tintColor()
                 .font(Fonts.regular16)
                 .transparentScrolling()
@@ -119,11 +124,11 @@ private extension ProfileEditorScreen {
 
     @ViewBuilder
     var photoPicker: some View {
-        switch sourceType {
+        switch store.state.photoSourceType {
         case .camera:
-            CaptureImageView(image: $selectedImage, isPresented: isPhotoPickerPresented)
+            CaptureImageView(photo: $selectedPhoto, isPresented: isPhotoPickerPresented)
         case .library:
-            PhotoLibraryPicker(image: $selectedImage, isPresented: isPhotoPickerPresented)
+            PhotoLibraryPicker(photo: $selectedPhoto, isPresented: isPhotoPickerPresented)
         case nil:
             EmptyView()
         }
@@ -132,16 +137,46 @@ private extension ProfileEditorScreen {
     @ViewBuilder
     var alertActions: some View {
         Button(Strings.camera) {
-            sourceType = .camera
+            store.dispatch(.sourceTypeSelected(.camera))
         }
 
         Button(Strings.photos) {
-            sourceType = .library
+            store.dispatch(.sourceTypeSelected(.library))
         }
 
         Button(Strings.cancel, role: .cancel) {
-            isSourceTypeAlertPresented = false
+            store.dispatch(.sourceTypeAlertPresented(false))
         }
+    }
+}
+
+// MARK: - Bindings
+
+private extension ProfileEditorScreen {
+
+    var name: Binding<String> {
+        Binding(store.state.name.content) {
+            store.dispatch(.nameChanged($0))
+        }
+    }
+
+    var aboutMyself: Binding<String> {
+        Binding(store.state.aboutMyself) {
+            store.dispatch(.aboutMyselfChanged($0))
+        }
+    }
+
+    var isSourceTypeAlertPresented: Binding<Bool> {
+        Binding(store.state.isSourceTypeAlertPresented) {
+            store.dispatch(.sourceTypeAlertPresented($0))
+        }
+    }
+
+    var isPhotoPickerPresented: Binding<Bool> {
+        Binding(
+            get: { store.state.isPhotoPickerPresented },
+            set: { _ in store.dispatch(.sourceTypeSelected(nil)) }
+        )
     }
 }
 
@@ -160,17 +195,5 @@ private extension ProfileEditorScreen {
             static let insetVertical: CGFloat = 12
             static let insetHorizontal: CGFloat = 18
         }
-    }
-}
-
-// MARK: - Bindings
-
-private extension ProfileEditorScreen {
-
-    var isPhotoPickerPresented: Binding<Bool> {
-        Binding(
-            get: { sourceType != nil },
-            set: { _ in sourceType = nil }
-        )
     }
 }

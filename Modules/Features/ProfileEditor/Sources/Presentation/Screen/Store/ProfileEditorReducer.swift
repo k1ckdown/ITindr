@@ -15,16 +15,19 @@ struct ProfileEditorReducer: Reducer {
         case .choosePhotoTapped:
             state.isSourceTypeAlertPresented = true
         case .deletePhotoTapped:
-            state.photoUrl = nil
-            state.chosenPhoto = nil
-        case .photoChosen(let data):
-            state.chosenPhoto = data
+            state.avatarUrl = nil
+            state.chosenAvatar = nil
+        case .avatarChosen(let avatar):
+            print("Avatar: \(avatar)")
+            state.chosenAvatar = avatar
         case .nameChanged(let name):
             state.name.content = name
         case .aboutMyselfChanged(let aboutMyself):
             state.aboutMyself = aboutMyself
         case .sourceTypeSelected(let type):
             state.photoSourceType = type
+        case .sourceTypeAlertPresented(let isPresented):
+            state.isSourceTypeAlertPresented = isPresented
         }
     }
 }

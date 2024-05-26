@@ -7,26 +7,26 @@
 
 import CommonUI
 import Foundation
-
-enum PhotoSourceType {
-    case camera
-    case library
-}
+import ProfileDomain
 
 struct ProfileEditorState: Equatable {
     var name = TextFieldState()
     var aboutMyself = ""
-    var photoUrl: String?
-    var chosenPhoto: Data?
+    var avatarUrl: String?
+    var chosenAvatar: Resource?
     var photoSourceType: PhotoSourceType?
     var isSourceTypeAlertPresented = false
 
-    var isPhotoChosen: Bool {
-        photoUrl != nil && chosenPhoto != nil
+    var isAvatarChosen: Bool {
+        chosenAvatar != nil
     }
 
     var isPhotoPickerPresented: Bool {
         photoSourceType != nil
+    }
+
+    var hasAvatar: Bool {
+        avatarUrl != nil && chosenAvatar != nil
     }
 }
 
@@ -34,8 +34,9 @@ enum ProfileEditorIntent: Equatable {
     case saveTapped
     case choosePhotoTapped
     case deletePhotoTapped
-    case photoChosen(Data)
+    case avatarChosen(Resource)
     case nameChanged(String)
     case aboutMyselfChanged(String)
+    case sourceTypeAlertPresented(Bool)
     case sourceTypeSelected(PhotoSourceType?)
 }

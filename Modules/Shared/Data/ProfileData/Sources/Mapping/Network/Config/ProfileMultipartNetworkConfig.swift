@@ -16,7 +16,7 @@ enum ProfileMultipartNetworkConfig: MultipartNetworkConfig {
     var endpoint: String {
         switch self {
         case .uploadAvatar:
-            "avatar"
+            "/avatar"
         }
     }
     

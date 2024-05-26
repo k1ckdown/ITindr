@@ -8,6 +8,7 @@
 import UDFKit
 import SwiftUI
 import Navigation
+import ProfileDomain
 import ProfileEditorInterface
 
 public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssemblyProtocol {
@@ -34,7 +35,12 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
     private func makeScreen(middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
         let initialState = ProfileEditorState()
         let reducer = ProfileEditorReducer()
-        let middleware = ProfileEditorMiddleware(delegate: middlewareDelegate)
+        let middleware = ProfileEditorMiddleware(
+            updateUserAvatarUseCase: UpdateUserAvatarUseCase(profileRepository: dependencies.profileRepository),
+            updateUserProfileUseCase: UpdateUserProfileUseCase(profileRepository: dependencies.profileRepository),
+            delegate: middlewareDelegate
+        )
+
         let store = Store(initialState: initialState, reducer: reducer, middleware: middleware)
 
         return ProfileEditorScreen(store: store)
