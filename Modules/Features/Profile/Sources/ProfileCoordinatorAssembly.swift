@@ -9,9 +9,9 @@ import Navigation
 import ProfileInterface
 
 public struct ProfileCoordinatorAssembly: ProfileCoordinatorAssemblyProtocol {
-    
+
     public init() {}
-    
+
     public func assemble(navigationController: NavigationController) -> ProfileCoordinatorProtocol {
         ProfileCoordinator(navigationController: navigationController)
     }
