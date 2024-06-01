@@ -10,7 +10,7 @@ import AuthFlowInterface
 
 public struct AuthFlowCoordinatorAssembly: AuthFlowCoordinatorAssemblyProtocol {
 
-    let dependencies: ModuleDependencies
+    private let dependencies: ModuleDependencies
 
     public init(dependencies: ModuleDependencies) {
         self.dependencies = dependencies

@@ -13,7 +13,7 @@ final class ProfileCoordinator: BaseCoordinator, ProfileCoordinatorProtocol {
 
     override func start() {
         let viewController = UIViewController()
-        viewController.view.backgroundColor = .red
+        viewController.view.backgroundColor = .systemBlue
 
         addPopHandler(for: viewController)
         navigationController.pushViewController(viewController, animated: true)

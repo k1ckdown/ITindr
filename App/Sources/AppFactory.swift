@@ -5,6 +5,10 @@
 //  Created by Ivan Semenov on 10.05.2024.
 //
 
+import Profile
+import ChatList
+import UserList
+import UserFeed
 import Auth
 import ProfileEditor
 import AuthFlow
@@ -44,10 +48,6 @@ final class AppFactory {
 @MainActor
 extension AppFactory {
 
-    func makeMainTabBarCoordinatorAssembly() -> MainTabBarCoordinatorAssembly {
-        MainTabBarCoordinatorAssembly()
-    }
-
     func makeAuthFlowCoordinatorAssembly() -> AuthFlowCoordinatorAssembly {
         let dependencies = AuthFlow.ModuleDependencies(
             authCoordinatorAssembly: makeAuthCoordinatorAssembly(),
@@ -55,6 +55,17 @@ extension AppFactory {
         )
 
         return AuthFlowCoordinatorAssembly(dependencies: dependencies)
+    }
+
+    func makeMainTabBarCoordinatorAssembly() -> MainTabBarCoordinatorAssembly {
+        let dependencies = MainTabBar.ModuleDependencies(
+            profileCoordinatorAssembly: ProfileCoordinatorAssembly(),
+            chatListCoordinatorAssembly: ChatListCoordinatorAssembly(),
+            userFeedCoordinatorAssembly: UserFeedCoordinatorAssembly(),
+            userListCoordinatorAssembly: UserListCoordinatorAssembly()
+        )
+
+        return MainTabBarCoordinatorAssembly(dependencies: dependencies)
     }
 }
 

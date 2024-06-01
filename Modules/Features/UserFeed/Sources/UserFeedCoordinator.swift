@@ -13,7 +13,7 @@ final class UserFeedCoordinator: BaseCoordinator, UserFeedCoordinatorProtocol {
 
     override func start() {
         let viewController = UIViewController()
-        viewController.view.backgroundColor = .green
+        viewController.view.backgroundColor = .systemYellow
 
         addPopHandler(for: viewController)
         navigationController.pushViewController(viewController, animated: true)
