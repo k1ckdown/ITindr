@@ -54,6 +54,7 @@ private extension ProfileEditorMiddleware {
             if let avatar = state.chosenAvatar {
                 try await updateUserAvatarUseCase.execute(avatar)
             }
+            await delegate?.goToNext()
         } catch {
             await delegate?.showError(error.localizedDescription)
         }

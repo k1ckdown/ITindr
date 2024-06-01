@@ -41,6 +41,7 @@ let project = Project(
             resources: Constants.resources,
             dependencies: [
                 .project(target: "Auth", path: "../Modules/Features/Auth"),
+                .project(target: "MainTabBar", path: "../Modules/Features/MainTabBar"),
                 .project(target: "ProfileEditor", path: "../Modules/Features/ProfileEditor"),
                 .project(target: "AuthFlow", path: "../Modules/Features/AuthFlow"),
                 .project(target: "Network", path: "../Modules/Shared/Core/Network"),

@@ -11,7 +11,9 @@ struct RegistrationReducer: Reducer {
 
     func reduce(state: inout RegistrationState, intent: RegistrationIntent) {
         switch intent {
-        case .goBackTapped, .registerTapped: break
+        case .goBackTapped: break
+        case .registerTapped:
+            state.isLoading = true
         case .registered, .registrationFailed:
             state.isLoading = false
         case .emailValidated(let error):
