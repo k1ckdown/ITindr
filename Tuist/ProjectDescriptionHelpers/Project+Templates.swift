@@ -60,11 +60,12 @@ extension Project {
     
     public static func dataFramework(
         name: String,
+        domainName: String? = nil,
         dependencies: [TargetDependency] = [],
         hasResources: Bool = false
     ) -> Project {
         let dataProject = "\(name)Data"
-        let domainProject = "\(name)Domain"
+        let domainProject = "\(domainName ?? name)Domain"
         
         return Project(
             name: dataProject,
