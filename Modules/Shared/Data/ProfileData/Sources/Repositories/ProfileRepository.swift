@@ -5,8 +5,8 @@
 //  Created by Ivan Semenov on 14.05.2024.
 //
 
-import ProfileDomain
 import Foundation
+import ProfileDomain
 
 final class ProfileRepository {
 
