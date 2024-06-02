@@ -47,7 +47,6 @@ final class ChatListViewController: UIViewController, LoadableView {
 private extension ChatListViewController {
 
     func setup() {
-        navigationItem.title = "Chats"
         view.backgroundColor = Colors.appBackground.color
         setupChatTableView()
         setupLoadingView()

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CommonUI
 import Navigation
 import ChatListInterface
 
@@ -22,11 +23,14 @@ final class ChatListCoordinator: BaseCoordinator, ChatListCoordinatorProtocol {
     override func start() {
         let content = content(self)
 
+        content.navigationItem.title = ChatListStrings.chats
+        navigationController.navigationBar.titleTextAttributes = [.foregroundColor: Colors.accentColor.color]
+
         addPopHandler(for: content)
         navigationController.pushViewController(content, animated: true)
     }
 }
 
 extension ChatListCoordinator: ChatListMiddlewareDelegate {
-    
+
 }
