@@ -15,7 +15,9 @@ public final class NavigationController: UINavigationController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+
         delegate = self
+        navigationBar.titleTextAttributes = [.foregroundColor: NavigationAsset.accentColor.color]
     }
 }
 

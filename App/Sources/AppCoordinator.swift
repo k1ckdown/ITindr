@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
+import CommonUI
 import Navigation
 
 final class AppCoordinator: BaseCoordinator {

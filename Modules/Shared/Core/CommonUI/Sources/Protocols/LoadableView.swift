@@ -20,6 +20,7 @@ public extension LoadableView where Self: UIViewController {
     func setupLoadingView() {
         view.addSubview(loadingView)
         loadingView.frame = view.bounds
+        loadingView.color = Colors.accentColor.color
         loadingView.backgroundColor = view.backgroundColor
     }
 }

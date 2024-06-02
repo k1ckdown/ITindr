@@ -22,11 +22,9 @@ final class ChatListCoordinator: BaseCoordinator, ChatListCoordinatorProtocol {
 
     override func start() {
         let content = content(self)
-
-        content.navigationItem.title = ChatListStrings.chats
-        navigationController.navigationBar.titleTextAttributes = [.foregroundColor: Colors.accentColor.color]
-
+        
         addPopHandler(for: content)
+        content.navigationItem.title = ChatListStrings.chats
         navigationController.pushViewController(content, animated: true)
     }
 }
