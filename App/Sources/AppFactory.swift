@@ -17,8 +17,9 @@ import AuthData
 import UserData
 import ChatData
 import MainTabBar
-import ProfileDomain
+import ChatDomain
 import AuthDomain
+import ProfileDomain
 import Network
 import Keychain
 import Navigation
@@ -29,7 +30,10 @@ final class AppFactory {
     private lazy var keychainStorage = KeychainStorage()
     private lazy var networkService = NetworkService(authInterceptor: authInterceptor)
 
-//    private lazy var chatRepository: ChatR
+    private lazy var chatRepository: ChatRepositoryProtocol = {
+        let dependencies = ChatData.ModuleDependencies(networkService: networkService)
+        return ChatRepositoryAssembly(dependencies: dependencies).assemble()
+    }()
 
     private lazy var userRepository: UserRepositoryProtocol = {
         let dependencies = UserData.ModuleDependencies(networkService: networkService)

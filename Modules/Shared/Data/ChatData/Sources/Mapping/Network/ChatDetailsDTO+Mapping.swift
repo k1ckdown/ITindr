@@ -17,6 +17,6 @@ extension [ChatDetailsDTO] {
 extension ChatDetailsDTO {
 
     func toDomain() -> ChatDetails {
-        ChatDetails(chat: chat.toDomain(), lastMessage: lastMessage.toDomain())
+        ChatDetails(chat: chat.toDomain(), lastMessage: lastMessage?.toDomain())
     }
 }

@@ -30,7 +30,7 @@ struct ChatListReducer: Reducer {
             id: chatDetails.chat.id,
             title: chatDetails.chat.title,
             avatarUrl: chatDetails.chat.avatar,
-            lastMessage: chatDetails.lastMessage.text
+            lastMessage: chatDetails.lastMessage?.text
         )
     }
 }

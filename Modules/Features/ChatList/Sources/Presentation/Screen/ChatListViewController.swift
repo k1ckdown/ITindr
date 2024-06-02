@@ -12,7 +12,7 @@ import Combine
 
 final class ChatListViewController: UIViewController, LoadableView {
 
-    @StateObject private var store: ChatListStore
+    @ObservedObject private var store: ChatListStore
     private let dataSource: ChatListDataSource
     private var subscriptions = Set<AnyCancellable>()
 
@@ -20,7 +20,7 @@ final class ChatListViewController: UIViewController, LoadableView {
     private(set) var loadingView = UIActivityIndicatorView()
 
     init(store: ChatListStore) {
-        _store = StateObject(wrappedValue: store)
+        self.store = store
         dataSource = ChatListDataSource(store: store)
         super.init(nibName: nil, bundle: nil)
     }
@@ -85,11 +85,12 @@ private extension ChatListViewController {
 
     func render() {
         switch store.state {
-        case .failed: 
-            break
+        case .failed:
+            isLoading(false)
         case .idle, .loading:
             isLoading(true)
         case .loaded:
+            isLoading(false)
             chatTableView.reloadData()
         }
     }

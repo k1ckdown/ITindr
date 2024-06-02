@@ -7,9 +7,9 @@
 
 public struct ChatDetails: Equatable {
     public let chat: Chat
-    public let lastMessage: Message
+    public let lastMessage: Message?
 
-    public init(chat: Chat, lastMessage: Message) {
+    public init(chat: Chat, lastMessage: Message?) {
         self.chat = chat
         self.lastMessage = lastMessage
     }

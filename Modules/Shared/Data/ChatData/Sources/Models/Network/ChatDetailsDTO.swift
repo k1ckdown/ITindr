@@ -7,5 +7,5 @@
 
 struct ChatDetailsDTO: Decodable {
     let chat: ChatDTO
-    let lastMessage: MessageDTO
+    let lastMessage: MessageDTO?
 }
