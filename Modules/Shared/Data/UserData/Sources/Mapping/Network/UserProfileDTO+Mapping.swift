@@ -18,9 +18,9 @@ extension UserProfileDTO {
     
     func toDomain() -> UserProfile {
         UserProfile(
-            id: id,
+            id: userId,
             name: name,
-            avatarUrl: avatarUrl,
+            avatarUrl: avatar,
             aboutMyself: aboutMyself,
             topics: topics.toDomain()
         )

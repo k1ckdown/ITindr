@@ -9,8 +9,8 @@ import Network
 
 enum UserNetworkConfig: NetworkConfig {
     case feed
-    case like(userId: Int)
-    case dislike(userId: Int)
+    case like(userId: String)
+    case dislike(userId: String)
     case allUsers(limit: Int, offset: Int)
 
     var path: String {

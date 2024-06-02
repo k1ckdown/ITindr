@@ -20,12 +20,12 @@ final class UserRepository {
 
 extension UserRepository: UserRepositoryProtocol {
 
-    func like(userId: Int) async throws {
-        try await remoteDataSource.like(userId: userId)
+    func dislike(userId: String) async throws {
+        try await remoteDataSource.dislike(userId: userId)
     }
 
-    func dislike(userId: Int) async throws {
-        try await remoteDataSource.dislike(userId: userId)
+    func like(userId: String) async throws -> Bool {
+        try await remoteDataSource.like(userId: userId)
     }
 
     func getUsersFeed() async throws -> [UserProfile] {

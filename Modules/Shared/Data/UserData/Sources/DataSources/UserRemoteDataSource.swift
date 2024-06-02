@@ -21,14 +21,16 @@ final class UserRemoteDataSource {
 
 extension UserRemoteDataSource {
 
-    func like(userId: Int) async throws {
-        let config = UserNetworkConfig.like(userId: userId)
+    func dislike(userId: String) async throws {
+        let config = UserNetworkConfig.dislike(userId: userId)
         try await networkService.request(config: config, authorized: true)
     }
 
-    func dislike(userId: Int) async throws {
-        let config = UserNetworkConfig.dislike(userId: userId)
-        try await networkService.request(config: config, authorized: true)
+    func like(userId: String) async throws -> Bool {
+        let config = UserNetworkConfig.like(userId: userId)
+        let response: UserLikeResponseDTO = try await networkService.request(config: config, authorized: true)
+
+        return response.isMutual
     }
 
     func fetchUsersFeed() async throws -> [UserProfileDTO] {

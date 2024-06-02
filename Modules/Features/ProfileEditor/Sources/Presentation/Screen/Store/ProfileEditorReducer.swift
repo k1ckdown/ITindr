@@ -18,7 +18,6 @@ struct ProfileEditorReducer: Reducer {
             state.avatarUrl = nil
             state.chosenAvatar = nil
         case .avatarChosen(let avatar):
-            print("Avatar: \(avatar)")
             state.chosenAvatar = avatar
         case .nameChanged(let name):
             state.name.content = name

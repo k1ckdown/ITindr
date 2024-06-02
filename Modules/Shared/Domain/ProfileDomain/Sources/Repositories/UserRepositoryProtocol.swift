@@ -6,8 +6,8 @@
 //
 
 public protocol UserRepositoryProtocol: AnyObject {
-    func like(userId: Int) async throws
-    func dislike(userId: Int) async throws
+    func dislike(userId: String) async throws
+    func like(userId: String) async throws -> Bool
     func getUsersFeed() async throws -> [UserProfile]
     func getAllUsers(pagination: Pagination) async throws -> [UserProfile]
 }

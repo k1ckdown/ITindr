@@ -7,7 +7,7 @@
 
 import TopicDomain
 
-public struct UserProfile {
+public struct UserProfile: Equatable {
     public let id: String
     public let name: String
     public let avatarUrl: String?

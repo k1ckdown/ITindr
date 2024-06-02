@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 13.05.2024.
 //
 
-public struct Topic {
+public struct Topic: Equatable {
     public let id: String
     public let title: String
 
