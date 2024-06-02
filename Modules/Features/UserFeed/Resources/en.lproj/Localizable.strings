@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  UserFeed
+
+  Created by Ivan Semenov on 02.06.2024.
+  
+*/
+
+"Like" = "Like";
+"Reject" = "Reject";
