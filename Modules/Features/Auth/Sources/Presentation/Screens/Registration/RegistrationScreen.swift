@@ -36,6 +36,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
                 TextField(AuthStrings.email, text: email)
                     .submitLabel(.next)
                     .autocorrectionDisabled()
+                    .keyboardType(.emailAddress)
                     .textContentType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .focused($focusedField, equals: .email)

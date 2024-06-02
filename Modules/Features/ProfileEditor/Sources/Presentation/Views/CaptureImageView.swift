@@ -47,12 +47,9 @@ extension CaptureImageView {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             parent.isPresented = false
             
-            guard
-                let imageUrl = info[.imageURL] as? URL,
-                let image = info[.originalImage] as? UIImage
-            else { return }
-            
-            parent.photo = PhotoDetails(image: image, fileName: imageUrl.lastPathComponent)
+            if let image = info[.originalImage] as? UIImage {
+                parent.photo = PhotoDetails(image: image, fileName: "")
+            }
         }
     }
 }

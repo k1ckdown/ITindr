@@ -20,6 +20,7 @@ let project = Project(
             infoPlist: .extendingDefault(with: [
                 "CFBundleAllowMixedLocalizations": .boolean(true),
                 "UILaunchStoryboardName": "LaunchScreen.storyboard",
+                "NSCameraUsageDescription": "$(PRODUCT_NAME) uses Cameras",
                 "UISupportedInterfaceOrientations": .array([
                     .string("UIInterfaceOrientationPortrait")
                 ]),
