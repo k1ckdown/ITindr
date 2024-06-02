@@ -9,8 +9,9 @@ import UDFKit
 import SwiftUI
 import CommonUI
 import Kingfisher
+import Navigation
 
-struct FeedScreen: View {
+struct FeedScreen: View, NavigationBarHidden {
 
     @StateObject private var store: StoreOf<FeedReducer>
 
@@ -33,7 +34,7 @@ struct FeedScreen: View {
         case .loading:
             ProgressView().tintColor()
         case .loaded(let user):
-            if let user { userView(user) } else { placeholderView() }
+            loadedView(user)
         }
     }
 }
@@ -41,6 +42,14 @@ struct FeedScreen: View {
 // MARK: - Views
 
 private extension FeedScreen {
+
+    @ViewBuilder
+    func loadedView(_ user: FeedState.User?) -> some View {
+        Group {
+            if let user { userView(user) } else { placeholderView() }
+        }
+        .appLogo(padding: Constants.appLogoInsetTop)
+    }
 
     func actionButtonLabel(title: String, image: Image) -> some View {
         HStack(spacing: .zero) {
@@ -50,7 +59,7 @@ private extension FeedScreen {
     }
 
     func placeholderView() -> some View {
-        Text("No users")
+        Text("No users").frame(maxHeight: .infinity)
     }
 
     func avatarView(url: String?) -> some View {
@@ -87,7 +96,7 @@ private extension FeedScreen {
     }
 
     func userView(_ user: FeedState.User) -> some View {
-        VStack {
+        VStack(spacing: .zero) {
             VStack(spacing: Constants.contentSpacing) {
                 avatarView(url: user.avatarUrl)
                     .onTapGesture {
@@ -110,17 +119,25 @@ private extension FeedScreen {
             actionButtons().padding(.bottom)
         }
         .padding(.horizontal)
-        .appLogo()
+        .fullScreenCover(isPresented: .constant(user.isMutual)) {
+            UserMatchView {
+                store.dispatch(.usersMatchDisappear)
+            } writeMessageHandler: {
+                store.dispatch(.writeMessageTapped)
+            }
+            .background(ClearBackgroundView())
+        }
     }
 }
 
 // MARK: - Constants
 
 private extension FeedScreen {
-    
+
     enum Constants {
         static let avatarSize: CGFloat = 206
         static let contentSpacing: CGFloat = 32
+        static let appLogoInsetTop: CGFloat = 32
         static let actionButtonSpacing: CGFloat = 20
         static let actionTitleInsetLeading: CGFloat = 16
     }

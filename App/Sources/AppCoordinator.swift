@@ -12,7 +12,7 @@ final class AppCoordinator: BaseCoordinator {
     private let appFactory = AppFactory()
 
     override func start() {
-        goToMainTabBar()
+        goToAuthFlow()
     }
 }
 

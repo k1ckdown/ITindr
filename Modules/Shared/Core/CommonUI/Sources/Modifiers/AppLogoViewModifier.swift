@@ -9,28 +9,21 @@ import SwiftUI
 
 struct AppLogoViewModifier: ViewModifier {
 
+    let padding: CGFloat
+
     func body(content: Content) -> some View {
         VStack {
             Images.appLogo.swiftUIImage
                 .padding(.top)
-                .padding(.bottom, Constants.insetBottom)
+                .padding(.bottom, padding)
 
             content
         }
     }
 }
 
-// MARK: - Constants
-
-private extension AppLogoViewModifier {
-
-    enum Constants {
-        static let insetBottom: CGFloat = 40
-    }
-}
-
 public extension View {
-    func appLogo() -> some View {
-        modifier(AppLogoViewModifier())
+    func appLogo(padding: CGFloat = 40) -> some View {
+        modifier(AppLogoViewModifier(padding: padding))
     }
 }

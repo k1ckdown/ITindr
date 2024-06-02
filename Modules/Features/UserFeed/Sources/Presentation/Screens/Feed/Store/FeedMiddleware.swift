@@ -35,15 +35,18 @@ final class FeedMiddleware: Middleware {
 
     func handle(state: FeedState, intent: FeedIntent) async -> FeedIntent? {
         switch intent {
-        case .userLoaded, .loadFailed: break
+        case .userSelected, .loadFailed, .usersMatched: break
         case .onAppear:
             return await getUsers()
         case .likeTapped:
-            await likeUser()
+            return await likeUser()
         case .rejectTapped:
             await dislikeUser()
-            return .userLoaded(getCurrentUser())
+            return .userSelected(getCurrentUser())
+        case .usersMatchDisappear:
+            return .userSelected(getCurrentUser())
         case .avatarTapped: break
+        case .writeMessageTapped: break
         }
 
         return nil
@@ -69,20 +72,22 @@ private extension FeedMiddleware {
         }
     }
 
-    func likeUser() async {
-        guard let currentUser else { return }
+    func likeUser() async -> FeedIntent? {
+        guard let currentUser else { return nil }
 
         do {
             let isMutual = try await likeUserUseCase.execute(userId: currentUser.id)
+            return isMutual ? .usersMatched : .userSelected(getCurrentUser())
         } catch {
             await delegate?.showError(error.localizedDescription)
+            return nil
         }
     }
 
     func getUsers() async -> FeedIntent {
         do {
             users = try await getUsersFeedUseCase.execute()
-            return .userLoaded(getCurrentUser())
+            return .userSelected(getCurrentUser())
         } catch {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)

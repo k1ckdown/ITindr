@@ -12,12 +12,16 @@ struct FeedReducer: Reducer {
 
     func reduce(state: inout FeedState, intent: FeedIntent) {
         switch intent {
-        case .likeTapped, .rejectTapped, .avatarTapped: break
+        case .likeTapped, .rejectTapped, .avatarTapped, .writeMessageTapped, .usersMatchDisappear: break
         case .onAppear:
             state = .loading
+        case .usersMatched:
+            guard case .loaded(var user) = state else { return }
+            user?.isMutual = true
+            state = .loaded(user)
         case .loadFailed(let message):
             state = .failed(message)
-        case .userLoaded(let user):
+        case .userSelected(let user):
             guard let user else { return state = .loaded(nil) }
             state = .loaded(mapToViewModel(user: user))
         }

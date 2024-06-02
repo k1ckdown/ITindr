@@ -18,14 +18,18 @@ enum FeedState: Equatable {
         let avatarUrl: String?
         let aboutMyself: String?
         let topics: [String]
+        var isMutual = false
     }
 }
 
 enum FeedIntent: Equatable {
     case onAppear
+    case usersMatched
+    case usersMatchDisappear
     case likeTapped
     case rejectTapped
     case avatarTapped
+    case writeMessageTapped
     case loadFailed(String)
-    case userLoaded(UserProfile?)
+    case userSelected(UserProfile?)
 }

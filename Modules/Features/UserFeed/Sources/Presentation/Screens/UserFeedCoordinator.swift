@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
-import UIKit
+import SwiftUI
 import Navigation
 import UserFeedInterface
 
@@ -29,6 +29,4 @@ final class UserFeedCoordinator: BaseCoordinator, UserFeedCoordinatorProtocol {
     }
 }
 
-extension UserFeedCoordinator: FeedMiddlewareDelegate {
-
-}
+extension UserFeedCoordinator: FeedMiddlewareDelegate {}
