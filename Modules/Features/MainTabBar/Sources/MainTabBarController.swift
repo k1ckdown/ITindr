@@ -7,8 +7,9 @@
 
 import UIKit
 import CommonUI
+import Navigation
 
-final class MainTabBarController: UITabBarController {
+final class MainTabBarController: UITabBarController, NavigationBarHidden {
 
     override func viewDidLoad() {
         tabBar.tintColor = Colors.accentColor.color

@@ -39,7 +39,7 @@ final class MainTabBarCoordinator: BaseCoordinator, MainTabBarCoordinatorProtoco
         let viewControllers = TabFlow.allCases.map(makeViewController)
 
         tabBarController.setViewControllers(viewControllers, animated: false)
-        navigationController.pushViewController(tabBarController, animated: true)
+        navigationController.pushViewController(tabBarController, animated: false)
     }
 }
 

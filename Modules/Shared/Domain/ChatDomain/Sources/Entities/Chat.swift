@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
-public struct Chat {
+public struct Chat: Equatable {
     public let id: String
     public let title: String
     public let avatar: String?

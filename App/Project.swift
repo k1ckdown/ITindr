@@ -53,6 +53,7 @@ let project = Project(
                 .project(target: "AuthData", path: "../Modules/Shared/Data/AuthData"),
                 .project(target: "TopicData", path: "../Modules/Shared/Data/TopicData"),
                 .project(target: "UserData", path: "../Modules/Shared/Data/UserData"),
+                .project(target: "ChatData", path: "../Modules/Shared/Data/ChatData"),
                 .project(target: "ProfileData", path: "../Modules/Shared/Data/ProfileData"),
             ]
         )

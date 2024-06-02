@@ -10,12 +10,23 @@ import Navigation
 import ChatListInterface
 
 final class ChatListCoordinator: BaseCoordinator, ChatListCoordinatorProtocol {
-    
-    override func start() {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemIndigo
-        
-        addPopHandler(for: viewController)
-        navigationController.pushViewController(viewController, animated: true)
+    typealias Content = (ChatListMiddlewareDelegate) -> UIViewController
+
+    private let content: Content
+
+    init(content: @escaping Content, navigationController: NavigationController) {
+        self.content = content
+        super.init(navigationController: navigationController)
     }
+
+    override func start() {
+        let content = content(self)
+
+        addPopHandler(for: content)
+        navigationController.pushViewController(content, animated: true)
+    }
+}
+
+extension ChatListCoordinator: ChatListMiddlewareDelegate {
+    
 }

@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
-public struct User {
+public struct User: Equatable {
     public let id: String
     public let name: String
     public let avatar: String?

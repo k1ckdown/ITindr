@@ -15,6 +15,7 @@ import AuthFlow
 import ProfileData
 import AuthData
 import UserData
+import ChatData
 import MainTabBar
 import ProfileDomain
 import AuthDomain
@@ -27,6 +28,8 @@ final class AppFactory {
     private lazy var authInterceptor = AuthInterceptor()
     private lazy var keychainStorage = KeychainStorage()
     private lazy var networkService = NetworkService(authInterceptor: authInterceptor)
+
+//    private lazy var chatRepository: ChatR
 
     private lazy var userRepository: UserRepositoryProtocol = {
         let dependencies = UserData.ModuleDependencies(networkService: networkService)
@@ -67,7 +70,7 @@ extension AppFactory {
         print(authRepository.isLoggedIn())
         let dependencies = MainTabBar.ModuleDependencies(
             profileCoordinatorAssembly: ProfileCoordinatorAssembly(),
-            chatListCoordinatorAssembly: ChatListCoordinatorAssembly(),
+            chatListCoordinatorAssembly: makeChatListCoordinatorAssembly(),
             userFeedCoordinatorAssembly: makeUserFeedCoordinatorAssembly(),
             userListCoordinatorAssembly: UserListCoordinatorAssembly()
         )
@@ -80,6 +83,11 @@ extension AppFactory {
 
 @MainActor
 private extension AppFactory {
+
+    func makeChatListCoordinatorAssembly() -> ChatListCoordinatorAssembly {
+        let dependencies = ChatList.ModuleDependencies(chatRepository: chatRepository)
+        return ChatListCoordinatorAssembly(dependencies: dependencies)
+    }
 
     func makeUserFeedCoordinatorAssembly() -> UserFeedCoordinatorAssembly {
         let dependencies = UserFeed.ModuleDependencies(userRepository: userRepository)
