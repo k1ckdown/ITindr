@@ -12,5 +12,5 @@ struct MessageDTO: Decodable {
     let text: String
     let createdAt: Date
     let user: UserDTO
-    let attachments: [Data]
+    let attachments: [String]
 }
