@@ -52,7 +52,7 @@ final class MessageViewCell: UICollectionViewCell {
 
         let time = viewModel.createdAt.formatted(.dateTime.hour().minute())
         let date = viewModel.createdAt.formatted(.dateTime.day().month(.wide).year())
-        sentDateLabel.text = "\(time) • \(date)"
+        sentDateLabel.text = "\(time) • \(date)".lowercased()
 
         let avatarPlaceholder = Images.avatarPlaceholder.image
         if let avatarUrl = viewModel.avatar {
