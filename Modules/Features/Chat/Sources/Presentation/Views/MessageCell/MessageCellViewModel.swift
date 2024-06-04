@@ -35,6 +35,12 @@ extension MessageCellViewModel {
         .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false),
         .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: true),
         .init(text: "Открыл тебе доступ", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false),
+        .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false),
+        .init(text: "Открыл тебе доступ", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false),
+        .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: true),
+        .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false),
+        .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: true),
+        .init(text: "Открыл тебе доступ", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false),
         .init(text: "Открыл тебе доступ к своему приватному репо. Скоро закрою 🥴", avatar: "https://versiya.info/uploads/posts/2019-03/1552587088_unnamed.jpg", createdAt: .now, isAuthor: false)
     ]
 }
