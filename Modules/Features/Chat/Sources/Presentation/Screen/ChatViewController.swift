@@ -50,7 +50,10 @@ final class ChatViewController: UIViewController {
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+
         sendMessageGradientLayer.frame = sendMessageButton.bounds
+        let lastIndexPath = IndexPath(item: viewModel.cellViewModels.count - 1, section: 0)
+        messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
     }
 }
 
