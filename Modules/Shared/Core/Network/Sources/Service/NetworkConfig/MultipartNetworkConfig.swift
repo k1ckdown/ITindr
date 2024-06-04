@@ -8,7 +8,6 @@
 import Foundation
 
 public protocol MultipartNetworkConfig: BaseNetworkConfig {
-    var key: String { get }
-    var data: Data { get }
-    var fileName: String { get }
+    var parameters: [String: Data] { get }
+    var files: [String: (data: Data, fileName: String)] { get }
 }

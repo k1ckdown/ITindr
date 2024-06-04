@@ -22,6 +22,7 @@ public struct ChatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol {
             let reducer = ChatReducer()
             let middleware = ChatMiddleware(
                 chatId: chatId,
+                sendMessageUseCase: .init(chatRepository: dependencies.chatRepository),
                 getMessageListUseCase: .init(chatRepository: dependencies.chatRepository),
                 delegate: middlewareDelegate
             )

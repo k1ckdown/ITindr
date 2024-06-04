@@ -12,6 +12,7 @@ public protocol NetworkServiceProtocol: AnyObject {
     func request(config: NetworkConfig, authorized: Bool) async throws
     func multipartRequest(config: MultipartNetworkConfig, authorized: Bool) async throws
     func request<T: Decodable>(config: NetworkConfig, authorized: Bool) async throws -> T
+    func multipartRequest<T: Decodable>(config: MultipartNetworkConfig, authorized: Bool) async throws -> T
 }
 
 public final class NetworkService {
@@ -35,35 +36,38 @@ public final class NetworkService {
 extension NetworkService: NetworkServiceProtocol {
     
     public func request(config: NetworkConfig, authorized: Bool) async throws {
-        try await makeRequest(config: config, authorized: authorized)
+        let request = try buildDataRequest(config: config, authorized: authorized)
+        try await makeRequest(request, authorized: authorized)
     }
-    
+
+    public func multipartRequest(config: MultipartNetworkConfig, authorized: Bool) async throws {
+        let request = buildUploadRequest(config: config, authorized: authorized)
+        try await makeRequest(request, authorized: authorized)
+    }
+
     public func request<T: Decodable>(config: NetworkConfig, authorized: Bool) async throws -> T {
-        let data = try await makeRequest(config: config, authorized: authorized)
+        let request = try buildDataRequest(config: config, authorized: authorized)
+        let data = try await makeRequest(request, authorized: authorized)
         let value = try jsonDecoder.decode(T.self, from: data)
         
         return value
     }
-    
-    public func multipartRequest(config: MultipartNetworkConfig, authorized: Bool) async throws {
-        let uploadRequest = buildUploadRequest(config: config, authorized: authorized)
-        let dataTask = uploadRequest.serializingData()
-        
-        do {
-            let _ = try await dataTask.value
-        } catch {
-            throw resolveError(error, data: uploadRequest.data)
-        }
+
+    public func multipartRequest<T: Decodable>(config: MultipartNetworkConfig, authorized: Bool) async throws -> T {
+        let request = buildUploadRequest(config: config, authorized: authorized)
+        let data = try await makeRequest(request, authorized: authorized)
+        let value = try jsonDecoder.decode(T.self, from: data)
+
+        return value
     }
 }
 
 // MARK: - Private methods
 
 private extension NetworkService {
-    
+
     @discardableResult
-    func makeRequest(config: NetworkConfig, authorized: Bool) async throws -> Data {
-        let request = try buildDataRequest(config: config, authorized: authorized)
+    func makeRequest(_ request: DataRequest, authorized: Bool) async throws -> Data {
         let dataTask = request.serializingData()
         
         do {
@@ -78,7 +82,13 @@ private extension NetworkService {
         
         return AF.upload(
             multipartFormData: { formData in
-                formData.append(config.data, withName: config.key, fileName: config.fileName)
+                config.parameters.forEach { key, data in
+                    formData.append(data, withName: key)
+                }
+
+                config.files.forEach { key, file in
+                    formData.append(file.data, withName: key, fileName: file.fileName)
+                }
             },
             to: config.absolutePath,
             interceptor: interceptor

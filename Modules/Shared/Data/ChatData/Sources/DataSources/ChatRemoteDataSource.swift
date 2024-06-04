@@ -21,18 +21,23 @@ final class ChatRemoteDataSource {
 
 extension ChatRemoteDataSource {
 
+    func sendMessage(_ message: MessageSend) async throws -> MessageDTO {
+        let networkConfig = ChatMultipartNetworkConfig.sendMessage(message)
+        return try await networkService.multipartRequest(config: networkConfig, authorized: true)
+    }
+
     func fetchAllChats() async throws -> [ChatDetailsDTO] {
-        let config = ChatNetworkConfig.chatList
-        return try await networkService.request(config: config, authorized: true)
+        let networkConfig = ChatNetworkConfig.chatList
+        return try await networkService.request(config: networkConfig, authorized: true)
     }
 
     func createChat(userId: String) async throws -> ChatDTO {
-        let config = ChatNetworkConfig.newChat(userId: userId)
-        return try await networkService.request(config: config, authorized: true)
+        let networkConfig = ChatNetworkConfig.newChat(userId: userId)
+        return try await networkService.request(config: networkConfig, authorized: true)
     }
 
     func fetchChatMessages(chatId: String, pagination: Pagination) async throws -> [MessageDTO] {
-        let config = ChatNetworkConfig.chatMessages(chatId: chatId, pagination: pagination)
-        return try await networkService.request(config: config, authorized: true)
+        let networkConfig = ChatNetworkConfig.chatMessages(chatId: chatId, pagination: pagination)
+        return try await networkService.request(config: networkConfig, authorized: true)
     }
 }

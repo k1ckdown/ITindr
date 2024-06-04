@@ -23,8 +23,9 @@ final class ChatRepository {
 
 extension ChatRepository: ChatRepositoryProtocol {
 
-    func sendMessage(_ message: MessageSend) async throws -> Message {
-        throw NSError()
+    func sendMessage(_ messageSend: MessageSend) async throws -> Message {
+        let messageDto = try await remoteDataSource.sendMessage(messageSend)
+        return messageDto.toDomain(isOutgoing: true)
     }
 
     func createChat(userId: String) async throws -> Chat {

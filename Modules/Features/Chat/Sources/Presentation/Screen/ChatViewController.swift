@@ -60,6 +60,16 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
     }
 }
 
+// MARK: - Actions
+
+private extension ChatViewController {
+
+    @objc
+    func handleSendMessageButton() {
+        store.dispatch(.sendMessageTapped)
+    }
+}
+
 // MARK: - Setup
 
 private extension ChatViewController {
@@ -92,7 +102,6 @@ private extension ChatViewController {
         messageToolbar.addSubview(messageTextView)
 
         // TODO: Placeholder
-        messageTextView.text = "Message..."
         messageTextView.delegate = self
         messageTextView.textColor = .black
         messageTextView.font = Fonts.uiRegular16
@@ -143,6 +152,7 @@ private extension ChatViewController {
         sendMessageGradientLayer.cornerRadius = Constants.sendMessageCornerRadius
         sendMessageButton.layer.addSublayer(sendMessageGradientLayer)
         sendMessageButton.translatesAutoresizingMaskIntoConstraints = false
+        sendMessageButton.addTarget(self, action: #selector(handleSendMessageButton), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
             sendMessageButton.heightAnchor.constraint(equalToConstant: Constants.buttonActionSize),
@@ -166,6 +176,17 @@ private extension ChatViewController {
             messageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
+
+    func adjustMessageTextHeight() {
+        let width = messageTextView.bounds.width
+        let oldHeight = messageTextView.bounds.height
+
+        let newHeight = messageTextView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
+        let height = max(Constants.buttonActionSize, min(newHeight, Constants.messageViewMaxHeight))
+
+        messageTextViewHeightConstraint?.constant = height
+        messageToolbarHeightConstraint?.constant += height - oldHeight
+    }
 }
 
 // MARK: - UITextViewDelegate
@@ -173,14 +194,7 @@ private extension ChatViewController {
 extension ChatViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
-        let width = messageTextView.bounds.width
-        let oldHeight = messageTextView.bounds.height
-
-        let newHeight = textView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
-        let height = max(Constants.buttonActionSize, min(newHeight, Constants.messageViewMaxHeight))
-
-        messageTextViewHeightConstraint?.constant = height
-        messageToolbarHeightConstraint?.constant += height - oldHeight
+        store.dispatch(.messageChanged(textView.text))
     }
 }
 
@@ -197,22 +211,27 @@ private extension ChatViewController {
 
     func render() {
         switch store.state {
-        case .failed:
-            isLoading(false)
-        case .idle, .loading:
-            isLoading(true)
-        case .loaded:
-            isLoading(false)
-            messageCollectionView.reloadData()
-            scrollToLastMessage()
+        case .failed: isLoading(false)
+        case .idle, .loading: isLoading(true)
+        case .loaded(let viewData): handleViewData(viewData)
         }
     }
 
-    func scrollToLastMessage() {
-        guard case .loaded(let cellViewModels) = store.state else { return }
+    func scrollToLastMessage(messageCount: Int) {
+        guard case .loaded(let viewData) = store.state else { return }
 
-        let lastIndexPath = IndexPath(item: cellViewModels.count - 1, section: 0)
+        let lastIndexPath = IndexPath(item: messageCount - 1, section: 0)
         messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
+    }
+
+    func handleViewData(_ viewData: ChatState.ViewData) {
+        isLoading(false)
+
+        messageTextView.text = viewData.messageText
+        adjustMessageTextHeight()
+
+        messageCollectionView.reloadData()
+        scrollToLastMessage(messageCount: viewData.messages.count)
     }
 }
 

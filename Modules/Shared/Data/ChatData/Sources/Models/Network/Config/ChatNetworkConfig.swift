@@ -13,9 +13,7 @@ enum ChatNetworkConfig: NetworkConfig {
     case newChat(userId: String)
     case chatMessages(chatId: String, pagination: Pagination)
     
-    var path: String {
-        "http://itindr.mcenter.pro:8092/api/mobile/v1/chat"
-    }
+    var path: String { NetworkConstants.baseUrlString }
     
     var endpoint: String {
         switch self {

@@ -7,6 +7,7 @@
 
 import UDFKit
 import Navigation
+import ChatDomain
 
 @MainActor
 protocol ChatMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
@@ -14,20 +15,24 @@ protocol ChatMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
 final class ChatMiddleware: Middleware {
 
     private let chatId: String
+    private let sendMessageUseCase: SendMessageUseCase
     private let getMessageListUseCase: GetMessageListUseCase
     private weak var delegate: ChatMiddlewareDelegate?
 
-    init(chatId: String, getMessageListUseCase: GetMessageListUseCase, delegate: ChatMiddlewareDelegate?) {
+    init(chatId: String, sendMessageUseCase: SendMessageUseCase, getMessageListUseCase: GetMessageListUseCase, delegate: ChatMiddlewareDelegate?) {
         self.chatId = chatId
+        self.sendMessageUseCase = sendMessageUseCase
         self.getMessageListUseCase = getMessageListUseCase
         self.delegate = delegate
     }
 
     func handle(state: ChatState, intent: ChatIntent) async -> ChatIntent? {
         switch intent {
-        case .dataLoaded, .loadFailed: break
+        case .dataLoaded, .loadFailed, .messageChanged, .messageCreated: break
         case .onAppear:
             return await getMessages()
+        case .sendMessageTapped:
+            return await handleSendMessageTap(state: state)
         }
 
         return nil
@@ -45,6 +50,22 @@ private extension ChatMiddleware {
         } catch {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)
+        }
+    }
+
+    func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
+        guard
+            case .loaded(let viewData) = state,
+            viewData.messageText.isEmpty == false
+        else { return nil }
+
+        do {
+            let messageSend = MessageSend(chatId: chatId, text: viewData.messageText, attachments: [])
+            let message = try await sendMessageUseCase.execute(messageSend)
+            return .messageCreated(message)
+        } catch {
+            await delegate?.showError(error.localizedDescription)
+            return nil
         }
     }
 }
