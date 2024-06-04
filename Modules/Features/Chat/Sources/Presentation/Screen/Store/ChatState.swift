@@ -17,5 +17,5 @@ enum ChatState {
 enum ChatIntent {
     case onAppear
     case loadFailed(String)
-    case dataLoaded([MessageCellViewModel])
+    case dataLoaded([Message])
 }

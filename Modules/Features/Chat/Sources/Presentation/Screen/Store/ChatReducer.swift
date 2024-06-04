@@ -19,8 +19,8 @@ struct ChatReducer: Reducer {
         case .loadFailed(let message):
             state = .failed(message)
         case .dataLoaded(let messages):
-//            let messageCellViewModels = messages.map { mapToViewModel(message: $0) }
-            state = .loaded(messages)
+            let messageCellViewModels = messages.map { mapToViewModel(message: $0) }
+            state = .loaded(messageCellViewModels.reversed())
         }
     }
 
