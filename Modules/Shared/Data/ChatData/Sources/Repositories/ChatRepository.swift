@@ -10,9 +10,11 @@ import ChatDomain
 
 final class ChatRepository {
 
+    private let userIdProvider: UserIdProvider
     private let remoteDataSource: ChatRemoteDataSource
 
-    init(remoteDataSource: ChatRemoteDataSource) {
+    init(userIdProvider: @escaping UserIdProvider, remoteDataSource: ChatRemoteDataSource) {
+        self.userIdProvider = userIdProvider
         self.remoteDataSource = remoteDataSource
     }
 }
@@ -32,11 +34,15 @@ extension ChatRepository: ChatRepositoryProtocol {
 
     func getAllChats() async throws -> [ChatDetails] {
         let chatDtos = try await remoteDataSource.fetchAllChats()
-        return chatDtos.toDomain()
+        let userId = try await userIdProvider()
+
+        return chatDtos.map { $0.toDomain(lastMessageIsOutgoing: userId == $0.lastMessage?.user.userId) }
     }
 
     func getChatMessages(chatId: String, pagination: Pagination) async throws -> [Message] {
         let messageDtos = try await remoteDataSource.fetchChatMessages(chatId: chatId, pagination: pagination)
-        return messageDtos.toDomain()
+        let userId = try await userIdProvider()
+
+        return messageDtos.map { $0.toDomain(isOutgoing: userId == $0.user.userId) }
     }
 }

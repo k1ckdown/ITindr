@@ -32,7 +32,11 @@ final class AppFactory {
     private lazy var networkService = NetworkService(authInterceptor: authInterceptor)
 
     private lazy var chatRepository: ChatRepositoryProtocol = {
-        let dependencies = ChatData.ModuleDependencies(networkService: networkService)
+        let dependencies = ChatData.ModuleDependencies(
+            userIdProvider: profileRepository.getUserId,
+            networkService: networkService
+        )
+
         return ChatRepositoryAssembly(dependencies: dependencies).assemble()
     }()
 

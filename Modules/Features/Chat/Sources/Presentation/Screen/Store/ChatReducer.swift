@@ -29,7 +29,7 @@ struct ChatReducer: Reducer {
             text: message.text,
             avatar: message.user.avatar,
             createdAt: message.createdAt,
-            isAuthor: false
+            isAuthor: message.isOutgoing
         )
     }
 }

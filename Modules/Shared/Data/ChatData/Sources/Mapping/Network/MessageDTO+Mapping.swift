@@ -7,21 +7,15 @@
 
 import ChatDomain
 
-extension [MessageDTO] {
-    
-    func toDomain() -> [Message] {
-        map { $0.toDomain() }
-    }
-}
-
 extension MessageDTO {
     
-    func toDomain() -> Message {
+    func toDomain(isOutgoing: Bool) -> Message {
         Message(
             id: id,
             text: text,
             createdAt: createdAt,
             user: user.toDomain(),
+            isOutgoing: isOutgoing,
             attachments: attachments
         )
     }

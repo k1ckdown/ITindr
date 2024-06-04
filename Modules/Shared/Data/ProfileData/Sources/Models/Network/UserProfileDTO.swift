@@ -6,7 +6,7 @@
 //
 
 struct UserProfileDTO: Decodable {
-    let id: String
+    let userId: String
     let name: String
     let avatarUrl: String?
     let aboutMyself: String?

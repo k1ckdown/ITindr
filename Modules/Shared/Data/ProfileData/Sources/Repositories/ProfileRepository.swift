@@ -10,6 +10,7 @@ import ProfileDomain
 
 final class ProfileRepository {
 
+    private var profile: UserProfile?
     private let remoteDataSource: ProfileRemoteDataSource
 
     init(remoteDataSource: ProfileRemoteDataSource) {
@@ -37,5 +38,14 @@ extension ProfileRepository: ProfileRepositoryProtocol {
     func updateProfile(_ profile: UserProfileEdit) async throws {
         let profileDto = profile.toDto()
         try await remoteDataSource.updateProfile(profileDto)
+    }
+
+    func getUserId() async throws -> String {
+        if let profile { return profile.id }
+
+        let profileDto = try await remoteDataSource.fetchProfile()
+        profile = profileDto.toDomain()
+
+        return profileDto.userId
     }
 }

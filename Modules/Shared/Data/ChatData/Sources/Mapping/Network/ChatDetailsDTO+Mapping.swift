@@ -7,16 +7,9 @@
 
 import ChatDomain
 
-extension [ChatDetailsDTO] {
-
-    func toDomain() -> [ChatDetails] {
-        map { $0.toDomain() }
-    }
-}
-
 extension ChatDetailsDTO {
 
-    func toDomain() -> ChatDetails {
-        ChatDetails(chat: chat.toDomain(), lastMessage: lastMessage?.toDomain())
+    func toDomain(lastMessageIsOutgoing: Bool) -> ChatDetails {
+        ChatDetails(chat: chat.toDomain(), lastMessage: lastMessage?.toDomain(isOutgoing: lastMessageIsOutgoing))
     }
 }
