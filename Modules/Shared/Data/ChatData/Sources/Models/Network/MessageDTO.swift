@@ -9,7 +9,7 @@ import Foundation
 
 struct MessageDTO: Decodable {
     let id: String
-    let text: String
+    let text: String?
     let createdAt: Date
     let user: UserDTO
     let attachments: [String]

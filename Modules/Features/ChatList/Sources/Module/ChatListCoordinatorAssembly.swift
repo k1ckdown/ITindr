@@ -29,6 +29,10 @@ public struct ChatListCoordinatorAssembly: ChatListCoordinatorAssemblyProtocol {
             return ChatListViewController(store: store)
         }
 
-        return ChatListCoordinator(content: content, navigationController: navigationController)
+        return ChatListCoordinator(
+            content: content,
+            navigationController: navigationController,
+            chatCoordinatorAssembly: dependencies.chatCoordinatorAssembly
+        )
     }
 }

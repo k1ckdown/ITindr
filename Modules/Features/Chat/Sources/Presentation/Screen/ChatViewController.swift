@@ -7,17 +7,21 @@
 
 import UIKit
 import CommonUI
+import Combine
+import Navigation
 
-final class ChatViewController: UIViewController {
+final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
 
     private let store: ChatStore
     private let dataSource: ChatDataSource
+    private var subscriptions = Set<AnyCancellable>()
 
     private let messageToolbar = UIView()
     private let messageTextView = UITextView()
     private let sendMessageButton = UIButton()
     private let addAttachmentButton = UIButton(type: .system)
     private let sendMessageGradientLayer = CAGradientLayer()
+    private(set) var loadingView = UIActivityIndicatorView()
 
     private var messageToolbarHeightConstraint: NSLayoutConstraint?
     private var messageTextViewHeightConstraint: NSLayoutConstraint?
@@ -40,7 +44,9 @@ final class ChatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         setup()
+        bindToState()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -50,11 +56,7 @@ final class ChatViewController: UIViewController {
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard case .loaded(let cellViewModels) = store.state else { return }
-        
         sendMessageGradientLayer.frame = sendMessageButton.bounds
-        let lastIndexPath = IndexPath(item: cellViewModels.count - 1, section: 0)
-        messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
     }
 }
 
@@ -69,6 +71,7 @@ private extension ChatViewController {
         setupAddAttachmentButton()
         setupSendMessageButton()
         setupMessageCollectionView()
+        setupLoadingView()
     }
 
     func setupMessageToolbar() {
@@ -157,7 +160,7 @@ private extension ChatViewController {
         dataSource.configure(messageCollectionView)
 
         NSLayoutConstraint.activate([
-            messageCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            messageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             messageCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             messageCollectionView.bottomAnchor.constraint(equalTo: messageToolbar.topAnchor, constant: Constants.messageCollectionInsetBottom),
             messageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
@@ -178,6 +181,38 @@ extension ChatViewController: UITextViewDelegate {
 
         messageTextViewHeightConstraint?.constant = height
         messageToolbarHeightConstraint?.constant += height - oldHeight
+    }
+}
+
+// MARK: - State Binding
+
+private extension ChatViewController {
+
+    func bindToState() {
+        store.objectWillChange
+            .throttle(for: 0, scheduler: DispatchQueue.main, latest: true)
+            .sink { [weak self] in self?.render() }
+            .store(in: &subscriptions)
+    }
+
+    func render() {
+        switch store.state {
+        case .failed:
+            isLoading(false)
+        case .idle, .loading:
+            isLoading(true)
+        case .loaded:
+            isLoading(false)
+            messageCollectionView.reloadData()
+            scrollToLastMessage()
+        }
+    }
+
+    func scrollToLastMessage() {
+        guard case .loaded(let cellViewModels) = store.state else { return }
+
+        let lastIndexPath = IndexPath(item: cellViewModels.count - 1, section: 0)
+        messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
     }
 }
 

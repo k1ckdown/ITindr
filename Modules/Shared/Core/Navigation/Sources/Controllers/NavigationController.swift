@@ -17,6 +17,7 @@ public final class NavigationController: UINavigationController {
         super.viewDidLoad()
 
         delegate = self
+        navigationBar.tintColor = NavigationAsset.accentColor.color
         navigationBar.titleTextAttributes = [.foregroundColor: NavigationAsset.accentColor.color]
     }
 }
@@ -40,6 +41,9 @@ extension NavigationController: UINavigationControllerDelegate {
 
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         let isNavigationBarHidden = viewController is NavigationBarHidden
+        let isTabBarHidden = viewController is TabBarHidden
+
+        navigationController.tabBarController?.tabBar.isHidden = isTabBarHidden
         navigationController.setNavigationBarHidden(isNavigationBarHidden, animated: false)
     }
 

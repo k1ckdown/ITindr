@@ -10,7 +10,9 @@ import Navigation
 import ChatDomain
 
 @MainActor
-protocol ChatListMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
+protocol ChatListMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
+    func goToChat(with id: String)
+}
 
 final class ChatListMiddleware: Middleware {
 
@@ -41,8 +43,8 @@ final class ChatListMiddleware: Middleware {
 private extension ChatListMiddleware {
 
     func handleChatTap(at index: Int) async {
-        let chat = chats[index]
-        print(chat.chat.title)
+        let chatId = chats[index].chat.id
+        await delegate?.goToChat(with: chatId)
     }
 
     func getAllChats() async -> ChatListIntent {

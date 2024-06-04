@@ -33,7 +33,7 @@ final class ChatListViewController: UIViewController, LoadableView {
         super.viewDidLoad()
 
         setup()
-        bindToViewModel()
+        bindToState()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -69,16 +69,14 @@ private extension ChatListViewController {
     }
 }
 
-// MARK: - ViewModel Binding
+// MARK: - State Binding
 
 private extension ChatListViewController {
 
-    func bindToViewModel() {
+    func bindToState() {
         store.objectWillChange
             .throttle(for: 0, scheduler: DispatchQueue.main, latest: true)
-            .sink { [weak self] _ in
-                self?.render()
-            }
+            .sink { [weak self] in self?.render() }
             .store(in: &subscriptions)
     }
 

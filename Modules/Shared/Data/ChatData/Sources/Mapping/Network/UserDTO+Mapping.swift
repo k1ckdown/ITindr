@@ -11,7 +11,7 @@ extension UserDTO {
 
     func toDomain() -> User {
         User(
-            id: id,
+            id: userId,
             name: name,
             avatar: avatar,
             aboutMyself: aboutMyself

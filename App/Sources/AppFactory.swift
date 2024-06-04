@@ -82,10 +82,6 @@ extension AppFactory {
 
         return MainTabBarCoordinatorAssembly(dependencies: dependencies)
     }
-
-    func makeChatCoordinatorAssembly() -> ChatCoordinatorAssembly {
-        ChatCoordinatorAssembly(dependencies: .init(chatRepository: chatRepository))
-    }
 }
 
 // MARK: - Private methods
@@ -93,9 +89,8 @@ extension AppFactory {
 @MainActor
 private extension AppFactory {
 
-    func makeChatListCoordinatorAssembly() -> ChatListCoordinatorAssembly {
-        let dependencies = ChatList.ModuleDependencies(chatRepository: chatRepository)
-        return ChatListCoordinatorAssembly(dependencies: dependencies)
+    func makeChatCoordinatorAssembly() -> ChatCoordinatorAssembly {
+        ChatCoordinatorAssembly(dependencies: .init(chatRepository: chatRepository))
     }
 
     func makeUserFeedCoordinatorAssembly() -> UserFeedCoordinatorAssembly {
@@ -111,5 +106,14 @@ private extension AppFactory {
     func makeProfileEditorCoordinatorAssembly() -> ProfileEditorCoordinatorAssembly {
         let dependencies = ProfileEditor.ModuleDependencies(profileRepository: profileRepository)
         return ProfileEditorCoordinatorAssembly(dependencies: dependencies)
+    }
+
+    func makeChatListCoordinatorAssembly() -> ChatListCoordinatorAssembly {
+        let dependencies = ChatList.ModuleDependencies(
+            chatRepository: chatRepository,
+            chatCoordinatorAssembly: makeChatCoordinatorAssembly()
+        )
+
+        return ChatListCoordinatorAssembly(dependencies: dependencies)
     }
 }

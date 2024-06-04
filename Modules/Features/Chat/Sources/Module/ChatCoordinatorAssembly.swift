@@ -17,10 +17,10 @@ public struct ChatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol {
         self.dependencies = dependencies
     }
 
-    public func assemble(navigationController: NavigationController) -> ChatCoordinatorProtocol {
+    public func assemble(chatId: String, navigationController: NavigationController) -> ChatCoordinatorProtocol {
         let content: ChatCoordinator.Content = { middlewareDelegate in
             let reducer = ChatReducer()
-            let middleware = ChatMiddleware(delegate: middlewareDelegate)
+            let middleware = ChatMiddleware(chatId: chatId, delegate: middlewareDelegate)
             let store = Store(initialState: .idle, reducer: reducer, middleware: middleware)
             return ChatViewController(store: store)
         }
