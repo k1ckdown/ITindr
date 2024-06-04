@@ -12,8 +12,7 @@ import ChatInterface
 final class ChatCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
 
     override func start() {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .yellow
+        let viewController = ChatViewController(with: .init(chatId: ""))
 
         addPopHandler(for: viewController)
         navigationController.pushViewController(viewController, animated: true)

@@ -42,6 +42,7 @@ let project = Project(
             resources: Constants.resources,
             dependencies: [
                 .project(target: "Auth", path: "../Modules/Features/Auth"),
+                .project(target: "Chat", path: "../Modules/Features/Chat"),
                 .project(target: "ChatList", path: "../Modules/Features/ChatList"),
                 .project(target: "UserList", path: "../Modules/Features/UserList"),
                 .project(target: "UserFeed", path: "../Modules/Features/UserFeed"),

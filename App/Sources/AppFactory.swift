@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 10.05.2024.
 //
 
+import Chat
 import Profile
 import ChatList
 import UserList
@@ -80,6 +81,10 @@ extension AppFactory {
         )
 
         return MainTabBarCoordinatorAssembly(dependencies: dependencies)
+    }
+
+    func makeChatCoordinatorAssembly() -> ChatCoordinatorAssembly {
+        ChatCoordinatorAssembly(dependencies: .init(chatRepository: chatRepository))
     }
 }
 
