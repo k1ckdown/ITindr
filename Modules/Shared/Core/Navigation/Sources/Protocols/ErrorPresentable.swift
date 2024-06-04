@@ -15,6 +15,7 @@ public protocol ErrorPresentable {
 public extension ErrorPresentable where Self: BaseCoordinator {
 
     func showError(_ message: String) {
+        // TODO: Localize
         let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
 
         let okAction = UIAlertAction(title: "OK", style: .default)

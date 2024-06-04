@@ -13,7 +13,8 @@ final class AppCoordinator: BaseCoordinator {
     private let appFactory = AppFactory()
 
     override func start() {
-        coordinate(to: appFactory.makeChatCoordinatorAssembly().assemble(navigationController: navigationController))
+        goToAuthFlow()
+//        coordinate(to: appFactory.makeChatCoordinatorAssembly().assemble(navigationController: navigationController))
     }
 }
 

@@ -10,7 +10,7 @@ import CommonUI
 
 final class ChatViewController: UIViewController {
 
-    private let viewModel: ChatViewModel
+    private let store: ChatStore
     private let dataSource: ChatDataSource
 
     private let messageToolbar = UIView()
@@ -28,9 +28,9 @@ final class ChatViewController: UIViewController {
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
 
-    init(with viewModel: ChatViewModel) {
-        self.viewModel = viewModel
-        dataSource = ChatDataSource(viewModel: viewModel)
+    init(store: ChatStore) {
+        self.store = store
+        dataSource = ChatDataSource(store: store)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,14 +45,15 @@ final class ChatViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.viewWillAppear()
+        store.dispatch(.onAppear)
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-
+        guard case .loaded(let cellViewModels) = store.state else { return }
+        
         sendMessageGradientLayer.frame = sendMessageButton.bounds
-        let lastIndexPath = IndexPath(item: viewModel.cellViewModels.count - 1, section: 0)
+        let lastIndexPath = IndexPath(item: cellViewModels.count - 1, section: 0)
         messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
     }
 }
@@ -87,6 +88,7 @@ private extension ChatViewController {
     func setupMessageTextView() {
         messageToolbar.addSubview(messageTextView)
 
+        // TODO: Placeholder
         messageTextView.text = "Message..."
         messageTextView.delegate = self
         messageTextView.textColor = .black

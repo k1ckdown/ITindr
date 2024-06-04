@@ -9,11 +9,11 @@ import UIKit
 
 final class ChatDataSource: NSObject {
 
-    private let viewModel: ChatViewModel
+    private let store: ChatStore
     private let messageDummyCell = MessageViewCell()
 
-    init(viewModel: ChatViewModel) {
-        self.viewModel = viewModel
+    init(store: ChatStore) {
+        self.store = store
     }
 
     func configure(_ collectionView: UICollectionView) {
@@ -29,18 +29,20 @@ final class ChatDataSource: NSObject {
 extension ChatDataSource: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.cellViewModels.count
+        guard case .loaded(let cellViewModels) = store.state else { return 0 }
+        return cellViewModels.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
+            case .loaded(let cellViewModels) = store.state,
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: MessageViewCell.reuseIdentifier,
                 for: indexPath
             ) as? MessageViewCell
         else { return .init() }
 
-        let cellViewModel = viewModel.cellViewModels[indexPath.item]
+        let cellViewModel = cellViewModels[indexPath.item]
         cell.configure(with: cellViewModel)
 
         return cell
@@ -52,7 +54,9 @@ extension ChatDataSource: UICollectionViewDataSource {
 extension ChatDataSource: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellViewModel = viewModel.cellViewModels[indexPath.item]
+        guard case .loaded(let cellViewModels) = store.state else { return .zero }
+
+        let cellViewModel = cellViewModels[indexPath.item]
         messageDummyCell.configure(with: cellViewModel)
         let cellSize = messageDummyCell.sizeThatFits(CGSize(width: collectionView.bounds.width, height: .greatestFiniteMagnitude))
 

@@ -10,11 +10,23 @@ import Navigation
 import ChatInterface
 
 final class ChatCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
+    typealias Content = (ChatMiddlewareDelegate) -> UIViewController
+
+    private let content: Content
+
+    init(content: @escaping Content, navigationController: NavigationController) {
+        self.content = content
+        super.init(navigationController: navigationController)
+    }
 
     override func start() {
-        let viewController = ChatViewController(with: .init(chatId: ""))
+        let content = content(self)
 
-        addPopHandler(for: viewController)
-        navigationController.pushViewController(viewController, animated: true)
+        addPopHandler(for: content)
+        navigationController.pushViewController(content, animated: true)
     }
 }
+
+// MARK: - ChatMiddlewareDelegate
+
+extension ChatCoordinator: ChatMiddlewareDelegate {}
