@@ -20,7 +20,12 @@ final class ChatMiddleware: Middleware {
     private let getMessageListUseCase: GetMessageListUseCase
     private weak var delegate: ChatMiddlewareDelegate?
 
-    init(chatId: String, sendMessageUseCase: SendMessageUseCase, getMessageListUseCase: GetMessageListUseCase, delegate: ChatMiddlewareDelegate?) {
+    init(
+        chatId: String,
+        sendMessageUseCase: SendMessageUseCase,
+        getMessageListUseCase: GetMessageListUseCase,
+        delegate: ChatMiddlewareDelegate?
+    ) {
         self.chatId = chatId
         self.sendMessageUseCase = sendMessageUseCase
         self.getMessageListUseCase = getMessageListUseCase
@@ -35,15 +40,7 @@ final class ChatMiddleware: Middleware {
         case .sendMessageTapped:
             return await handleSendMessageTap(state: state)
         case .loadMore:
-            guard
-                case .loaded(let viewData) = state,
-                case .available(let pagination) = viewData.loadMore,
-                viewData.isMoreLoading == false,
-                viewData.messages.count >= pagination.offset
-            else { return nil }
-
-            return .loadMoreStarted
-
+            return checkLoadMoreAvailable(state: state) ? .loadMoreStarted : nil
         case .loadMoreStarted:
             return await loadMore(state: state)
         }
@@ -71,11 +68,18 @@ private extension ChatMiddleware {
         }
     }
 
-    func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
+    func checkLoadMoreAvailable(state: ChatState) -> Bool {
         guard
             case .loaded(let viewData) = state,
-            viewData.messageText.isEmpty == false
-        else { return nil }
+            case .available(let pagination) = viewData.loadMore,
+            viewData.isMoreLoading == false,
+            viewData.messages.count >= pagination.offset
+        else { return false }
+        return true
+    }
+
+    func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
+        guard case .loaded(let viewData) = state, viewData.messageText.isEmpty == false else { return nil }
 
         do {
             let messageSend = MessageSend(chatId: chatId, text: viewData.messageText, attachments: [])

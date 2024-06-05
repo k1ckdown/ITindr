@@ -59,7 +59,7 @@ private extension ChatReducer {
 
         state = .loaded(viewData)
     }
-    
+
     func handleDataLoad(_ state: inout ChatState, messages: [Message], pagination: Pagination) {
         let messageCellViewModels = messages.map { mapToViewModel(message: $0) }
         let loadMore = ChatState.ViewData.LoadMore.available(pagination.nextPage)
@@ -83,7 +83,7 @@ private extension ChatReducer {
             text: message.text,
             avatar: message.user.avatar,
             createdAt: message.createdAt,
-            isAuthor: message.isOutgoing
+            isOutgoing: message.isOutgoing
         )
     }
 }
