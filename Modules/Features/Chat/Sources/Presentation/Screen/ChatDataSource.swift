@@ -77,11 +77,6 @@ extension ChatDataSource: UICollectionViewDelegateFlowLayout {
         store.dispatch(.loadMore)
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard case .loaded(let viewData) = store.state else { return }
-        print(viewData.messages[indexPath.item].text ?? "n/a")
-    }
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard case .loaded(let viewData) = store.state else { return .zero }
         

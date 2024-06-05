@@ -13,18 +13,12 @@ enum ChatState: Equatable {
     case loading
     case failed(String)
     case loaded(ViewData)
-
+    
     struct ViewData: Equatable {
-        enum LoadMore: Equatable {
-            case unavailable
-            case failed(Pagination)
-            case available(Pagination)
-        }
-        
         var messageText = ""
-        var loadMore: LoadMore
         var isMoreLoading = false
         var isMessageCreated = false
+        var pagination: Pagination
         var messages: [MessageCellViewModel]
     }
 }

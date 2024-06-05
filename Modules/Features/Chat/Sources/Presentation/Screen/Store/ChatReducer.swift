@@ -62,14 +62,14 @@ private extension ChatReducer {
 
     func handleDataLoad(_ state: inout ChatState, messages: [Message], pagination: Pagination) {
         let messageCellViewModels = messages.map { mapToViewModel(message: $0) }
-        let loadMore = ChatState.ViewData.LoadMore.available(pagination.nextPage)
+        let nextPage = pagination.nextPage
 
         switch state {
         case .loading:
-            let viewData = ChatState.ViewData(loadMore: loadMore, messages: messageCellViewModels)
+            let viewData = ChatState.ViewData(pagination: nextPage, messages: messageCellViewModels)
             state = .loaded(viewData)
         case .loaded(var viewData):
-            viewData.loadMore = loadMore
+            viewData.pagination = nextPage
             viewData.messages.append(contentsOf: messageCellViewModels)
             viewData.isMoreLoading = false
             viewData.isMessageCreated = false

@@ -54,8 +54,17 @@ final class ChatMiddleware: Middleware {
 private extension ChatMiddleware {
 
     func loadMore(state: ChatState) async -> ChatIntent? {
-        guard case .loaded(let viewData) = state, case .available(let pagination) = viewData.loadMore else { return nil }
-        return await getMessages(pagination: pagination)
+        guard case .loaded(let viewData) = state else { return nil }
+        return await getMessages(pagination: viewData.pagination)
+    }
+    
+    func checkLoadMoreAvailable(state: ChatState) -> Bool {
+        guard
+            case .loaded(let viewData) = state,
+            viewData.isMoreLoading == false,
+            viewData.messages.count >= viewData.pagination.offset
+        else { return false }
+        return true
     }
 
     func getMessages(pagination: Pagination) async -> ChatIntent {
@@ -66,16 +75,6 @@ private extension ChatMiddleware {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)
         }
-    }
-
-    func checkLoadMoreAvailable(state: ChatState) -> Bool {
-        guard
-            case .loaded(let viewData) = state,
-            case .available(let pagination) = viewData.loadMore,
-            viewData.isMoreLoading == false,
-            viewData.messages.count >= pagination.offset
-        else { return false }
-        return true
     }
 
     func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
