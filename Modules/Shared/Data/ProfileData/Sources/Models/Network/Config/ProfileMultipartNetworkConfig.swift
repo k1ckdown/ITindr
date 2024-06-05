@@ -7,9 +7,10 @@
 
 import Network
 import Foundation
+import CommonDomain
 
 enum ProfileMultipartNetworkConfig: MultipartNetworkConfig {
-    case uploadAvatar(data: Data, fileName: String)
+    case uploadAvatar(Resource)
 
     var path: String { NetworkConstants.baseUrlString }
 
@@ -24,8 +25,8 @@ enum ProfileMultipartNetworkConfig: MultipartNetworkConfig {
 
     var files: [String: (data: Data, fileName: String)] {
         switch self {
-        case .uploadAvatar(let data, let fileName):
-            ["avatar": (data, fileName)]
+        case .uploadAvatar(let avatar):
+            ["avatar": (avatar.data, avatar.fileName)]
         }
     }
 }

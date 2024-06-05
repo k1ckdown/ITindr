@@ -6,12 +6,13 @@
 //
 
 import Network
+import CommonDomain
 
 enum UserNetworkConfig: NetworkConfig {
     case feed
     case like(userId: String)
     case dislike(userId: String)
-    case allUsers(limit: Int, offset: Int)
+    case allUsers(Pagination)
 
     var path: String {
         "http://itindr.mcenter.pro:8092/api/mobile/v1/user"
@@ -36,7 +37,7 @@ enum UserNetworkConfig: NetworkConfig {
     var parameters: Encodable? {
         switch self {
         case .feed, .like, .dislike: nil
-        case .allUsers(let limit, let offset): ["limit": limit, "offset": offset]
+        case .allUsers(let pagination): ["limit": pagination.limit, "offset": pagination.offset]
         }
     }
 }

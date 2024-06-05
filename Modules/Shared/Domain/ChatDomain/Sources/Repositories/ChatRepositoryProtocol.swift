@@ -5,6 +5,8 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
+import CommonDomain
+
 public protocol ChatRepositoryProtocol: AnyObject {
     func getAllChats() async throws -> [ChatDetails]
     func createChat(userId: String) async throws -> Chat

@@ -14,20 +14,36 @@ struct ChatReducer: Reducer {
 
     func reduce(state: inout ChatState, intent: ChatIntent) {
         switch intent {
-        case .sendMessageTapped: break
+        case .sendMessageTapped, .loadMore: break
         case .onAppear: state = .loading
+        case .loadMoreStarted:
+            guard case .loaded(var viewData) = state else { return }
+            viewData.isMoreLoading = true
+            state = .loaded(viewData)
 
         case .loadFailed(let error): state = .failed(error)
 
         case .messageCreated(let message):
             guard case .loaded(var viewData) = state else { return }
             viewData.messageText = ""
-            viewData.messages.append(mapToViewModel(message: message))
+            viewData.isMessageCreated = true
+            viewData.messages.insert(mapToViewModel(message: message), at: 0)
             state = .loaded(viewData)
-            
-        case .dataLoaded(let messages):
+
+        case .dataLoaded(let messages, let pagination):
             let messageCellViewModels = messages.map { mapToViewModel(message: $0) }
-            state = .loaded(.init(messages: messageCellViewModels.reversed()))
+            switch state {
+            case .loading:
+                let viewData = ChatState.ViewData(loadMore: .available(pagination.nextPage), messages: messageCellViewModels)
+                state = .loaded(viewData)
+            case .loaded(var viewData):
+                viewData.messages.append(contentsOf: messageCellViewModels)
+                viewData.loadMore = .available(pagination.nextPage)
+                viewData.isMoreLoading = false
+                viewData.isMessageCreated = false
+                state = .loaded(viewData)
+            default: return
+            }
 
         case .messageChanged(let text):
             guard case .loaded(var viewData) = state else { return }

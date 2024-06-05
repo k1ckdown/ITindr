@@ -2,4 +2,10 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.domainFramework(name: "Profile", dependencies: ["Topic"])
+let project = Project.domainFramework(
+    name: "Profile",
+    hasCommon: true,
+    dependencies: [
+        "Topic"
+    ]
+)

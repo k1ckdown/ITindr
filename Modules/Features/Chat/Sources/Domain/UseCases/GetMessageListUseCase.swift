@@ -6,6 +6,7 @@
 //
 
 import ChatDomain
+import CommonDomain
 
 final class GetMessageListUseCase {
 

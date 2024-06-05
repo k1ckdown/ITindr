@@ -7,6 +7,7 @@
 
 import Network
 import ChatDomain
+import CommonDomain
 
 enum ChatNetworkConfig: NetworkConfig {
     case chatList
@@ -34,7 +35,7 @@ enum ChatNetworkConfig: NetworkConfig {
         switch self {
         case .chatList: nil
         case .newChat(let userId): userId
-        case .chatMessages(_, let pagination): ["limit": pagination.count, "offset": pagination.page]
+        case .chatMessages(_, let pagination): ["limit": pagination.limit, "offset": pagination.offset]
         }
     }
 }

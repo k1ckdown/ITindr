@@ -29,6 +29,7 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
     private lazy var messageCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = Constants.messageSpacing
+        layout.footerReferenceSize = Constants.footerSize
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
 
@@ -57,6 +58,15 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         sendMessageGradientLayer.frame = sendMessageButton.bounds
+    }
+}
+
+// MARK: - UITextViewDelegate
+
+extension ChatViewController: UITextViewDelegate {
+
+    func textViewDidChange(_ textView: UITextView) {
+        store.dispatch(.messageChanged(textView.text))
     }
 }
 
@@ -166,6 +176,7 @@ private extension ChatViewController {
         view.addSubview(messageCollectionView)
 
         messageCollectionView.backgroundColor = .clear
+        messageCollectionView.transform = CGAffineTransform(scaleX: 1, y: -1)
         messageCollectionView.translatesAutoresizingMaskIntoConstraints = false
         dataSource.configure(messageCollectionView)
 
@@ -189,15 +200,6 @@ private extension ChatViewController {
     }
 }
 
-// MARK: - UITextViewDelegate
-
-extension ChatViewController: UITextViewDelegate {
-
-    func textViewDidChange(_ textView: UITextView) {
-        store.dispatch(.messageChanged(textView.text))
-    }
-}
-
 // MARK: - State Binding
 
 private extension ChatViewController {
@@ -217,21 +219,32 @@ private extension ChatViewController {
         }
     }
 
-    func scrollToLastMessage(messageCount: Int) {
-        guard case .loaded(let viewData) = store.state else { return }
+    func handleViewData(_ viewData: ChatState.ViewData) {
+        isLoading(false)
+        updateMessageText(viewData.messageText)
+        dataSource.loadingView?.isShowing = viewData.isMoreLoading
+        updateMessages(viewModels: viewData.messages, isMessageCreated: viewData.isMessageCreated)
+    }
 
+    func scrollToLastMessage(messageCount: Int) {
         let lastIndexPath = IndexPath(item: messageCount - 1, section: 0)
         messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
     }
 
-    func handleViewData(_ viewData: ChatState.ViewData) {
-        isLoading(false)
-
-        messageTextView.text = viewData.messageText
+    func updateMessageText(_ text: String) {
+        messageTextView.text = text
         adjustMessageTextHeight()
+    }
 
-        messageCollectionView.reloadData()
-        scrollToLastMessage(messageCount: viewData.messages.count)
+    func updateMessages(viewModels: [MessageCellViewModel], isMessageCreated: Bool) {
+        let previousMessageCount = messageCollectionView.numberOfItems(inSection: 0)
+        guard viewModels.count != previousMessageCount else { return }
+
+        let indexPaths = isMessageCreated
+        ? [IndexPath(item: 0, section: 0)]
+        : (previousMessageCount..<viewModels.count).map { IndexPath(item: $0, section: 0) }
+
+        messageCollectionView.performBatchUpdates { messageCollectionView.insertItems(at: indexPaths) }
     }
 }
 
@@ -243,6 +256,7 @@ private extension ChatViewController {
         static let buttonActionSize: CGFloat = 40
         static let messageSpacing: CGFloat = 24
         static let messageCollectionInsetBottom: CGFloat = -10
+        static let footerSize = CGSize(width: 150, height: 65)
 
         static let messageToolbarHeight: CGFloat = 80
         static let messageToolbarInsetHorizontal: CGFloat = 16

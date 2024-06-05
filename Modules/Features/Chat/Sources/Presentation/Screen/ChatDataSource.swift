@@ -11,6 +11,7 @@ final class ChatDataSource: NSObject {
 
     private let store: ChatStore
     private let messageDummyCell = MessageViewCell()
+    private(set) var loadingView: LoadingReusableView?
 
     init(store: ChatStore) {
         self.store = store
@@ -21,6 +22,11 @@ final class ChatDataSource: NSObject {
         collectionView.dataSource = self
 
         collectionView.register(MessageViewCell.self, forCellWithReuseIdentifier: MessageViewCell.reuseIdentifier)
+        collectionView.register(
+            LoadingReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: LoadingReusableView.reuseIdentifier
+        )
     }
 }
 
@@ -47,15 +53,38 @@ extension ChatDataSource: UICollectionViewDataSource {
 
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard
+            let loadingView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: LoadingReusableView.reuseIdentifier,
+                for: indexPath
+            ) as? LoadingReusableView
+        else { return .init() }
+
+        self.loadingView = loadingView
+        return loadingView
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension ChatDataSource: UICollectionViewDelegateFlowLayout {
 
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard case .loaded(let viewData) = store.state, indexPath.item == viewData.messages.count - 1 else { return }
+        store.dispatch(.loadMore)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard case .loaded(let viewData) = store.state else { return }
+        print(viewData.messages[indexPath.item].text ?? "n/a")
+    }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard case .loaded(let viewData) = store.state else { return .zero }
-
+        
         let cellViewModel = viewData.messages[indexPath.item]
         messageDummyCell.configure(with: cellViewModel)
         let cellSize = messageDummyCell.sizeThatFits(CGSize(width: collectionView.bounds.width, height: .greatestFiniteMagnitude))

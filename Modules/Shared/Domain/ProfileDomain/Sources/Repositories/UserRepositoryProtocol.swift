@@ -5,6 +5,8 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
+import CommonDomain
+
 public protocol UserRepositoryProtocol: AnyObject {
     func dislike(userId: String) async throws
     func like(userId: String) async throws -> Bool

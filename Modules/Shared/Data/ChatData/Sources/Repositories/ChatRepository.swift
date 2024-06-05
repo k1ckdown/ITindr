@@ -5,8 +5,8 @@
 //  Created by Ivan Semenov on 03.06.2024.
 //
 
-import Foundation
 import ChatDomain
+import CommonDomain
 
 final class ChatRepository {
 

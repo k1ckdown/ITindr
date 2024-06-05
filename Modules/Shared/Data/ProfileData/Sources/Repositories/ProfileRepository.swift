@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 14.05.2024.
 //
 
-import Foundation
+import CommonDomain
 import ProfileDomain
 
 final class ProfileRepository {
@@ -26,8 +26,8 @@ extension ProfileRepository: ProfileRepositoryProtocol {
         try await remoteDataSource.deleteAvatar()
     }
 
-    func saveAvatar(data: Data, fileName: String) async throws {
-        try await remoteDataSource.uploadAvatar(data: data, fileName: fileName)
+    func saveAvatar(_ avatar: Resource) async throws {
+        try await remoteDataSource.uploadAvatar(avatar)
     }
 
     func getProfile() async throws -> UserProfile {

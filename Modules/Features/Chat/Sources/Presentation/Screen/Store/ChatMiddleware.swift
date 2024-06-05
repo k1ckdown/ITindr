@@ -8,6 +8,7 @@
 import UDFKit
 import Navigation
 import ChatDomain
+import CommonDomain
 
 @MainActor
 protocol ChatMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
@@ -30,9 +31,21 @@ final class ChatMiddleware: Middleware {
         switch intent {
         case .dataLoaded, .loadFailed, .messageChanged, .messageCreated: break
         case .onAppear:
-            return await getMessages()
+            return await getMessages(pagination: .firstPage)
         case .sendMessageTapped:
             return await handleSendMessageTap(state: state)
+        case .loadMore:
+            guard
+                case .loaded(let viewData) = state,
+                case .available(let pagination) = viewData.loadMore,
+                viewData.isMoreLoading == false,
+                viewData.messages.count >= pagination.offset
+            else { return nil }
+
+            return .loadMoreStarted
+
+        case .loadMoreStarted:
+            return await loadMore(state: state)
         }
 
         return nil
@@ -43,10 +56,15 @@ final class ChatMiddleware: Middleware {
 
 private extension ChatMiddleware {
 
-    func getMessages() async -> ChatIntent {
+    func loadMore(state: ChatState) async -> ChatIntent? {
+        guard case .loaded(let viewData) = state, case .available(let pagination) = viewData.loadMore else { return nil }
+        return await getMessages(pagination: pagination)
+    }
+
+    func getMessages(pagination: Pagination) async -> ChatIntent {
         do {
-            let messages = try await getMessageListUseCase.execute(chatId: chatId, pagination: .init(page: 0, count: 10))
-            return .dataLoaded(messages)
+            let messages = try await getMessageListUseCase.execute(chatId: chatId, pagination: pagination)
+            return .dataLoaded(messages, pagination)
         } catch {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)

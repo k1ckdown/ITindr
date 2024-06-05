@@ -74,6 +74,7 @@ private extension MessageViewCell {
         setupMessageContentView()
         setupTextLabel()
         setupSentDateLabel()
+        contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
     }
 
     func setupAvatarImageView() {

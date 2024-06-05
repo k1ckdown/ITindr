@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 26.05.2024.
 //
 
-import Foundation
+import CommonDomain
 
 public final class UpdateUserAvatarUseCase {
 
@@ -16,6 +16,6 @@ public final class UpdateUserAvatarUseCase {
     }
 
     public func execute(_ avatar: Resource) async throws {
-        try await profileRepository.saveAvatar(data: avatar.data, fileName: avatar.fileName)
+        try await profileRepository.saveAvatar(avatar)
     }
 }

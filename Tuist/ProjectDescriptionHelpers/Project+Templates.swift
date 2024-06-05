@@ -34,6 +34,7 @@ extension Project {
     
     public static func domainFramework(
         name: String,
+        hasCommon: Bool = false,
         dependencies: [String] = []
     ) -> Project {
         let projectName = "\(name)Domain"
@@ -52,7 +53,7 @@ extension Project {
                     dependencies: dependencies.map {
                         let projectName = "\($0)Domain"
                         return .project(target: projectName, path: "../\(projectName)")
-                    }
+                    } + (hasCommon ? [.project(target: "CommonDomain", path: "../../Core/CommonDomain")] : [])
                 )
             ]
         )

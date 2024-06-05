@@ -7,6 +7,7 @@
 
 import Network
 import ChatDomain
+import CommonDomain
 
 final class ChatRemoteDataSource {
 

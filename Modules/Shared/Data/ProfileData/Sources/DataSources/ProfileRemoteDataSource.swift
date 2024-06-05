@@ -6,7 +6,7 @@
 //
 
 import Network
-import Foundation
+import CommonDomain
 
 final class ProfileRemoteDataSource {
 
@@ -36,8 +36,8 @@ extension ProfileRemoteDataSource {
         try await networkService.request(config: networkConfig, authorized: true)
     }
 
-    func uploadAvatar(data: Data, fileName: String) async throws {
-        let networkConfig = ProfileMultipartNetworkConfig.uploadAvatar(data: data, fileName: fileName)
+    func uploadAvatar(_ resource: Resource) async throws {
+        let networkConfig = ProfileMultipartNetworkConfig.uploadAvatar(resource)
         try await networkService.multipartRequest(config: networkConfig, authorized: true)
     }
 }

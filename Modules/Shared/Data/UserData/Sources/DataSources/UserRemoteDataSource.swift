@@ -6,6 +6,7 @@
 //
 
 import Network
+import CommonDomain
 import ProfileDomain
 
 final class UserRemoteDataSource {
@@ -39,7 +40,7 @@ extension UserRemoteDataSource {
     }
 
     func fetchAllUsers(pagination: Pagination) async throws -> [UserProfileDTO] {
-        let config = UserNetworkConfig.allUsers(limit: pagination.count, offset: pagination.page)
+        let config = UserNetworkConfig.allUsers(pagination)
         return try await networkService.request(config: config, authorized: true)
     }
 }
