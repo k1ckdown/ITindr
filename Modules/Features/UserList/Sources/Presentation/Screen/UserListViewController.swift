@@ -6,19 +6,21 @@
 //
 
 import UIKit
+import Combine
 import CommonUI
 
 final class UserListViewController: UIViewController, LoadableView {
 
-    private let viewModel: UserListViewModel
+    private let store: UserListStore
     private let dataSource: UserListDataSource
+    private var subscriptions = Set<AnyCancellable>()
 
     private(set) var loadingView = UIActivityIndicatorView()
     private lazy var userCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UserListLayout())
 
-    init(with viewModel: UserListViewModel) {
-        self.viewModel = viewModel
-        dataSource = UserListDataSource(viewModel: viewModel)
+    init(store: UserListStore) {
+        self.store = store
+        dataSource = UserListDataSource(store: store)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -30,12 +32,12 @@ final class UserListViewController: UIViewController, LoadableView {
         super.viewDidLoad()
 
         setup()
-        bindToViewModel()
+        bindToState()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.viewWillAppear()
+        store.dispatch(.onAppear)
     }
 }
 
@@ -65,16 +67,37 @@ private extension UserListViewController {
     }
 }
 
-// MARK: - ViewModel Binding
+// MARK: - State Binding
 
 private extension UserListViewController {
 
-    func bindToViewModel() {
-        viewModel.isLoading = isLoading
+    func bindToState() {
+        store.objectWillChange
+            .throttle(for: 0, scheduler: DispatchQueue.main, latest: true)
+            .sink { [weak self] in self?.render() }
+            .store(in: &subscriptions)
+    }
 
-        viewModel.refreshUserList = { [weak self] in
-            self?.userCollectionView.reloadData()
+    func render() {
+        switch store.state {
+        case .failed: isLoading(false)
+        case .idle, .loading: isLoading(true)
+        case .loaded(let viewData): handleViewData(viewData)
         }
+    }
+
+    func handleViewData(_ viewData: UserListState.ViewData) {
+        isLoading(false)
+        dataSource.loadingView?.isShowing = viewData.isMoreLoading
+        updateUserList(viewModels: viewData.users)
+    }
+
+    func updateUserList(viewModels: [UserCellViewModel]) {
+        let previousUserCount = userCollectionView.numberOfItems(inSection: 0)
+        guard previousUserCount < viewModels.count else { return }
+
+        let indexPaths = (previousUserCount..<viewModels.count).map { IndexPath(item: $0, section: 0) }
+        userCollectionView.insertItems(at: indexPaths)
     }
 }
 
@@ -83,6 +106,6 @@ private extension UserListViewController {
 private extension UserListViewController {
 
     enum Constants {
-        static let collectionContentInset = UIEdgeInsets(top: 0, left: 16, bottom: 50, right: 16)
+        static let collectionContentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
 }

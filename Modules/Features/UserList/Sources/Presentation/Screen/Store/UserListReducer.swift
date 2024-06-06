@@ -9,13 +9,15 @@ import UDFKit
 import CommonDomain
 import ProfileDomain
 
+typealias UserListStore = StoreOf<UserListReducer>
+
 struct UserListReducer: Reducer {
 
     func reduce(state: inout UserListState, intent: UserListIntent) {
         switch intent {
         case .loadMore: break
         case .onAppear:
-            state = .loading
+            handleOnAppear(&state)
         case .loadMoreStarted:
             handleLoadMoreStart(&state)
         case .userTapped(let index):
@@ -31,6 +33,11 @@ struct UserListReducer: Reducer {
 // MARK: - Private methods
 
 private extension UserListReducer {
+
+    func handleOnAppear(_ state: inout State) {
+        guard case .idle = state else { return }
+        state = .loading
+    }
 
     func handleUserTap(_ state: inout State, index: Int) {
         guard case .loaded(var viewData) = state else { return }

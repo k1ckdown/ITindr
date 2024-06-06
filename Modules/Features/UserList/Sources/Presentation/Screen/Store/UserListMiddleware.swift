@@ -30,6 +30,7 @@ final class UserListMiddleware: Middleware {
         switch intent {
         case .loadFailed, .dataLoaded: break
         case .onAppear:
+            guard case .loading = state else { return nil }
             return await getUserList(pagination: .firstPage)
         case .loadMore:
             return checkLoadMoreAvailable(state: state) ? .loadMoreStarted : nil
@@ -58,8 +59,9 @@ private extension UserListMiddleware {
 
     func getUserList(pagination: Pagination) async -> UserListIntent {
         do {
-            users = try await getUserListUseCase.execute(pagination: pagination)
-            return .dataLoaded(users, pagination)
+            let userList = try await getUserListUseCase.execute(pagination: pagination)
+            users.append(contentsOf: userList)
+            return .dataLoaded(userList, pagination)
         } catch {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)

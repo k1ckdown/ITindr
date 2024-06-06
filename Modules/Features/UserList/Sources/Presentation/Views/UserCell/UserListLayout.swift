@@ -27,6 +27,7 @@ final class UserListLayout: UICollectionViewFlowLayout {
         cachedAttributes.removeAll()
         guard let collectionView else { return }
 
+        footerReferenceSize = Constants.footerSize
         let contentWidth = collectionWidth - (Constants.numberOfColumns - 1) * Constants.itemSpacing
         let itemWidth = contentWidth / Constants.numberOfColumns
 
@@ -54,6 +55,8 @@ final class UserListLayout: UICollectionViewFlowLayout {
             collectionHeight = max(collectionHeight, itemFrame.maxY)
             cachedAttributes.append(attributes)
         }
+        
+        cachedAttributes.append(getFooterAttributes())
     }
 
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -62,6 +65,27 @@ final class UserListLayout: UICollectionViewFlowLayout {
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         cachedAttributes.filter { $0.frame.intersects(rect) }
+    }
+
+    override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        cachedAttributes.first(where: { $0.representedElementKind == elementKind && $0.indexPath == indexPath })
+    }
+}
+
+// MARK: - Private methods
+
+private extension UserListLayout {
+
+    func getFooterAttributes() -> UICollectionViewLayoutAttributes {
+        let attributes = UICollectionViewLayoutAttributes(
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            with: IndexPath(item: 0, section: 0)
+        )
+
+        attributes.frame = CGRect(x: 0, y: collectionHeight, width: collectionWidth, height: footerReferenceSize.height)
+        collectionHeight += footerReferenceSize.height
+
+        return attributes
     }
 }
 
@@ -74,5 +98,6 @@ private extension UserListLayout {
         static let lineSpacing: CGFloat = 24
         static let itemSpacing: CGFloat = 16
         static let numberOfColumns: CGFloat = 3
+        static let footerSize = CGSize(width: 150, height: 50)
     }
 }

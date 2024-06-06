@@ -26,7 +26,7 @@ public struct UserListCoordinatorAssembly: UserListCoordinatorAssemblyProtocol {
             )
 
             let store = Store(initialState: .idle, reducer: reducer, middleware: middleware)
-            return UserListViewController(with: .init())
+            return UserListViewController(store: store)
         }
 
         return UserListCoordinator(content: content, navigationController: navigationController)

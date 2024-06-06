@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CommonUI
 
 final class ChatDataSource: NSObject {
 

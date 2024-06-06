@@ -6,11 +6,10 @@
 //
 
 import UIKit
-import CommonUI
 
-final class LoadingReusableView: UICollectionReusableView {
+public final class LoadingReusableView: UICollectionReusableView {
 
-    var isShowing = false {
+    public var isShowing = false {
         didSet {
             isShowing ? indicatorView.startAnimating() : indicatorView.stopAnimating()
         }
@@ -28,8 +27,8 @@ final class LoadingReusableView: UICollectionReusableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func layoutSubviews() {
+    
+    public override func layoutSubviews() {
         super.layoutSubviews()
         indicatorView.frame = bounds
     }
