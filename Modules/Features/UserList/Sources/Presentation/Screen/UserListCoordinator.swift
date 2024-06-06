@@ -12,8 +12,7 @@ import UserListInterface
 final class UserListCoordinator: BaseCoordinator, UserListCoordinatorProtocol {
 
     override func start() {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemIndigo
+        let viewController = UserListViewController(with: .init())
 
         addPopHandler(for: viewController)
         navigationController.pushViewController(viewController, animated: true)

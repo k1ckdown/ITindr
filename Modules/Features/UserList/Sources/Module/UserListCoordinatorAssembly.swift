@@ -9,9 +9,13 @@ import Navigation
 import UserListInterface
 
 public struct UserListCoordinatorAssembly: UserListCoordinatorAssemblyProtocol {
-    
-    public init() {}
-    
+
+    private let dependencies: ModuleDependencies
+
+    public init(dependencies: ModuleDependencies) {
+        self.dependencies = dependencies
+    }
+
     public func assemble(navigationController: NavigationController) -> UserListCoordinatorProtocol {
         UserListCoordinator(navigationController: navigationController)
     }

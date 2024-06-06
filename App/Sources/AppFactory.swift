@@ -81,7 +81,7 @@ extension AppFactory {
             profileCoordinatorAssembly: ProfileCoordinatorAssembly(),
             chatListCoordinatorAssembly: makeChatListCoordinatorAssembly(),
             userFeedCoordinatorAssembly: makeUserFeedCoordinatorAssembly(),
-            userListCoordinatorAssembly: UserListCoordinatorAssembly()
+            userListCoordinatorAssembly: makeUserListCoordinatorAssembly()
         )
 
         return MainTabBarCoordinatorAssembly(dependencies: dependencies)
@@ -95,6 +95,11 @@ private extension AppFactory {
 
     func makeChatCoordinatorAssembly() -> ChatCoordinatorAssembly {
         ChatCoordinatorAssembly(dependencies: .init(chatRepository: chatRepository))
+    }
+
+    func makeUserListCoordinatorAssembly() -> UserListCoordinatorAssembly {
+        let dependencies = UserList.ModuleDependencies(userRepository: userRepository)
+        return UserListCoordinatorAssembly(dependencies: dependencies)
     }
 
     func makeUserFeedCoordinatorAssembly() -> UserFeedCoordinatorAssembly {
