@@ -35,7 +35,7 @@ extension UserRepository: UserRepositoryProtocol {
     }
 
     func getAllUsers(pagination: Pagination) async throws -> [UserProfile] {
-        let userDtos = try await remoteDataSource.fetchUsersFeed()
+        let userDtos = try await remoteDataSource.fetchAllUsers(pagination: pagination)
         return userDtos.toDomain()
     }
 }
