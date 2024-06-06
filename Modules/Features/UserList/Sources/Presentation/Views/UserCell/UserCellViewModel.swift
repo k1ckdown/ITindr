@@ -5,7 +5,7 @@
 //  Created by Ivan Semenov on 06.06.2024.
 //
 
-struct UserCellViewModel {
+struct UserCellViewModel: Equatable {
     let name: String
     let avatarUrl: String?
 }
