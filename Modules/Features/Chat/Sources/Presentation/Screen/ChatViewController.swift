@@ -11,7 +11,7 @@ import CommonUI
 import Navigation
 import Kingfisher
 
-final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
+final class ChatViewController: UIViewController, LoadableView, TabBarHidden, Keyboardable {
 
     private let store: ChatStore
     private let dataSource: ChatDataSource
@@ -27,6 +27,7 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
 
     private var messageToolbarHeightConstraint: NSLayoutConstraint?
     private var messageTextViewHeightConstraint: NSLayoutConstraint?
+    private var messageToolbarBottomConstraint: NSLayoutConstraint?
 
     private lazy var messageCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -54,7 +55,9 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         store.dispatch(.onAppear)
+        setupObservers()
     }
 
     override func viewWillLayoutSubviews() {
@@ -79,6 +82,11 @@ private extension ChatViewController {
     @objc
     func handleSendMessageButton() {
         store.dispatch(.sendMessageTapped)
+    }
+
+    @objc
+    func handleMessageCollectionTap() {
+        view.endEditing(true)
     }
 }
 
@@ -107,11 +115,12 @@ private extension ChatViewController {
         messageToolbar.translatesAutoresizingMaskIntoConstraints = false
         messageToolbarHeightConstraint = messageToolbar.heightAnchor.constraint(equalToConstant: Constants.messageToolbarHeight)
         messageToolbarHeightConstraint?.isActive = true
+        messageToolbarBottomConstraint = messageToolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        messageToolbarBottomConstraint?.isActive = true
 
         NSLayoutConstraint.activate([
             messageToolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            messageToolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            messageToolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            messageToolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
@@ -183,9 +192,13 @@ private extension ChatViewController {
         view.addSubview(messageCollectionView)
 
         messageCollectionView.backgroundColor = .clear
+        messageCollectionView.keyboardDismissMode = .onDrag
         messageCollectionView.transform = CGAffineTransform(scaleX: 1, y: -1)
         messageCollectionView.translatesAutoresizingMaskIntoConstraints = false
         dataSource.configure(messageCollectionView)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleMessageCollectionTap))
+        messageCollectionView.addGestureRecognizer(tapGesture)
 
         NSLayoutConstraint.activate([
             messageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -204,6 +217,18 @@ private extension ChatViewController {
 
         messageTextViewHeightConstraint?.constant = height
         messageToolbarHeightConstraint?.constant += height - oldHeight
+    }
+
+    func setupObservers() {
+        registerKeyboardWillHideNotification { [weak self] in
+            self?.messageToolbarBottomConstraint?.constant = 0
+            self?.view.layoutIfNeeded()
+        }
+
+        registerKeyboardWillShowNotification { [weak self] keyboardFrame in
+            self?.messageToolbarBottomConstraint?.constant = -keyboardFrame.height + Constants.keyboardInsetTop
+            self?.view.layoutIfNeeded()
+        }
     }
 }
 
@@ -290,6 +315,7 @@ private extension ChatViewController {
         static let sendMessageCornerRadius: CGFloat = buttonActionSize / 2
         static let sendMessageContentInset = NSDirectionalEdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 5)
 
+        static let keyboardInsetTop: CGFloat = 22
         static let messageViewInsetLeft: CGFloat = 16
         static let messageViewMaxHeight: CGFloat = 200
         static let messageViewCornerRadius: CGFloat = 4
