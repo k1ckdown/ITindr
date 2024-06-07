@@ -29,7 +29,8 @@ extension ChatRepository: ChatRepositoryProtocol {
     }
 
     func createChat(userId: String) async throws -> Chat {
-        let chatDto = try await remoteDataSource.createChat(userId: userId)
+        let requestDto = CreateChatDTO(userId: userId)
+        let chatDto = try await remoteDataSource.createChat(requestDto)
         return chatDto.toDomain()
     }
 

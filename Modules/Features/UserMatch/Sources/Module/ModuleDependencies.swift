@@ -6,11 +6,14 @@
 //
 
 import ChatDomain
+import ChatInterface
 
 public struct ModuleDependencies {
     let chatRepository: ChatRepositoryProtocol
+    let chatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol
 
-    public init(chatRepository: ChatRepositoryProtocol) {
+    public init(chatRepository: ChatRepositoryProtocol, chatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol) {
         self.chatRepository = chatRepository
+        self.chatCoordinatorAssembly = chatCoordinatorAssembly
     }
 }

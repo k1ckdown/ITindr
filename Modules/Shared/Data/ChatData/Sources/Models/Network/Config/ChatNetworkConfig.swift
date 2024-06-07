@@ -11,7 +11,7 @@ import CommonDomain
 
 enum ChatNetworkConfig: NetworkConfig {
     case chatList
-    case newChat(userId: String)
+    case newChat(CreateChatDTO)
     case chatMessages(chatId: String, pagination: Pagination)
     
     var path: String { NetworkConstants.baseUrlString }
@@ -34,7 +34,7 @@ enum ChatNetworkConfig: NetworkConfig {
     var parameters: Encodable? {
         switch self {
         case .chatList: nil
-        case .newChat(let userId): userId
+        case .newChat(let requestDto): requestDto
         case .chatMessages(_, let pagination): ["limit": pagination.limit, "offset": pagination.offset]
         }
     }

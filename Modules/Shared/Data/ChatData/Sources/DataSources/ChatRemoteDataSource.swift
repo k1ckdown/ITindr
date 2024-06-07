@@ -32,8 +32,8 @@ extension ChatRemoteDataSource {
         return try await networkService.request(config: networkConfig, authorized: true)
     }
 
-    func createChat(userId: String) async throws -> ChatDTO {
-        let networkConfig = ChatNetworkConfig.newChat(userId: userId)
+    func createChat(_ requestDto: CreateChatDTO) async throws -> ChatDTO {
+        let networkConfig = ChatNetworkConfig.newChat(requestDto)
         return try await networkService.request(config: networkConfig, authorized: true)
     }
 

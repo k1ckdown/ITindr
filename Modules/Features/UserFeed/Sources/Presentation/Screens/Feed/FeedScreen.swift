@@ -51,6 +51,7 @@ private extension FeedScreen {
     }
     
     func placeholderView() -> some View {
+        // TODO: Placeholder
         Text("No users").frame(maxHeight: .infinity)
     }
     
