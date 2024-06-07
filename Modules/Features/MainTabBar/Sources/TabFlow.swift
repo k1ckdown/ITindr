@@ -18,6 +18,7 @@ enum TabFlow: Int, CaseIterable {
         rawValue
     }
 
+    // TODO: Localize
     var title: String {
         switch self {
         case .userFeed: "Feed"
