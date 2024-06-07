@@ -11,8 +11,8 @@ extension Project {
     
     public static func coreFramework(
         name: String,
-        dependencies: [TargetDependency] = [],
-        hasResources: Bool = false
+        hasResources: Bool = false,
+        dependencies: [TargetDependency] = []
     ) -> Project {
         Project(
             name: name,
