@@ -5,8 +5,7 @@
 //  Created by Ivan Semenov on 20.05.2024.
 //
 
-import UDFKit
-import SwiftUI
+import UIKit
 import Navigation
 
 final class StartCoordinator: BaseCoordinator {

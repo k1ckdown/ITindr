@@ -19,7 +19,10 @@ public struct UserFeedCoordinatorAssembly: UserFeedCoordinatorAssemblyProtocol {
     public func assemble(navigationController: NavigationController) -> UserFeedCoordinatorProtocol {
         let useCaseFactory = UseCaseFactory(userRepository: dependencies.userRepository)
         let screenFactory = ScreenFactory(useCaseFactory: useCaseFactory)
-        let coordinatorFactory = CoordinatorFactory(screenFactory: screenFactory)
+        let coordinatorFactory = CoordinatorFactory(
+            screenFactory: screenFactory,
+            userMatchCoordinatorAssembly: dependencies.userMatchCoordinatorAssembly
+        )
 
         return coordinatorFactory.makeFeedCoordinator(navigationController: navigationController)
     }

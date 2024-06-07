@@ -9,5 +9,9 @@ import Navigation
 
 @MainActor
 public protocol UserMatchCoordinatorAssemblyProtocol {
-    func assemble(cancelHandler: () -> Void, navigationController: NavigationController) -> UserMatchCoordinatorProtocol
+    func assemble(
+        userId: String,
+        cancelHandler: (() -> Void)?,
+        navigationController: NavigationController
+    ) -> UserMatchCoordinatorProtocol
 }

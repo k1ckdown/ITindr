@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  UserMatch
+
+  Created by Ivan Semenov on 07.06.2024.
+  
+*/
+
+"WriteMessage" = "Write a message";
+"InterfacesFitTogether" = "Your interfaces fit together";

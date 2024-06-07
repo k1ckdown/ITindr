@@ -11,11 +11,12 @@ import ProfileDomain
 
 @MainActor
 protocol FeedMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
-    func showUserMatch()
+    func showUserMatch(userId: String, cancelHandler: (() -> Void)?)
 }
 
 final class FeedMiddleware: Middleware {
 
+    var cancelMatchHandler: ((UserProfile?) -> Void)?
     private var currentUser: UserProfile?
     private var users: [UserProfile] = []
     private let likeUserUseCase: LikeUserUseCase
@@ -64,6 +65,24 @@ private extension FeedMiddleware {
         return currentUser
     }
 
+    func showUserMatch(userId: String) async {
+        let cancelHandler: () -> Void = { [weak self] in
+            self?.cancelMatchHandler?(self?.getNextUser())
+        }
+
+        await delegate?.showUserMatch(userId: userId, cancelHandler: cancelHandler)
+    }
+
+    func getUsers() async -> FeedIntent {
+        do {
+            users = try await getUsersFeedUseCase.execute()
+            return .userSelected(getNextUser())
+        } catch {
+            await delegate?.showError(error.localizedDescription)
+            return .loadFailed(error.localizedDescription)
+        }
+    }
+
     func dislikeUser() async {
         guard let currentUser else { return }
 
@@ -76,26 +95,16 @@ private extension FeedMiddleware {
 
     func likeUser() async -> FeedIntent? {
         guard let currentUser else { return nil }
-        
+
         do {
             let isMutual = try await likeUserUseCase.execute(userId: currentUser.id)
             guard isMutual else { return .userSelected(getNextUser())}
 
-            await delegate?.showUserMatch()
+            await showUserMatch(userId: currentUser.id)
             return .usersMatched
         } catch {
             await delegate?.showError(error.localizedDescription)
             return nil
-        }
-    }
-
-    func getUsers() async -> FeedIntent {
-        do {
-            users = try await getUsersFeedUseCase.execute()
-            return .userSelected(getNextUser())
-        } catch {
-            await delegate?.showError(error.localizedDescription)
-            return .loadFailed(error.localizedDescription)
         }
     }
 }

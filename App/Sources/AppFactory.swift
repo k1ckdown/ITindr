@@ -6,11 +6,12 @@
 //
 
 import Chat
+import Auth
 import Profile
 import ChatList
 import UserList
 import UserFeed
-import Auth
+import UserMatch
 import ProfileEditor
 import AuthFlow
 import ProfileData
@@ -102,9 +103,9 @@ private extension AppFactory {
         return UserListCoordinatorAssembly(dependencies: dependencies)
     }
 
-    func makeUserFeedCoordinatorAssembly() -> UserFeedCoordinatorAssembly {
-        let dependencies = UserFeed.ModuleDependencies(userRepository: userRepository)
-        return UserFeedCoordinatorAssembly(dependencies: dependencies)
+    func makeUserMatchCoordinatorAssembly() -> UserMatchCoordinatorAssembly {
+        let dependencies = UserMatch.ModuleDependencies(chatRepository: chatRepository)
+        return UserMatchCoordinatorAssembly(dependencies: dependencies)
     }
 
     func makeAuthCoordinatorAssembly() -> AuthCoordinatorAssembly {
@@ -115,6 +116,15 @@ private extension AppFactory {
     func makeProfileEditorCoordinatorAssembly() -> ProfileEditorCoordinatorAssembly {
         let dependencies = ProfileEditor.ModuleDependencies(profileRepository: profileRepository)
         return ProfileEditorCoordinatorAssembly(dependencies: dependencies)
+    }
+
+    func makeUserFeedCoordinatorAssembly() -> UserFeedCoordinatorAssembly {
+        let dependencies = UserFeed.ModuleDependencies(
+            userRepository: userRepository,
+            userMatchCoordinatorAssembly: makeUserMatchCoordinatorAssembly()
+        )
+
+        return UserFeedCoordinatorAssembly(dependencies: dependencies)
     }
 
     func makeChatListCoordinatorAssembly() -> ChatListCoordinatorAssembly {

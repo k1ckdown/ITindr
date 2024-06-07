@@ -44,6 +44,7 @@ let project = Project(
                 .project(target: "Auth", path: "../Modules/Features/Auth"),
                 .project(target: "Chat", path: "../Modules/Features/Chat"),
                 .project(target: "ChatList", path: "../Modules/Features/ChatList"),
+                .project(target: "UserMatch", path: "../Modules/Features/UserMatch"),
                 .project(target: "UserList", path: "../Modules/Features/UserList"),
                 .project(target: "UserFeed", path: "../Modules/Features/UserFeed"),
                 .project(target: "Profile", path: "../Modules/Features/Profile"),

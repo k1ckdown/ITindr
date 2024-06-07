@@ -6,6 +6,7 @@
 //
 
 import UDFKit
+import ProfileDomain
 
 final class ScreenFactory {
 
@@ -20,7 +21,7 @@ final class ScreenFactory {
 
 @MainActor
 extension ScreenFactory {
-
+    
     func makeFeedScreen(middlewareDelegate: FeedMiddlewareDelegate?) -> FeedScreen {
         let reducer = FeedReducer()
         let middleware = FeedMiddleware(
@@ -31,6 +32,9 @@ extension ScreenFactory {
         )
 
         let store = Store(initialState: FeedState.idle, reducer: reducer, middleware: middleware)
+        let cancelMatchHandler: ((UserProfile?) -> Void) = { [weak store] in store?.dispatch(.userSelected($0)) }
+        
+        middleware.cancelMatchHandler = cancelMatchHandler
         return FeedScreen(store: store)
     }
 }
