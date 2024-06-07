@@ -8,6 +8,7 @@
 import UIKit
 import CommonUI
 import Navigation
+import ChatDomain
 import ChatInterface
 import ChatListInterface
 
@@ -40,8 +41,9 @@ final class ChatListCoordinator: BaseCoordinator, ChatListCoordinatorProtocol {
 
 extension ChatListCoordinator: ChatListMiddlewareDelegate {
 
-    func goToChat(with id: String) {
-        let chatCoordinator = chatCoordinatorAssembly.assemble(chatId: id, navigationController: navigationController)
+    func goToChat(with chat: ChatDomain.Chat) {
+        let interfaceChat = ChatInterface.Chat(id: chat.id, title: chat.title, avatarUrl: chat.avatar)
+        let chatCoordinator = chatCoordinatorAssembly.assemble(chat: interfaceChat, navigationController: navigationController)
         coordinate(to: chatCoordinator)
     }
 }

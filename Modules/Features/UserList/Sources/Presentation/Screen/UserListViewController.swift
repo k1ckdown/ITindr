@@ -97,7 +97,7 @@ private extension UserListViewController {
         guard previousUserCount < viewModels.count else { return }
 
         let indexPaths = (previousUserCount..<viewModels.count).map { IndexPath(item: $0, section: 0) }
-        userCollectionView.insertItems(at: indexPaths)
+        userCollectionView.performBatchUpdates { userCollectionView.insertItems(at: indexPaths) }
     }
 }
 

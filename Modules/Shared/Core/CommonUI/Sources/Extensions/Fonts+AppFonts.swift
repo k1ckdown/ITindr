@@ -22,4 +22,5 @@ public extension Fonts {
     static let uiBold16 = Fonts.bold.font(size: 16)
     static let uiRegular12 = Fonts.regular.font(size: 12)
     static let uiRegular16 = Fonts.regular.font(size: 16)
+    static let uiSemibold16 = Fonts.semiBold.font(size: 16)
 }

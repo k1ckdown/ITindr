@@ -9,5 +9,5 @@ import Navigation
 
 @MainActor
 public protocol ChatCoordinatorAssemblyProtocol {
-    func assemble(chatId: String, navigationController: NavigationController) -> ChatCoordinatorProtocol
+    func assemble(chat: Chat, navigationController: NavigationController) -> ChatCoordinatorProtocol
 }

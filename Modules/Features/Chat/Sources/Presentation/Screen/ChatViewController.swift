@@ -6,9 +6,10 @@
 //
 
 import UIKit
-import CommonUI
 import Combine
+import CommonUI
 import Navigation
+import Kingfisher
 
 final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
 
@@ -16,6 +17,7 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden {
     private let dataSource: ChatDataSource
     private var subscriptions = Set<AnyCancellable>()
 
+    private let titleView = ChatTitleView()
     private let messageToolbar = UIView()
     private let messageTextView = UITextView()
     private let sendMessageButton = UIButton()
@@ -85,13 +87,18 @@ private extension ChatViewController {
 private extension ChatViewController {
 
     func setup() {
-        view.backgroundColor = Colors.appBackground.color
+        setupSuperView()
         setupMessageToolbar()
         setupMessageTextView()
         setupAddAttachmentButton()
         setupSendMessageButton()
         setupMessageCollectionView()
         setupLoadingView()
+    }
+
+    func setupSuperView() {
+        navigationItem.titleView = titleView
+        view.backgroundColor = Colors.appBackground.color
     }
 
     func setupMessageToolbar() {
@@ -223,6 +230,7 @@ private extension ChatViewController {
         isLoading(false)
         updateMessageText(viewData.messageText)
         dataSource.loadingView?.isShowing = viewData.isMoreLoading
+        updateTitleView(title: viewData.chatTitle, avatarUrl: viewData.chatAvatarUrl)
         updateMessages(viewModels: viewData.messages, isMessageCreated: viewData.isMessageCreated)
     }
 
@@ -245,6 +253,18 @@ private extension ChatViewController {
         : (previousMessageCount..<viewModels.count).map { IndexPath(item: $0, section: 0) }
 
         messageCollectionView.performBatchUpdates { messageCollectionView.insertItems(at: indexPaths) }
+    }
+
+    func updateTitleView(title: String, avatarUrl: String?) {
+        guard titleView.title == nil else { return }
+
+        titleView.title = title
+        let avatarPlaceholder = Images.avatarPlaceholder.image
+        if let avatarUrl {
+            titleView.avatarImageView.kf.setImage(with: URL(string: avatarUrl), placeholder: avatarPlaceholder)
+        } else {
+            titleView.avatarImageView.image = avatarPlaceholder
+        }
     }
 }
 

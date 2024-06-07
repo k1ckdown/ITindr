@@ -22,10 +22,10 @@ struct ChatReducer: Reducer {
             state = .failed(error)
         case .loadMoreStarted:
             handleLoadMoreStart(&state)
+        case .dataLoaded(let data):
+            handleDataLoad(&state, data: data)
         case .messageCreated(let message):
             handleMessageCreate(&state, message: message)
-        case .dataLoaded(let messages, let pagination):
-            handleDataLoad(&state, messages: messages, pagination: pagination)
         case .messageChanged(let text):
             handleMessageChange(&state, text: text)
         }
@@ -60,14 +60,20 @@ private extension ChatReducer {
         state = .loaded(viewData)
     }
 
-    func handleDataLoad(_ state: inout ChatState, messages: [Message], pagination: Pagination) {
-        let messageCellViewModels = messages.map { mapToViewModel(message: $0) }
-        let nextPage = pagination.nextPage
+    func handleDataLoad(_ state: inout ChatState, data: ChatIntent.LoadData) {
+        let messageCellViewModels = data.messages.map { mapToViewModel(message: $0) }
+        let nextPage = data.pagination.nextPage
 
         switch state {
         case .loading:
-            let viewData = ChatState.ViewData(pagination: nextPage, messages: messageCellViewModels)
+            let viewData = ChatState.ViewData(
+                chatTitle: data.chat.title,
+                chatAvatarUrl: data.chat.avatarUrl,
+                pagination: nextPage,
+                messages: messageCellViewModels
+            )
             state = .loaded(viewData)
+
         case .loaded(var viewData):
             viewData.pagination = nextPage
             viewData.messages.append(contentsOf: messageCellViewModels)

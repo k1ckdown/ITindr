@@ -9,24 +9,25 @@ import UDFKit
 import Navigation
 import ChatDomain
 import CommonDomain
+import ChatInterface
 
 @MainActor
 protocol ChatMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
 
 final class ChatMiddleware: Middleware {
 
-    private let chatId: String
+    private let chat: Chat
     private let sendMessageUseCase: SendMessageUseCase
     private let getMessageListUseCase: GetMessageListUseCase
     private weak var delegate: ChatMiddlewareDelegate?
 
     init(
-        chatId: String,
+        chat: Chat,
         sendMessageUseCase: SendMessageUseCase,
         getMessageListUseCase: GetMessageListUseCase,
         delegate: ChatMiddlewareDelegate?
     ) {
-        self.chatId = chatId
+        self.chat = chat
         self.sendMessageUseCase = sendMessageUseCase
         self.getMessageListUseCase = getMessageListUseCase
         self.delegate = delegate
@@ -57,7 +58,7 @@ private extension ChatMiddleware {
         guard case .loaded(let viewData) = state else { return nil }
         return await getMessages(pagination: viewData.pagination)
     }
-    
+
     func checkLoadMoreAvailable(state: ChatState) -> Bool {
         guard
             case .loaded(let viewData) = state,
@@ -69,8 +70,9 @@ private extension ChatMiddleware {
 
     func getMessages(pagination: Pagination) async -> ChatIntent {
         do {
-            let messages = try await getMessageListUseCase.execute(chatId: chatId, pagination: pagination)
-            return .dataLoaded(messages, pagination)
+            let messages = try await getMessageListUseCase.execute(chatId: chat.id, pagination: pagination)
+            let loadData = ChatIntent.LoadData(chat: chat, messages: messages, pagination: pagination)
+            return .dataLoaded(loadData)
         } catch {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)
@@ -81,7 +83,7 @@ private extension ChatMiddleware {
         guard case .loaded(let viewData) = state, viewData.messageText.isEmpty == false else { return nil }
 
         do {
-            let messageSend = MessageSend(chatId: chatId, text: viewData.messageText, attachments: [])
+            let messageSend = MessageSend(chatId: chat.id, text: viewData.messageText, attachments: [])
             let message = try await sendMessageUseCase.execute(messageSend)
             return .messageCreated(message)
         } catch {

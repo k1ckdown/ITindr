@@ -9,6 +9,8 @@ import UDFKit
 import Navigation
 import ChatInterface
 
+public typealias Chat = ChatInterface.Chat
+
 public struct ChatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol {
 
     private let dependencies: ModuleDependencies
@@ -17,11 +19,11 @@ public struct ChatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol {
         self.dependencies = dependencies
     }
 
-    public func assemble(chatId: String, navigationController: NavigationController) -> ChatCoordinatorProtocol {
+    public func assemble(chat: Chat, navigationController: NavigationController) -> ChatCoordinatorProtocol {
         let content: ChatCoordinator.Content = { middlewareDelegate in
             let reducer = ChatReducer()
             let middleware = ChatMiddleware(
-                chatId: chatId,
+                chat: chat,
                 sendMessageUseCase: .init(chatRepository: dependencies.chatRepository),
                 getMessageListUseCase: .init(chatRepository: dependencies.chatRepository),
                 delegate: middlewareDelegate
