@@ -119,14 +119,6 @@ private extension FeedScreen {
             actionButtons().padding(.bottom)
         }
         .padding(.horizontal)
-        .fullScreenCover(isPresented: .constant(user.isMutual)) {
-            UserMatchView {
-                store.dispatch(.usersMatchDisappear)
-            } writeMessageHandler: {
-                store.dispatch(.writeMessageTapped)
-            }
-            .background(ClearBackgroundView())
-        }
     }
 }
 

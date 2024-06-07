@@ -10,7 +10,9 @@ import Navigation
 import ProfileDomain
 
 @MainActor
-protocol FeedMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
+protocol FeedMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
+    func showUserMatch()
+}
 
 final class FeedMiddleware: Middleware {
 
@@ -42,9 +44,9 @@ final class FeedMiddleware: Middleware {
             return await likeUser()
         case .rejectTapped:
             await dislikeUser()
-            return .userSelected(getCurrentUser())
+            return .userSelected(getNextUser())
         case .usersMatchDisappear:
-            return .userSelected(getCurrentUser())
+            return .userSelected(getNextUser())
         case .avatarTapped: break
         case .writeMessageTapped: break
         }
@@ -57,7 +59,7 @@ final class FeedMiddleware: Middleware {
 
 private extension FeedMiddleware {
 
-    func getCurrentUser() -> UserProfile? {
+    func getNextUser() -> UserProfile? {
         currentUser = users.isEmpty ? nil : users.removeFirst()
         return currentUser
     }
@@ -74,10 +76,13 @@ private extension FeedMiddleware {
 
     func likeUser() async -> FeedIntent? {
         guard let currentUser else { return nil }
-
+        
         do {
             let isMutual = try await likeUserUseCase.execute(userId: currentUser.id)
-            return isMutual ? .usersMatched : .userSelected(getCurrentUser())
+            guard isMutual else { return .userSelected(getNextUser())}
+
+            await delegate?.showUserMatch()
+            return .usersMatched
         } catch {
             await delegate?.showError(error.localizedDescription)
             return nil
@@ -87,7 +92,7 @@ private extension FeedMiddleware {
     func getUsers() async -> FeedIntent {
         do {
             users = try await getUsersFeedUseCase.execute()
-            return .userSelected(getCurrentUser())
+            return .userSelected(getNextUser())
         } catch {
             await delegate?.showError(error.localizedDescription)
             return .loadFailed(error.localizedDescription)
