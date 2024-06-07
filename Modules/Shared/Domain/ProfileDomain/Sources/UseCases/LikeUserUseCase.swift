@@ -5,17 +5,15 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
-import ProfileDomain
-
-final class LikeUserUseCase {
+public final class LikeUserUseCase {
 
     private let userRepository: UserRepositoryProtocol
 
-    init(userRepository: UserRepositoryProtocol) {
+    public init(userRepository: UserRepositoryProtocol) {
         self.userRepository = userRepository
     }
 
-    func execute(userId: String) async throws -> Bool {
+    public func execute(userId: String) async throws -> Bool {
         try await userRepository.like(userId: userId)
     }
 }

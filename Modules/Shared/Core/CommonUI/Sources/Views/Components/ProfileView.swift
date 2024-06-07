@@ -63,7 +63,7 @@ public extension ProfileView {
         let topics: [String]
         let avatarTapped: (() -> Void)?
 
-        public init(username: String, avatarUrl: String?, aboutMyself: String?, topics: [String], avatarTapped: (() -> Void)?) {
+        public init(username: String, avatarUrl: String?, aboutMyself: String?, topics: [String], avatarTapped: (() -> Void)? = nil) {
             self.username = username
             self.avatarUrl = avatarUrl
             self.aboutMyself = aboutMyself

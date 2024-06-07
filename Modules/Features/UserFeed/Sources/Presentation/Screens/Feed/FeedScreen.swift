@@ -59,7 +59,7 @@ private extension FeedScreen {
             model: ProfileView.Model(
                 username: user.username,
                 avatarUrl: user.avatarUrl,
-                aboutMyself: user.avatarUrl,
+                aboutMyself: user.aboutMyself,
                 topics: user.topics,
                 avatarTapped: { store.dispatch(.avatarTapped) }
             )) {

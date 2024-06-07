@@ -12,23 +12,16 @@ import UserListInterface
 public struct UserListCoordinatorAssembly: UserListCoordinatorAssemblyProtocol {
 
     private let dependencies: ModuleDependencies
-    
+
     public init(dependencies: ModuleDependencies) {
         self.dependencies = dependencies
     }
 
     public func assemble(navigationController: NavigationController) -> UserListCoordinatorProtocol {
-        let content: UserListCoordinator.Content = { middlewareDelegate in
-            let reducer = UserListReducer()
-            let middleware = UserListMiddleware(
-                getUserListUseCase: .init(userRepository: dependencies.userRepository),
-                delegate: middlewareDelegate
-            )
+        let useCaseFactory = UseCaseFactory(userRepository: dependencies.userRepository)
+        let screenFactory = ScreenFactory(useCaseFactory: useCaseFactory)
+        let coordinatorFactory = CoordinatorFactory(screenFactory: screenFactory)
 
-            let store = Store(initialState: .idle, reducer: reducer, middleware: middleware)
-            return UserListViewController(store: store)
-        }
-
-        return UserListCoordinator(content: content, navigationController: navigationController)
+        return coordinatorFactory.makeUserListCoordinator(navigationController: navigationController)
     }
 }

@@ -46,10 +46,7 @@ final class FeedMiddleware: Middleware {
         case .rejectTapped:
             await dislikeUser()
             return .userSelected(getNextUser())
-        case .usersMatchDisappear:
-            return .userSelected(getNextUser())
         case .avatarTapped: break
-        case .writeMessageTapped: break
         }
 
         return nil

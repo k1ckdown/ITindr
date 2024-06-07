@@ -12,7 +12,7 @@ struct FeedReducer: Reducer {
 
     func reduce(state: inout FeedState, intent: FeedIntent) {
         switch intent {
-        case .likeTapped, .rejectTapped, .avatarTapped, .writeMessageTapped, .usersMatchDisappear: break
+        case .likeTapped, .rejectTapped, .avatarTapped: break
         case .onAppear:
             state = .loading
         case .usersMatched:

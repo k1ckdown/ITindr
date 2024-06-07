@@ -11,18 +11,21 @@ import ProfileDomain
 import UserListInterface
 
 final class UserListCoordinator: BaseCoordinator, UserListCoordinatorProtocol {
+    typealias Factory = ProfileCoordinatorFactory
     typealias Content = (UserListMiddlewareDelegate) -> UIViewController
-    
+
     private let content: Content
-    
-    init(content: @escaping Content, navigationController: NavigationController) {
+    private let factory: Factory
+
+    init(content: @escaping Content, factory: Factory, navigationController: NavigationController) {
         self.content = content
+        self.factory = factory
         super.init(navigationController: navigationController)
     }
-    
+
     override func start() {
         let content = content(self)
-        
+
         addPopHandler(for: content)
         navigationController.pushViewController(content, animated: true)
     }
@@ -33,11 +36,7 @@ final class UserListCoordinator: BaseCoordinator, UserListCoordinatorProtocol {
 extension UserListCoordinator: UserListMiddlewareDelegate {
     
     func goToProfile(_ profile: UserProfile) {
-        print(profile.name)
-        
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemIndigo
-        
-        navigationController.pushViewController(viewController, animated: true)
+        let profileCoordinator = factory.makeProfileCoordinator(profile: profile, navigationController: navigationController)
+        coordinate(to: profileCoordinator)
     }
 }

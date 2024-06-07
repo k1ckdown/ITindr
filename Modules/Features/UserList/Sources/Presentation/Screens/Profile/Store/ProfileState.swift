@@ -1,33 +1,30 @@
 //
-//  FeedState.swift
-//  UserFeed
+//  ProfileState.swift
+//  UserList
 //
-//  Created by Ivan Semenov on 02.06.2024.
+//  Created by Ivan Semenov on 07.06.2024.
 //
 
+import CommonUI
 import ProfileDomain
 
-enum FeedState: Equatable {
+enum ProfileState: Equatable {
     case idle
     case loading
     case failed(String)
-    case loaded(User?)
+    case loaded(User)
 
     struct User: Equatable {
         let username: String
         let avatarUrl: String?
         let aboutMyself: String?
         let topics: [String]
-        var isMutual = false
     }
 }
 
-enum FeedIntent: Equatable {
+enum ProfileIntent: Equatable {
     case onAppear
-    case usersMatched
     case likeTapped
     case rejectTapped
-    case avatarTapped
-    case loadFailed(String)
-    case userSelected(UserProfile?)
+    case dataLoaded(UserProfile)
 }
