@@ -20,7 +20,10 @@ public struct UserListCoordinatorAssembly: UserListCoordinatorAssemblyProtocol {
     public func assemble(navigationController: NavigationController) -> UserListCoordinatorProtocol {
         let useCaseFactory = UseCaseFactory(userRepository: dependencies.userRepository)
         let screenFactory = ScreenFactory(useCaseFactory: useCaseFactory)
-        let coordinatorFactory = CoordinatorFactory(screenFactory: screenFactory)
+        let coordinatorFactory = CoordinatorFactory(
+            screenFactory: screenFactory,
+            userMatchCoordinatorAssembly: dependencies.userMatchCoordinatorAssembly
+        )
 
         return coordinatorFactory.makeUserListCoordinator(navigationController: navigationController)
     }

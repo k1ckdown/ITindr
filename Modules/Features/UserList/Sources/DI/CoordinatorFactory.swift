@@ -8,13 +8,16 @@
 import SwiftUI
 import Navigation
 import ProfileDomain
+import UserMatchInterface
 
 final class CoordinatorFactory {
 
     private let screenFactory: ScreenFactory
+    private let userMatchCoordinatorAssembly: UserMatchCoordinatorAssemblyProtocol
 
-    init(screenFactory: ScreenFactory) {
+    init(screenFactory: ScreenFactory, userMatchCoordinatorAssembly: UserMatchCoordinatorAssemblyProtocol) {
         self.screenFactory = screenFactory
+        self.userMatchCoordinatorAssembly = userMatchCoordinatorAssembly
     }
 }
 
@@ -35,6 +38,10 @@ extension CoordinatorFactory: ProfileCoordinatorFactory {
             return UIHostingController(rootView: screen)
         }
 
-        return ProfileCoordinator(content: content, navigationController: navigationController)
+        return ProfileCoordinator(
+            content: content,
+            navigationController: navigationController,
+            userMatchCoordinatorAssembly: userMatchCoordinatorAssembly
+        )
     }
 }

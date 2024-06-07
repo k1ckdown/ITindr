@@ -98,11 +98,6 @@ private extension AppFactory {
         ChatCoordinatorAssembly(dependencies: .init(chatRepository: chatRepository))
     }
 
-    func makeUserListCoordinatorAssembly() -> UserListCoordinatorAssembly {
-        let dependencies = UserList.ModuleDependencies(userRepository: userRepository)
-        return UserListCoordinatorAssembly(dependencies: dependencies)
-    }
-
     func makeUserMatchCoordinatorAssembly() -> UserMatchCoordinatorAssembly {
         let dependencies = UserMatch.ModuleDependencies(chatRepository: chatRepository)
         return UserMatchCoordinatorAssembly(dependencies: dependencies)
@@ -125,6 +120,15 @@ private extension AppFactory {
         )
 
         return UserFeedCoordinatorAssembly(dependencies: dependencies)
+    }
+
+    func makeUserListCoordinatorAssembly() -> UserListCoordinatorAssembly {
+        let dependencies = UserList.ModuleDependencies(
+            userRepository: userRepository,
+            userMatchCoordinatorAssembly: makeUserMatchCoordinatorAssembly()
+        )
+
+        return UserListCoordinatorAssembly(dependencies: dependencies)
     }
 
     func makeChatListCoordinatorAssembly() -> ChatListCoordinatorAssembly {

@@ -12,6 +12,7 @@ import ProfileDomain
 @MainActor
 protocol ProfileMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
     func goToBack()
+    func showUserMatch(userId: String)
 }
 
 final class ProfileMiddleware: Middleware {
@@ -38,10 +39,10 @@ final class ProfileMiddleware: Middleware {
         case .dataLoaded: break
         case .onAppear:
             return .dataLoaded(profile)
-        case .likeTapped: break
-
+        case .likeTapped:
+            await likeUser()
         case .rejectTapped:
-            await delegate?.goToBack()
+            await dislikeUser()
         }
 
         return nil
@@ -53,6 +54,20 @@ final class ProfileMiddleware: Middleware {
 private extension ProfileMiddleware {
 
     func likeUser() async {
-        
+        do {
+            let isMutual = try await likeUserUseCase.execute(userId: profile.id)
+            if isMutual { await delegate?.showUserMatch(userId: profile.id) }
+        } catch {
+            await delegate?.showError(error.localizedDescription)
+        }
+    }
+
+    func dislikeUser() async {
+        do {
+            try await dislikeUserUseCase.execute(userId: profile.id)
+            await delegate?.goToBack()
+        } catch {
+            await delegate?.showError(error.localizedDescription)
+        }
     }
 }
