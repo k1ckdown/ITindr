@@ -28,7 +28,6 @@ enum ChatMultipartNetworkConfig: MultipartNetworkConfig {
         }
     }
     
-    // TODO: Attachments
     var files: [String: [(data: Data, fileName: String)]] {
         switch self {
         case .sendMessage(let messageSend):
