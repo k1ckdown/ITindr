@@ -26,7 +26,7 @@ enum ProfileMultipartNetworkConfig: MultipartNetworkConfig {
     var files: [String: (data: Data, fileName: String)] {
         switch self {
         case .uploadAvatar(let avatar):
-            ["avatar": (avatar.data, avatar.fileName)]
+            ["avatar": (avatar.data, "imageName.jpg")]
         }
     }
 }
