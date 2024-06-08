@@ -280,6 +280,7 @@ private extension ChatViewController {
     }
 
     func setupSourceTypeAlert() {
+        // TODO: Localize
         let actions = [
             UIAlertAction(title: "Photos", style: .default, handler: { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(.library))

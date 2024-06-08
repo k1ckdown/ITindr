@@ -52,8 +52,8 @@ private extension ChatReducer {
     func handleAttachmentChoice(_ state: inout ChatState, _ attachment: Resource) {
         guard case .loaded(var viewData) = state else { return }
 
-        viewData.chosenAttachment = attachment
         viewData.photoSourceType = nil
+        viewData.chosenAttachment = attachment
         state = .loaded(viewData)
     }
 
@@ -118,6 +118,7 @@ private extension ChatReducer {
         MessageCellViewModel(
             text: message.text,
             avatar: message.user.avatar,
+            imageUrl: message.attachments.first,
             createdAt: message.createdAt,
             isOutgoing: message.isOutgoing
         )

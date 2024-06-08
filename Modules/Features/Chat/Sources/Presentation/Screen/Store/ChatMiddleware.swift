@@ -81,9 +81,12 @@ private extension ChatMiddleware {
     }
 
     func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
-        guard case .loaded(let viewData) = state, viewData.messageText.isEmpty == false else { return nil }
-        let attachments = if let chosenAttachment = viewData.chosenAttachment { [chosenAttachment.data] } else { [Data]() }
+        guard 
+            case .loaded(let viewData) = state,
+            (viewData.messageText.isEmpty && viewData.chosenAttachment == nil) == false
+        else { return nil }
 
+        let attachments = if let chosenAttachment = viewData.chosenAttachment { [chosenAttachment.data] } else { [Data]() }
         do {
             let messageSend = MessageSend(chatId: chat.id, text: viewData.messageText, attachments: attachments)
             let message = try await sendMessageUseCase.execute(messageSend)

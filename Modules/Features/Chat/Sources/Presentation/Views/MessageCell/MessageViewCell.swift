@@ -16,6 +16,8 @@ final class MessageViewCell: UICollectionViewCell {
     private let sentDateLabel = UILabel()
     private let messageContentView = UIView()
     private let avatarImageView = UIImageView()
+    private let attachmentImageView = UIImageView()
+    private var attachmentImageSize = Constants.attachmentImageSize
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,6 +32,7 @@ final class MessageViewCell: UICollectionViewCell {
         textLabel.text = nil
         sentDateLabel.text = nil
         avatarImageView.image = nil
+        attachmentImageView.image = nil
     }
 
     override func layoutSubviews() {
@@ -45,23 +48,47 @@ final class MessageViewCell: UICollectionViewCell {
     func configure(with viewModel: MessageCellViewModel) {
         isOutgoing = viewModel.isOutgoing
         textLabel.text = viewModel.text
-        messageContentView.backgroundColor = viewModel.isOutgoing ? Colors.appLightGray.color : .clear
-        messageContentView.layer.borderColor = (viewModel.isOutgoing ? .clear : Colors.appGray.color).cgColor
+        setMessageContentStyle(isOutgoing: viewModel.isOutgoing)
+        setSentDate(viewModel.createdAt)
+        setAttachmentImage(with: viewModel.imageUrl)
+        setAvatarImage(with: viewModel.avatar)
+        setNeedsLayout()
+    }
+}
+
+// MARK: - Private methods
+
+private extension MessageViewCell {
+
+    func setSentDate(_ dateTime: Date) {
+        let time = dateTime.formatted(.dateTime.hour().minute())
+        let date = dateTime.formatted(.dateTime.day().month(.wide).year())
+        sentDateLabel.text = "\(time) • \(date)".lowercased()
+    }
+
+    func setMessageContentStyle(isOutgoing: Bool) {
+        messageContentView.backgroundColor = isOutgoing ? Colors.appLightGray.color : .clear
+        messageContentView.layer.borderColor = (isOutgoing ? .clear : Colors.appGray.color).cgColor
         messageContentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         messageContentView.layer.maskedCorners.insert(isOutgoing ? .layerMinXMaxYCorner : .layerMaxXMaxYCorner)
+    }
 
-        let time = viewModel.createdAt.formatted(.dateTime.hour().minute())
-        let date = viewModel.createdAt.formatted(.dateTime.day().month(.wide).year())
-        sentDateLabel.text = "\(time) • \(date)".lowercased()
+    func setAttachmentImage(with url: String?) {
+        if let imageUrl = url {
+            attachmentImageSize = Constants.attachmentImageSize
+            attachmentImageView.kf.setImage(with: URL(string: imageUrl))
+        } else {
+            attachmentImageSize = .zero
+        }
+    }
 
+    func setAvatarImage(with url: String?) {
         let avatarPlaceholder = Images.avatarPlaceholder.image
-        if let avatarUrl = viewModel.avatar {
+        if let avatarUrl = url {
             avatarImageView.kf.setImage(with: URL(string: avatarUrl), placeholder: avatarPlaceholder)
         } else {
             avatarImageView.image = avatarPlaceholder
         }
-
-        setNeedsLayout()
     }
 }
 
@@ -72,6 +99,7 @@ private extension MessageViewCell {
     func setup() {
         setupAvatarImageView()
         setupMessageContentView()
+        setupAttachmentImageView()
         setupTextLabel()
         setupSentDateLabel()
         contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -89,6 +117,13 @@ private extension MessageViewCell {
         messageContentView.backgroundColor = .lightGray
         messageContentView.layer.borderWidth = Constants.messageContentBorderWidth
         messageContentView.layer.cornerRadius = Constants.messageContentCornerRadius
+    }
+
+    func setupAttachmentImageView() {
+        messageContentView.addSubview(attachmentImageView)
+        attachmentImageView.contentMode = .scaleAspectFill
+        attachmentImageView.layer.masksToBounds = true
+        attachmentImageView.layer.cornerRadius = Constants.attachmentImageCornerRadius
     }
 
     func setupTextLabel() {
@@ -112,21 +147,18 @@ private extension MessageViewCell {
         let sentDateSize = sentDateLabel.sizeThatFits(CGSize(width: maxContentWidth, height: .greatestFiniteMagnitude))
 
         let textHeight = textSize.height
-        let messageWidth = max(textSize.width, sentDateSize.width)
+        let messageWidth = max(textSize.width, sentDateSize.width, attachmentImageSize.width)
 
         let messageContentWidth = messageWidth + Constants.messageContentPadding * 2
-        let messageContentHeight = textHeight + sentDateSize.height + Constants.messageContentPadding * 2
 
-        messageContentView.frame = CGRect(
-            x: isOutgoing ? width - messageContentWidth - Constants.messageContentInsetStart : Constants.messageContentInsetStart,
-            y: 0,
-            width: messageContentWidth,
-            height: messageContentHeight
+        attachmentImageView.frame = CGRect(
+            origin: CGPoint(x: Constants.messageContentPadding, y: Constants.messageContentPadding),
+            size: attachmentImageSize
         )
 
         textLabel.frame = CGRect(
             x: Constants.messageContentPadding,
-            y: Constants.messageContentPadding,
+            y: attachmentImageView.frame.maxY + (attachmentImageSize == .zero ? 0 : Constants.textInsetTop),
             width: messageWidth,
             height: textHeight
         )
@@ -138,6 +170,13 @@ private extension MessageViewCell {
             height: sentDateSize.height
         )
 
+        messageContentView.frame = CGRect(
+            x: isOutgoing ? width - messageContentWidth - Constants.messageContentInsetStart : Constants.messageContentInsetStart,
+            y: 0,
+            width: messageContentWidth,
+            height: sentDateLabel.frame.maxY + Constants.messageContentPadding
+        )
+
         avatarImageView.frame = CGRect(
             x: isOutgoing ? width - Constants.avatarSize - Constants.contentInsetHorizontal : Constants.contentInsetHorizontal,
             y: messageContentView.frame.maxY - Constants.avatarSize,
@@ -145,7 +184,7 @@ private extension MessageViewCell {
             height: Constants.avatarSize
         )
 
-        return messageContentHeight
+        return messageContentView.frame.maxY
     }
 }
 
@@ -154,15 +193,20 @@ private extension MessageViewCell {
 private extension MessageViewCell {
 
     enum Constants {
-        static let textNumberOfLines = 0
         static let avatarSize: CGFloat = 32
-        static let sentDateInsetTop: CGFloat = 6
         static let avatarCornerRadius = avatarSize / 2
+
         static let messageContentPadding: CGFloat = 16
-        static let contentInsetHorizontal: CGFloat = 16
         static let messageContentInsetEnd: CGFloat = 200
         static let messageContentBorderWidth: CGFloat = 1
         static let messageContentCornerRadius: CGFloat = 10
         static let messageContentInsetStart: CGFloat = avatarSize + 10 + contentInsetHorizontal
+
+        static let textNumberOfLines = 0
+        static let textInsetTop: CGFloat = 8
+        static let sentDateInsetTop: CGFloat = 6
+        static let contentInsetHorizontal: CGFloat = 16
+        static let attachmentImageCornerRadius: CGFloat = 4
+        static let attachmentImageSize = CGSize(width: 176, height: 128)
     }
 }

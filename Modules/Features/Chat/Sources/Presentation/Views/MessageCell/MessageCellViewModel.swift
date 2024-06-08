@@ -10,6 +10,7 @@ import Foundation
 struct MessageCellViewModel: Equatable {
     let text: String?
     let avatar: String?
+    let imageUrl: String?
     let createdAt: Date
     let isOutgoing: Bool
 }

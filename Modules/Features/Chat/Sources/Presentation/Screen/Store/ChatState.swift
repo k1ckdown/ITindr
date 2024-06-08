@@ -27,10 +27,6 @@ enum ChatState: Equatable {
         var messages: [MessageCellViewModel]
         var photoSourceType: PhotoSourceType?
         var isSourceTypeAlertPresented = false
-
-        var isPhotoPickerPresented: Bool {
-            photoSourceType != nil
-        }
     }
 }
 
