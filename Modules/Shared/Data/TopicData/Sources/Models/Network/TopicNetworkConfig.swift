@@ -11,7 +11,7 @@ enum TopicNetworkConfig: NetworkConfig {
     case list
 
     var path: String {
-        "http://itindr.mcenter.pro:8092/api/mobile/v1/topic/"
+        "http://itindr.mcenter.pro:8092/api/mobile/v1/topic"
     }
 
     var endpoint: String {

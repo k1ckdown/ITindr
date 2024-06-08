@@ -14,6 +14,7 @@ import UserFeed
 import UserMatch
 import ProfileEditor
 import AuthFlow
+import TopicData
 import ProfileData
 import AuthData
 import UserData
@@ -21,6 +22,7 @@ import ChatData
 import MainTabBar
 import ChatDomain
 import AuthDomain
+import TopicDomain
 import ProfileDomain
 import Network
 import Keychain
@@ -44,6 +46,11 @@ final class AppFactory {
     private lazy var userRepository: UserRepositoryProtocol = {
         let dependencies = UserData.ModuleDependencies(networkService: networkService)
         return UserRepositoryAssembly(dependencies: dependencies).assemble()
+    }()
+
+    private lazy var topicRepository: TopicRepositoryProtocol = {
+        let dependencies = TopicData.ModuleDependencies(networkService: networkService)
+        return TopicRepositoryAssembly(dependencies: dependencies).assemble()
     }()
 
     private lazy var profileRepository: ProfileRepositoryProtocol = {
@@ -104,7 +111,11 @@ private extension AppFactory {
     }
 
     func makeProfileEditorCoordinatorAssembly() -> ProfileEditorCoordinatorAssembly {
-        let dependencies = ProfileEditor.ModuleDependencies(profileRepository: profileRepository)
+        let dependencies = ProfileEditor.ModuleDependencies(
+            topicRepository: topicRepository,
+            profileRepository: profileRepository
+        )
+        
         return ProfileEditorCoordinatorAssembly(dependencies: dependencies)
     }
 

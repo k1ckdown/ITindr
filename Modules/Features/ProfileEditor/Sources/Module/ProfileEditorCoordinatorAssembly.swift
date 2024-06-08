@@ -36,6 +36,7 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         let initialState = ProfileEditorState()
         let reducer = ProfileEditorReducer()
         let middleware = ProfileEditorMiddleware(
+            getTopicListUseCase: .init(topicRepository: dependencies.topicRepository),
             updateUserAvatarUseCase: UpdateUserAvatarUseCase(profileRepository: dependencies.profileRepository),
             updateUserProfileUseCase: UpdateUserProfileUseCase(profileRepository: dependencies.profileRepository),
             delegate: middlewareDelegate

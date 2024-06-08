@@ -16,17 +16,24 @@ public struct TopicView: View {
     }
 
     public var body: some View {
-        Text(model.title)
-            .font(model.isSelected ? Fonts.regular14 : Fonts.bold14)
-            .foregroundStyle(model.isSelected ? Colors.accentColor.swiftUIColor : Colors.appWhite.swiftUIColor)
-            .padding(.vertical, Constants.insetVertical)
-            .padding(.horizontal, Constants.insetHorizontal)
-            .background(model.isSelected ? Colors.appWhite.swiftUIColor : Colors.accentColor.swiftUIColor)
-            .clipShape(.rect(cornerRadius: Constants.cornerRadius))
-            .overlay {
-                RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                    .stroke(model.isSelected ? Colors.accentColor.swiftUIColor : .clear)
-            }
+        ZStack {
+            Text(model.title)
+                .font(model.isSelected ? Fonts.regular14 : Fonts.bold14)
+
+            Text(model.title)
+                .opacity(0)
+                .font(Fonts.bold14)
+
+        }
+        .foregroundStyle(model.isSelected ? Colors.accentColor.swiftUIColor : Colors.appWhite.swiftUIColor)
+        .padding(.vertical, Constants.insetVertical)
+        .padding(.horizontal, Constants.insetHorizontal)
+        .background(model.isSelected ? Colors.appWhite.swiftUIColor : Colors.accentColor.swiftUIColor)
+        .clipShape(.rect(cornerRadius: Constants.cornerRadius))
+        .overlay {
+            RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                .stroke(model.isSelected ? Colors.accentColor.swiftUIColor : .clear)
+        }
     }
 }
 
@@ -36,8 +43,8 @@ public extension TopicView {
 
     struct Model: Hashable, Identifiable {
         public let id: String
+        public var isSelected = false
         let title: String
-        var isSelected = false
 
         public init(id: String, title: String) {
             self.id = id

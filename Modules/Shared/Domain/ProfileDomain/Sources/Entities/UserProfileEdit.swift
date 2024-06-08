@@ -10,9 +10,9 @@ import TopicDomain
 public struct UserProfileEdit {
     public let name: String
     public let aboutMyself: String?
-    public let topics: [Topic]
+    public let topics: [String]
     
-    public init(name: String, aboutMyself: String?, topics: [Topic]) {
+    public init(name: String, aboutMyself: String?, topics: [String]) {
         self.name = name
         self.aboutMyself = aboutMyself
         self.topics = topics

@@ -8,5 +8,5 @@
 struct UserProfileEditDTO: Encodable {
     let name: String
     let aboutMyself: String?
-    let topics: [TopicDTO]
+    let topics: [String]
 }

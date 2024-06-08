@@ -9,10 +9,11 @@ import UDFKit
 import SwiftUI
 import CommonUI
 import Kingfisher
+import Navigation
 
 typealias Strings = ProfileEditorStrings
 
-struct ProfileEditorScreen: View {
+struct ProfileEditorScreen: View, NavigationBarHidden {
 
     @State private var selectedPhoto: PhotoDetails?
     @StateObject private var store: StoreOf<ProfileEditorReducer>
@@ -22,34 +23,41 @@ struct ProfileEditorScreen: View {
     }
 
     var body: some View {
-        VStack {
-            VStack(alignment: .leading, spacing: .zero) {
-                HStack(spacing: .zero) {
-                    avatarView
-                    choosePhotoButton
-                }
+        ScrollView {
+            VStack {
+                VStack(alignment: .leading, spacing: .zero) {
+                    HStack(spacing: .zero) {
+                        avatarView
+                        choosePhotoButton
+                    }
 
-                textFields
+                    textFields
 
-                VStack {
-                    HStack {
-                        // TODO: Tags
+                    TagLayout(store.state.topics) { model in
+                        TopicView(model: model)
+                            .onTapGesture {
+                                store.dispatch(.topicTapped(model.id))
+                            }
                     }
                     .screenTitle(Strings.chooseInterests)
+                    .padding(.top, Constants.interestsInsetTop)
                 }
-                .padding(.top, Constants.interestsInsetTop)
-            }
-            .frame(maxHeight: .infinity, alignment: .top)
+                .frame(maxHeight: .infinity, alignment: .top)
 
-            Button(Strings.save) {
-                store.dispatch(.saveTapped)
+                Button(Strings.save) {
+                    store.dispatch(.saveTapped)
+                }
+                .mainButtonStyle()
+                .padding(.top, 55)
+                .padding(.bottom)
             }
-            .mainButtonStyle()
-            .padding(.bottom)
+            .screenTitle(Strings.tellAboutYourself)
+            .padding(.horizontal)
+            .appLogo()
         }
-        .screenTitle(Strings.tellAboutYourself)
-        .padding(.horizontal)
-        .appLogo()
+        .onAppear {
+            store.dispatch(.onAppear)
+        }
         .sheet(isPresented: isPhotoPickerPresented) { photoPicker }
         .alert(Strings.selectSourceType, isPresented: isSourceTypeAlertPresented) {
             alertActions

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TagLayout<Data, RowContent>: View where Data: RandomAccessCollection,
+public struct TagLayout<Data, RowContent>: View where Data: RandomAccessCollection,
                                                RowContent: View,
                                                Data.Element: Identifiable,
                                                Data.Element: Hashable {
@@ -24,7 +24,7 @@ struct TagLayout<Data, RowContent>: View where Data: RandomAccessCollection,
         self.rowContent = rowContent
     }
 
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             content(in: geometry).background(viewHeight(for: $height))
         }
