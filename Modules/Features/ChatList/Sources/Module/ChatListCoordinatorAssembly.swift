@@ -26,6 +26,8 @@ public struct ChatListCoordinatorAssembly: ChatListCoordinatorAssemblyProtocol {
             )
 
             let store = Store(initialState: ChatListState.idle, reducer: reducer, middleware: middleware)
+            middleware.refreshChatsHandler = { [weak store] in store?.dispatch(.dataLoaded($0)) }
+
             return ChatListViewController(store: store)
         }
 
