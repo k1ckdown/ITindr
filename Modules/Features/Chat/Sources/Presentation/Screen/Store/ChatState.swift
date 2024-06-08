@@ -21,7 +21,7 @@ enum ChatState: Equatable {
         var chatTitle: String
         var chatAvatarUrl: String?
         var isMoreLoading = false
-        var isMessageCreated = false
+        var messageCreatedCount = 0
         var pagination: Pagination
         var chosenAttachment: Resource?
         var messages: [MessageCellViewModel]
@@ -41,6 +41,7 @@ enum ChatIntent: Equatable {
     case messageChanged(String)
     case messageCreated(Message)
     case attachmentChosen(Resource)
+    case messagesRefreshed([Message])
     case sourceTypeSelected(PhotoSourceType?)
 
     struct LoadData: Equatable {

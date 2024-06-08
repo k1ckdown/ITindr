@@ -35,6 +35,8 @@ struct ChatReducer: Reducer {
             handleSourceTypeSelect(&state, type)
         case .attachmentChosen(let attachment):
             handleAttachmentChoice(&state, attachment)
+        case .messagesRefreshed(let messages):
+            handleMessagesRefresh(&state, messages)
         }
     }
 }
@@ -84,8 +86,21 @@ private extension ChatReducer {
 
         viewData.messageText = ""
         viewData.chosenAttachment = nil
-        viewData.isMessageCreated = true
+        viewData.messageCreatedCount = 1
         viewData.messages.insert(mapToViewModel(message: message), at: 0)
+
+        state = .loaded(viewData)
+    }
+
+    func handleMessagesRefresh(_ state: inout State, _ messages: [Message]) {
+        guard case .loaded(var viewData) = state else { return }
+
+        var newMessages = messages.prefix(while: { $0.id != viewData.messages.first?.id })
+        guard newMessages.count > 0 else { return }
+
+        viewData.pagination = Pagination(offset: viewData.pagination.offset + newMessages.count, limit: viewData.pagination.limit)
+        viewData.messageCreatedCount = newMessages.count
+        viewData.messages.insert(contentsOf: newMessages.map { mapToViewModel(message: $0) }, at: 0)
 
         state = .loaded(viewData)
     }
@@ -108,7 +123,7 @@ private extension ChatReducer {
             viewData.pagination = nextPage
             viewData.messages.append(contentsOf: messageCellViewModels)
             viewData.isMoreLoading = false
-            viewData.isMessageCreated = false
+            viewData.messageCreatedCount = 0
             state = .loaded(viewData)
         default: return
         }
@@ -116,6 +131,7 @@ private extension ChatReducer {
 
     func mapToViewModel(message: Message) -> MessageCellViewModel {
         MessageCellViewModel(
+            id: message.id,
             text: message.text,
             avatar: message.user.avatar,
             imageUrl: message.attachments.first,

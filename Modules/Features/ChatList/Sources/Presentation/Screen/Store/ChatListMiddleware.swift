@@ -18,6 +18,7 @@ protocol ChatListMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
 final class ChatListMiddleware: Middleware {
 
     var refreshChatsHandler: (([ChatDetails]) -> Void)?
+
     private var refreshTimer: Timer?
     private var chats: [ChatDetails] = []
     private let getChatListUseCase: GetChatListUseCase
@@ -54,7 +55,10 @@ private extension ChatListMiddleware {
     func refreshChats() {
         Task {
             let chats = try? await getChatListUseCase.execute()
-            if let chats { refreshChatsHandler?(chats) }
+            guard let chats else { return }
+
+            self.chats = chats
+            refreshChatsHandler?(chats)
         }
     }
 

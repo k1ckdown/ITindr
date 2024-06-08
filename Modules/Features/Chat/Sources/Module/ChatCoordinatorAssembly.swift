@@ -30,6 +30,8 @@ public struct ChatCoordinatorAssembly: ChatCoordinatorAssemblyProtocol {
             )
 
             let store = Store(initialState: .idle, reducer: reducer, middleware: middleware)
+            middleware.refreshMessagesHandler = { [weak store] in store?.dispatch(.messagesRefreshed($0))}
+
             return ChatViewController(store: store)
         }
 

@@ -17,7 +17,10 @@ protocol ChatMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {}
 
 final class ChatMiddleware: Middleware {
 
+    var refreshMessagesHandler: (([Message]) -> Void)?
+
     private let chat: Chat
+    private var refreshTimer: Timer?
     private let sendMessageUseCase: SendMessageUseCase
     private let getMessageListUseCase: GetMessageListUseCase
     private weak var delegate: ChatMiddlewareDelegate?
@@ -36,8 +39,8 @@ final class ChatMiddleware: Middleware {
 
     func handle(state: ChatState, intent: ChatIntent) async -> ChatIntent? {
         switch intent {
-        case .dataLoaded, .loadFailed, .messageChanged, .messageCreated, .addAttachmentTapped, .sourceTypeSelected, .attachmentChosen: break
         case .onAppear:
+            await setupRefreshTimer()
             return await getMessages(pagination: .firstPage)
         case .sendMessageTapped:
             return await handleSendMessageTap(state: state)
@@ -45,6 +48,8 @@ final class ChatMiddleware: Middleware {
             return checkLoadMoreAvailable(state: state) ? .loadMoreStarted : nil
         case .loadMoreStarted:
             return await loadMore(state: state)
+        case .dataLoaded, .loadFailed, .messageChanged, .messageCreated,
+                .addAttachmentTapped, .sourceTypeSelected, .attachmentChosen, .messagesRefreshed: break
         }
 
         return nil
@@ -69,6 +74,23 @@ private extension ChatMiddleware {
         return true
     }
 
+    @MainActor
+    func setupRefreshTimer() {
+        guard refreshTimer == nil else { return }
+
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
+            self?.refreshMessages()
+        }
+    }
+
+    func refreshMessages() {
+        Task {
+            let pagination = Pagination(offset: 0)
+            let messages = try? await getMessageListUseCase.execute(chatId: chat.id, pagination: pagination)
+            if let messages { refreshMessagesHandler?(messages) }
+        }
+    }
+
     func getMessages(pagination: Pagination) async -> ChatIntent {
         do {
             let messages = try await getMessageListUseCase.execute(chatId: chat.id, pagination: pagination)
@@ -81,7 +103,7 @@ private extension ChatMiddleware {
     }
 
     func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
-        guard 
+        guard
             case .loaded(let viewData) = state,
             (viewData.messageText.isEmpty && viewData.chosenAttachment == nil) == false
         else { return nil }

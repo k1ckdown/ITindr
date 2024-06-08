@@ -341,11 +341,11 @@ private extension ChatViewController {
 
     func handleViewData(_ viewData: ChatState.ViewData) {
         isLoading(false)
+        updateMessages(viewData)
         updateImagePicker(viewData)
         updateMessageText(viewData.messageText)
         dataSource.loadingView?.isShowing = viewData.isMoreLoading
         updateTitleView(title: viewData.chatTitle, avatarUrl: viewData.chatAvatarUrl)
-        updateMessages(viewModels: viewData.messages, isMessageCreated: viewData.isMessageCreated)
     }
 
     func updateImagePicker(_ viewData: ChatState.ViewData) {
@@ -371,13 +371,13 @@ private extension ChatViewController {
         adjustMessageTextHeight()
     }
 
-    func updateMessages(viewModels: [MessageCellViewModel], isMessageCreated: Bool) {
+    func updateMessages(_ viewData: ChatState.ViewData) {
         let previousMessageCount = messageCollectionView.numberOfItems(inSection: 0)
-        guard viewModels.count != previousMessageCount else { return }
+        guard viewData.messages.count != previousMessageCount else { return }
 
-        let indexPaths = isMessageCreated
-        ? [IndexPath(item: 0, section: 0)]
-        : (previousMessageCount..<viewModels.count).map { IndexPath(item: $0, section: 0) }
+        let indexPaths = viewData.messageCreatedCount != 0
+        ? (0..<viewData.messageCreatedCount).map { IndexPath(item: $0, section: 0) }
+        : (previousMessageCount..<viewData.messages.count).map { IndexPath(item: $0, section: 0) }
 
         messageCollectionView.performBatchUpdates { messageCollectionView.insertItems(at: indexPaths) }
     }
