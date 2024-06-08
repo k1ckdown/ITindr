@@ -9,5 +9,5 @@ import Foundation
 
 public protocol MultipartNetworkConfig: BaseNetworkConfig {
     var parameters: [String: Data] { get }
-    var files: [String: (data: Data, fileName: String)] { get }
+    var files: [String: [(data: Data, fileName: String)]] { get }
 }

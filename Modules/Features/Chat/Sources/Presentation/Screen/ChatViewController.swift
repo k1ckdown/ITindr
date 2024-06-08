@@ -10,6 +10,7 @@ import Combine
 import CommonUI
 import Navigation
 import Kingfisher
+import CommonDomain
 
 final class ChatViewController: UIViewController, LoadableView, TabBarHidden, Keyboardable {
 
@@ -25,9 +26,19 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden, Ke
     private let sendMessageGradientLayer = CAGradientLayer()
     private(set) var loadingView = UIActivityIndicatorView()
 
+    private var attachmentView = UIView()
+    private var attachmentImageView = UIImageView()
+    private let sourceTypeAlert = UIAlertController(title: "Select the source type", message: nil, preferredStyle: .alert)
+
     private var messageToolbarHeightConstraint: NSLayoutConstraint?
     private var messageTextViewHeightConstraint: NSLayoutConstraint?
     private var messageToolbarBottomConstraint: NSLayoutConstraint?
+
+    private lazy var imagePicker: UIImagePickerController = {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        return picker
+    }()
 
     private lazy var messageCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -64,6 +75,10 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden, Ke
         super.viewWillLayoutSubviews()
         sendMessageGradientLayer.frame = sendMessageButton.bounds
     }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK: - UITextViewDelegate
@@ -75,6 +90,23 @@ extension ChatViewController: UITextViewDelegate {
     }
 }
 
+// MARK: - UIImagePickerControllerDelegate
+
+extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard 
+            let image = info[.originalImage] as? UIImage,
+            let imageData = image.jpegData(compressionQuality: 0.5)
+        else { return }
+
+        attachmentImageView.image = image
+        let resource = Resource(data: imageData, fileName: "")
+
+        store.dispatch(.attachmentChosen(resource))
+    }
+}
+
 // MARK: - Actions
 
 private extension ChatViewController {
@@ -82,6 +114,11 @@ private extension ChatViewController {
     @objc
     func handleSendMessageButton() {
         store.dispatch(.sendMessageTapped)
+    }
+
+    @objc
+    func handleAddAttachmentButton() {
+        store.dispatch(.addAttachmentTapped)
     }
 
     @objc
@@ -102,6 +139,10 @@ private extension ChatViewController {
         setupSendMessageButton()
         setupMessageCollectionView()
         setupLoadingView()
+        setupAttachmentView()
+        setupAttachmentImageView()
+        setupSourceTypeAlert()
+        view.bringSubviewToFront(messageToolbar)
     }
 
     func setupSuperView() {
@@ -154,6 +195,7 @@ private extension ChatViewController {
         addAttachmentButton.layer.cornerRadius = Constants.addAttachmentCornerRadius
         addAttachmentButton.layer.borderColor = Colors.appLightGray.color.cgColor
         addAttachmentButton.translatesAutoresizingMaskIntoConstraints = false
+        addAttachmentButton.addTarget(self, action: #selector(handleAddAttachmentButton), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
             addAttachmentButton.leadingAnchor.constraint(equalTo: messageToolbar.leadingAnchor, constant: Constants.messageToolbarInsetHorizontal),
@@ -208,6 +250,51 @@ private extension ChatViewController {
         ])
     }
 
+    func setupAttachmentView() {
+        view.addSubview(attachmentView)
+
+        attachmentView.isHidden = true
+        attachmentView.backgroundColor = .black.withAlphaComponent(0.2)
+        attachmentView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            attachmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            attachmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            attachmentView.topAnchor.constraint(equalTo: view.topAnchor),
+            attachmentView.bottomAnchor.constraint(equalTo: messageCollectionView.bottomAnchor)
+        ])
+    }
+
+    func setupAttachmentImageView() {
+        attachmentView.addSubview(attachmentImageView)
+
+        attachmentImageView.contentMode = .scaleToFill
+        attachmentImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            attachmentImageView.leadingAnchor.constraint(equalTo: attachmentView.leadingAnchor),
+            attachmentImageView.trailingAnchor.constraint(equalTo: attachmentView.trailingAnchor),
+            attachmentImageView.heightAnchor.constraint(equalToConstant: 200),
+            attachmentImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
+    func setupSourceTypeAlert() {
+        let actions = [
+            UIAlertAction(title: "Photos", style: .default, handler: { [weak self] _ in
+                self?.store.dispatch(.sourceTypeSelected(.library))
+            }),
+            UIAlertAction(title: "Camera", style: .default, handler: { [weak self] _ in
+                self?.store.dispatch(.sourceTypeSelected(.camera))
+            }),
+            UIAlertAction(title: "Cancel", style: .cancel, handler: { [weak self] _ in
+                self?.store.dispatch(.sourceTypeSelected(nil))
+            })
+        ]
+
+        actions.forEach { sourceTypeAlert.addAction($0) }
+    }
+
     func adjustMessageTextHeight() {
         let width = messageTextView.bounds.width
         let oldHeight = messageTextView.bounds.height
@@ -253,10 +340,24 @@ private extension ChatViewController {
 
     func handleViewData(_ viewData: ChatState.ViewData) {
         isLoading(false)
+        updateImagePicker(viewData)
         updateMessageText(viewData.messageText)
         dataSource.loadingView?.isShowing = viewData.isMoreLoading
         updateTitleView(title: viewData.chatTitle, avatarUrl: viewData.chatAvatarUrl)
         updateMessages(viewModels: viewData.messages, isMessageCreated: viewData.isMessageCreated)
+    }
+
+    func updateImagePicker(_ viewData: ChatState.ViewData) {
+        viewData.isSourceTypeAlertPresented ? present(sourceTypeAlert, animated: true) : sourceTypeAlert.dismiss(animated: true)
+
+        if let photoSourceType = viewData.photoSourceType {
+            imagePicker.sourceType = photoSourceType == .camera ? .camera : .photoLibrary
+            present(imagePicker, animated: true)
+        } else {
+            imagePicker.dismiss(animated: true)
+        }
+
+        attachmentView.isHidden = viewData.chosenAttachment == nil
     }
 
     func scrollToLastMessage(messageCount: Int) {

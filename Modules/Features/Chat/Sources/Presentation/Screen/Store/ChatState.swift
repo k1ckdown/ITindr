@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 04.06.2024.
 //
 
+import CommonUI
 import ChatDomain
 import CommonDomain
 import ChatInterface
@@ -22,7 +23,14 @@ enum ChatState: Equatable {
         var isMoreLoading = false
         var isMessageCreated = false
         var pagination: Pagination
+        var chosenAttachment: Resource?
         var messages: [MessageCellViewModel]
+        var photoSourceType: PhotoSourceType?
+        var isSourceTypeAlertPresented = false
+
+        var isPhotoPickerPresented: Bool {
+            photoSourceType != nil
+        }
     }
 }
 
@@ -31,10 +39,13 @@ enum ChatIntent: Equatable {
     case loadMore
     case loadMoreStarted
     case sendMessageTapped
+    case addAttachmentTapped
     case loadFailed(String)
     case dataLoaded(LoadData)
     case messageChanged(String)
     case messageCreated(Message)
+    case attachmentChosen(Resource)
+    case sourceTypeSelected(PhotoSourceType?)
 
     struct LoadData: Equatable {
         let chat: Chat

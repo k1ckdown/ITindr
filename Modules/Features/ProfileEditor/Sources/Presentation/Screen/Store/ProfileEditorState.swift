@@ -6,8 +6,8 @@
 //
 
 import CommonUI
-import ProfileDomain
 import CommonDomain
+import ProfileDomain
 
 struct ProfileEditorState: Equatable {
     var name = TextFieldState()

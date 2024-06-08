@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import CommonUI
 
 struct PhotoLibraryPicker: UIViewControllerRepresentable {
     

@@ -23,10 +23,10 @@ enum ProfileMultipartNetworkConfig: MultipartNetworkConfig {
 
     var parameters: [String: Data] { [:] }
 
-    var files: [String: (data: Data, fileName: String)] {
+    var files: [String: [(data: Data, fileName: String)]] {
         switch self {
         case .uploadAvatar(let avatar):
-            ["avatar": (avatar.data, "imageName.jpg")]
+            ["avatar": [(avatar.data, "imageName.jpg")]]
         }
     }
 }

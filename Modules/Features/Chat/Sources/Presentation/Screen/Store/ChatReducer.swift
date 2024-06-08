@@ -6,6 +6,7 @@
 //
 
 import UDFKit
+import CommonUI
 import ChatDomain
 import CommonDomain
 
@@ -28,6 +29,12 @@ struct ChatReducer: Reducer {
             handleMessageCreate(&state, message: message)
         case .messageChanged(let text):
             handleMessageChange(&state, text: text)
+        case .addAttachmentTapped:
+            handleAddAttachmentTap(&state)
+        case .sourceTypeSelected(let type):
+            handleSourceTypeSelect(&state, type)
+        case .attachmentChosen(let attachment):
+            handleAttachmentChoice(&state, attachment)
         }
     }
 }
@@ -36,7 +43,29 @@ struct ChatReducer: Reducer {
 
 private extension ChatReducer {
 
-    func handleMessageChange(_ state: inout State, text: String) {
+    func handleAddAttachmentTap(_ state: inout ChatState) {
+        guard case .loaded(var viewData) = state else { return }
+        viewData.isSourceTypeAlertPresented = true
+        state = .loaded(viewData)
+    }
+
+    func handleAttachmentChoice(_ state: inout ChatState, _ attachment: Resource) {
+        guard case .loaded(var viewData) = state else { return }
+
+        viewData.chosenAttachment = attachment
+        viewData.photoSourceType = nil
+        state = .loaded(viewData)
+    }
+
+    func handleSourceTypeSelect(_ state: inout ChatState, _ type: PhotoSourceType?) {
+        guard case .loaded(var viewData) = state else { return }
+
+        viewData.photoSourceType = type
+        viewData.isSourceTypeAlertPresented = false
+        state = .loaded(viewData)
+    }
+
+    func handleMessageChange(_ state: inout ChatState, text: String) {
         guard case .loaded(var viewData) = state else { return }
 
         viewData.messageText = text
@@ -54,6 +83,7 @@ private extension ChatReducer {
         guard case .loaded(var viewData) = state else { return }
 
         viewData.messageText = ""
+        viewData.chosenAttachment = nil
         viewData.isMessageCreated = true
         viewData.messages.insert(mapToViewModel(message: message), at: 0)
 

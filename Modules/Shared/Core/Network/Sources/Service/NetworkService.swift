@@ -86,8 +86,10 @@ private extension NetworkService {
                     formData.append(data, withName: key)
                 }
 
-                config.files.forEach { key, file in
-                    formData.append(file.data, withName: key, fileName: file.fileName)
+                config.files.forEach { key, values in
+                    values.forEach {
+                        formData.append($0.data, withName: key, fileName: $0.fileName)
+                    }
                 }
             },
             to: config.absolutePath,

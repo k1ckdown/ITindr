@@ -6,6 +6,7 @@
 //
 
 import UDFKit
+import Foundation
 import Navigation
 import ChatDomain
 import CommonDomain
@@ -35,7 +36,7 @@ final class ChatMiddleware: Middleware {
 
     func handle(state: ChatState, intent: ChatIntent) async -> ChatIntent? {
         switch intent {
-        case .dataLoaded, .loadFailed, .messageChanged, .messageCreated: break
+        case .dataLoaded, .loadFailed, .messageChanged, .messageCreated, .addAttachmentTapped, .sourceTypeSelected, .attachmentChosen: break
         case .onAppear:
             return await getMessages(pagination: .firstPage)
         case .sendMessageTapped:
@@ -81,9 +82,10 @@ private extension ChatMiddleware {
 
     func handleSendMessageTap(state: ChatState) async -> ChatIntent? {
         guard case .loaded(let viewData) = state, viewData.messageText.isEmpty == false else { return nil }
+        let attachments = if let chosenAttachment = viewData.chosenAttachment { [chosenAttachment.data] } else { [Data]() }
 
         do {
-            let messageSend = MessageSend(chatId: chat.id, text: viewData.messageText, attachments: [])
+            let messageSend = MessageSend(chatId: chat.id, text: viewData.messageText, attachments: attachments)
             let message = try await sendMessageUseCase.execute(messageSend)
             return .messageCreated(message)
         } catch {
