@@ -95,7 +95,7 @@ private extension ChatReducer {
     func handleMessagesRefresh(_ state: inout State, _ messages: [Message]) {
         guard case .loaded(var viewData) = state else { return }
 
-        var newMessages = messages.prefix(while: { $0.id != viewData.messages.first?.id })
+        let newMessages = messages.prefix(while: { $0.id != viewData.messages.first?.id })
         guard newMessages.count > 0 else { return }
 
         viewData.pagination = Pagination(offset: viewData.pagination.offset + newMessages.count, limit: viewData.pagination.limit)

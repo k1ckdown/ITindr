@@ -21,8 +21,12 @@ public struct SelectableProfileView: View {
 
     public var body: some View {
         VStack {
-            ProfileView(model: model).frame(maxHeight: .infinity, alignment: .top)
-            actionButtons().padding(.bottom)
+            ProfileView(model: model)
+                .frame(maxHeight: .infinity, alignment: .top)
+
+            actionButtons()
+                .padding(.top, Constants.actionButtonsInsetTop)
+                .padding(.bottom)
         }
         .padding(.horizontal)
     }
@@ -60,8 +64,8 @@ private extension SelectableProfileView {
 private extension SelectableProfileView {
 
     enum Constants {
-        static let appLogoInsetTop: CGFloat = 32
         static let actionButtonSpacing: CGFloat = 20
+        static let actionButtonsInsetTop: CGFloat = 32
         static let actionTitleInsetLeading: CGFloat = 16
     }
 }

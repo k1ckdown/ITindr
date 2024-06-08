@@ -32,7 +32,7 @@ struct FeedReducer: Reducer {
             username: user.name,
             avatarUrl: user.avatarUrl,
             aboutMyself: user.aboutMyself,
-            topics: user.topics.map(\.title)
+            topics: user.topics.map { .init(id: $0.id, title: $0.title) }
         )
     }
 }

@@ -13,6 +13,7 @@ public extension Fonts {
     static let semibold16 = Fonts.semiBold.swiftUIFont(size: 16)
     
     static let regular12 = Fonts.regular.swiftUIFont(size: 12)
+    static let regular14 = Fonts.regular.swiftUIFont(size: 14)
     static let regular16 = Fonts.regular.swiftUIFont(size: 16)
     
     static let bold14 = Fonts.bold.swiftUIFont(size: 14)

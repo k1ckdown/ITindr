@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 02.06.2024.
 //
 
+import CommonUI
 import ProfileDomain
 
 enum FeedState: Equatable {
@@ -17,7 +18,7 @@ enum FeedState: Equatable {
         let username: String
         let avatarUrl: String?
         let aboutMyself: String?
-        let topics: [String]
+        let topics: [TopicView.Model]
         var isMutual = false
     }
 }

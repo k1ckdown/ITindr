@@ -8,8 +8,9 @@
 import UDFKit
 import SwiftUI
 import CommonUI
+import Navigation
 
-struct ProfileScreen: View {
+struct ProfileScreen: View, TabBarHidden {
 
     @StateObject private var store: StoreOf<ProfileReducer>
 
@@ -37,18 +38,20 @@ struct ProfileScreen: View {
     }
 
     private func loadedView(_ user: ProfileState.User) -> some View {
-        SelectableProfileView(
-            model: ProfileView.Model(
-                username: user.username,
-                avatarUrl: user.avatarUrl,
-                aboutMyself: user.aboutMyself,
-                topics: user.topics
-            )) {
-                store.dispatch(.likeTapped)
-            } rejectHandler: {
-                store.dispatch(.rejectTapped)
-            }
-            .padding(.top, Constants.contentInsetTop)
+        FullScrollView {
+            SelectableProfileView(
+                model: ProfileView.Model(
+                    username: user.username,
+                    avatarUrl: user.avatarUrl,
+                    aboutMyself: user.aboutMyself,
+                    topics: user.topics
+                )) {
+                    store.dispatch(.likeTapped)
+                } rejectHandler: {
+                    store.dispatch(.rejectTapped)
+                }
+                .padding(.top, Constants.contentInsetTop)
+        }
     }
 }
 

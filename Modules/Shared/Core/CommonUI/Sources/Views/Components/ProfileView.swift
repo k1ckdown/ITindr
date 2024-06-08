@@ -27,12 +27,15 @@ public struct ProfileView: View {
                 Text(model.username)
                     .font(Fonts.bold24)
 
-                // TODO: Topics
+                TagLayout(model.topics) {
+                    TopicView(model: $0)
+                }
             }
 
             Text(model.aboutMyself ?? "")
                 .font(Fonts.regular16)
                 .multilineTextAlignment(.center)
+                .padding(.top, model.topics.count == 0 ? 0 : Constants.contentSpacing)
         }
     }
 
@@ -60,10 +63,10 @@ public extension ProfileView {
         let username: String
         let avatarUrl: String?
         let aboutMyself: String?
-        let topics: [String]
+        let topics: [TopicView.Model]
         let avatarTapped: (() -> Void)?
 
-        public init(username: String, avatarUrl: String?, aboutMyself: String?, topics: [String], avatarTapped: (() -> Void)? = nil) {
+        public init(username: String, avatarUrl: String?, aboutMyself: String?, topics: [TopicView.Model], avatarTapped: (() -> Void)? = nil) {
             self.username = username
             self.avatarUrl = avatarUrl
             self.aboutMyself = aboutMyself

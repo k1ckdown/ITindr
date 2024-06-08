@@ -18,7 +18,7 @@ enum ProfileState: Equatable {
         let username: String
         let avatarUrl: String?
         let aboutMyself: String?
-        let topics: [String]
+        let topics: [TopicView.Model]
     }
 }
 

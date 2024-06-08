@@ -11,20 +11,20 @@ import CommonUI
 import Navigation
 
 struct FeedScreen: View, NavigationBarHidden {
-    
+
     @StateObject private var store: StoreOf<FeedReducer>
-    
+
     init(store: StoreOf<FeedReducer>) {
         _store = StateObject(wrappedValue: store)
     }
-    
+
     var body: some View {
         content
             .onAppear {
                 store.dispatch(.onAppear)
             }
     }
-    
+
     @ViewBuilder
     private var content: some View {
         switch store.state {
@@ -41,40 +41,39 @@ struct FeedScreen: View, NavigationBarHidden {
 // MARK: - Views
 
 private extension FeedScreen {
-    
+
     @ViewBuilder
     func loadedView(_ user: FeedState.User?) -> some View {
-        Group {
-            if let user { profileView(user) } else { placeholderView() }
-        }
-        .appLogo(padding: Constants.appLogoInsetTop)
+        if let user { profileView(user) } else { placeholderView() }
     }
-    
+
     func placeholderView() -> some View {
         // TODO: Placeholder
         Text("No users").frame(maxHeight: .infinity)
     }
-    
+
     func profileView(_ user: FeedState.User) -> some View {
-        SelectableProfileView(
-            model: ProfileView.Model(
-                username: user.username,
-                avatarUrl: user.avatarUrl,
-                aboutMyself: user.aboutMyself,
-                topics: user.topics,
-                avatarTapped: { store.dispatch(.avatarTapped) }
-            )) {
-                store.dispatch(.likeTapped)
-            } rejectHandler: {
-                store.dispatch(.rejectTapped)
-            }
+        FullScrollView {
+            SelectableProfileView(
+                model: ProfileView.Model(
+                    username: user.username,
+                    avatarUrl: user.avatarUrl,
+                    aboutMyself: user.aboutMyself,
+                    topics: user.topics
+                )) {
+                    store.dispatch(.likeTapped)
+                } rejectHandler: {
+                    store.dispatch(.rejectTapped)
+                }
+                .appLogo(padding: Constants.appLogoInsetTop)
+        }
     }
 }
 
 // MARK: - Constants
 
 private extension FeedScreen {
-    
+
     enum Constants {
         static let appLogoInsetTop: CGFloat = 32
         static let actionButtonSpacing: CGFloat = 20
