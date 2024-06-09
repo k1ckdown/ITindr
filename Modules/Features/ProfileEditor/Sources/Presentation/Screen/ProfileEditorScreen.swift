@@ -14,16 +14,16 @@ import Navigation
 typealias Strings = ProfileEditorStrings
 
 struct ProfileEditorScreen: View, NavigationBarHidden {
-
+    
     private(set) var isNavBarHidden: Bool
     @State private var selectedPhoto: PhotoDetails?
     @StateObject private var store: StoreOf<ProfileEditorReducer>
-
+    
     init(isNavBarHidden: Bool, store: StoreOf<ProfileEditorReducer>) {
         self.isNavBarHidden = isNavBarHidden
         _store = StateObject(wrappedValue: store)
     }
-
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -32,9 +32,9 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
                         avatarView
                         choosePhotoButton
                     }
-
+                    
                     textFields
-
+                    
                     TagLayout(store.state.topics) { model in
                         TopicView(model: model)
                             .onTapGesture {
@@ -45,12 +45,12 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
                     .padding(.top, Constants.interestsInsetTop)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
-
+                
                 Button(Strings.save) {
                     store.dispatch(.saveTapped)
                 }
                 .mainButtonStyle()
-                .padding(.top, 55)
+                .padding(.top, Constants.saveButtonInsetTop)
                 .padding(.bottom)
             }
             .screenTitle(Strings.tellAboutYourself)
@@ -69,7 +69,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
                 let photo = $0,
                 let data = photo.image.jpegData(compressionQuality: 0.5)
             else { return }
-
+            
             store.dispatch(.avatarChosen(.init(data: data, fileName: photo.fileName)))
         }
     }
@@ -78,7 +78,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
 // MARK: - Views
 
 private extension ProfileEditorScreen {
-
+    
     var avatarView: some View {
         Group {
             if let selectedPhoto, store.state.isAvatarChosen {
@@ -95,7 +95,7 @@ private extension ProfileEditorScreen {
         .frame(width: Constants.photoSize, height: Constants.photoSize)
         .clipShape(.circle)
     }
-
+    
     var choosePhotoButton: some View {
         Button(store.state.hasAvatar ? Strings.deletePhoto : Strings.choosePhoto) {
             if store.state.hasAvatar {
@@ -108,7 +108,7 @@ private extension ProfileEditorScreen {
         .foregroundStyle(Colors.accentColor.swiftUIColor)
         .padding(.leading, Constants.choosePhotoInsetLeading)
     }
-
+    
     var textFields: some View {
         VStack(spacing: .zero) {
             TextField(Strings.name, text: name)
@@ -116,7 +116,7 @@ private extension ProfileEditorScreen {
                 .submitLabel(.next)
                 .textContentType(.username)
                 .autocorrectionDisabled()
-
+            
             // TODO: Placeholder
             TextEditor(text: aboutMyself)
                 .tintColor()
@@ -132,7 +132,7 @@ private extension ProfileEditorScreen {
         }
         .padding(.top)
     }
-
+    
     @ViewBuilder
     var photoPicker: some View {
         switch store.state.photoSourceType {
@@ -144,17 +144,17 @@ private extension ProfileEditorScreen {
             EmptyView()
         }
     }
-
+    
     @ViewBuilder
     var alertActions: some View {
         Button(Strings.camera) {
             store.dispatch(.sourceTypeSelected(.camera))
         }
-
+        
         Button(Strings.photos) {
             store.dispatch(.sourceTypeSelected(.library))
         }
-
+        
         Button(Strings.cancel, role: .cancel) {
             store.dispatch(.sourceTypeAlertPresented(false))
         }
@@ -164,25 +164,25 @@ private extension ProfileEditorScreen {
 // MARK: - Bindings
 
 private extension ProfileEditorScreen {
-
+    
     var name: Binding<String> {
         Binding(store.state.name.content) {
             store.dispatch(.nameChanged($0))
         }
     }
-
+    
     var aboutMyself: Binding<String> {
         Binding(store.state.aboutMyself ?? "") {
             store.dispatch(.aboutMyselfChanged($0))
         }
     }
-
+    
     var isSourceTypeAlertPresented: Binding<Bool> {
         Binding(store.state.isSourceTypeAlertPresented) {
             store.dispatch(.sourceTypeAlertPresented($0))
         }
     }
-
+    
     var isPhotoPickerPresented: Binding<Bool> {
         Binding(
             get: { store.state.isPhotoPickerPresented },
@@ -194,12 +194,13 @@ private extension ProfileEditorScreen {
 // MARK: - Constants
 
 private extension ProfileEditorScreen {
-
+    
     enum Constants {
         static let photoSize: CGFloat = 88
         static let interestsInsetTop: CGFloat = 24
+        static let saveButtonInsetTop: CGFloat = 55
         static let choosePhotoInsetLeading: CGFloat = 24
-
+        
         enum AboutMyself {
             static let height: CGFloat = 128
             static let cornerRadius: CGFloat = 28
