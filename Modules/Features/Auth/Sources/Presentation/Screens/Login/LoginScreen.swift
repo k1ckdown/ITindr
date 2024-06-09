@@ -33,7 +33,7 @@ struct LoginScreen: View, NavigationBarHidden {
             } goBackHandler: {
                 store.dispatch(.goBackTapped)
             } textFields: {
-                TextField(AuthStrings.email, text: email)
+                MainTextField(AuthStrings.email, text: email)
                     .submitLabel(.next)
                     .autocorrectionDisabled()
                     .keyboardType(.emailAddress)
@@ -43,7 +43,7 @@ struct LoginScreen: View, NavigationBarHidden {
                     .errorFooter(store.state.email)
                     .onSubmit { focusedField = .password }
 
-                SecureField(AuthStrings.password, text: password)
+                MainTextField(AuthStrings.password, text: password, isSecure: true)
                     .submitLabel(.return)
                     .autocorrectionDisabled()
                     .textContentType(.password)

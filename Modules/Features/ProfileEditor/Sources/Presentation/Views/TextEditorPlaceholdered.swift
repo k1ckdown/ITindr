@@ -13,7 +13,7 @@ struct TextEditorPlaceholdered: View {
     @Binding var text: String
     let placeholder: String
     
-    init(text: Binding<String>, placeholder: String) {
+    init(_ placeholder: String, text: Binding<String>) {
         _text = text
         self.placeholder = placeholder
     }

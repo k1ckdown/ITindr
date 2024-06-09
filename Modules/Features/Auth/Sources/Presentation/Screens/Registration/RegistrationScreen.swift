@@ -11,18 +11,18 @@ import CommonUI
 import Navigation
 
 struct RegistrationScreen: View, NavigationBarHidden {
-
+    
     private enum Field {
         case email, password, repeatPassword
     }
-
+    
     @FocusState private var focusedField: Field?
     @StateObject private var store: StoreOf<RegistrationReducer>
-
+    
     init(store: StoreOf<RegistrationReducer>) {
         _store = StateObject(wrappedValue: store)
     }
-
+    
     var body: some View {
         AuthView(
             isLoading: store.state.isLoading,
@@ -33,7 +33,7 @@ struct RegistrationScreen: View, NavigationBarHidden {
             } goBackHandler: {
                 store.dispatch(.goBackTapped)
             } textFields: {
-                TextField(AuthStrings.email, text: email)
+                MainTextField(AuthStrings.email, text: email)
                     .submitLabel(.next)
                     .autocorrectionDisabled()
                     .keyboardType(.emailAddress)
@@ -42,8 +42,8 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .focused($focusedField, equals: .email)
                     .errorFooter(store.state.email)
                     .onSubmit { focusedField = .password }
-
-                TextField(AuthStrings.password, text: password)
+                
+                MainTextField(AuthStrings.password, text: password, isSecure: true)
                     .submitLabel(.next)
                     .autocorrectionDisabled()
                     .textContentType(.password)
@@ -51,8 +51,8 @@ struct RegistrationScreen: View, NavigationBarHidden {
                     .focused($focusedField, equals: .password)
                     .errorFooter(store.state.password)
                     .onSubmit { focusedField = .repeatPassword }
-
-                TextField(AuthStrings.repeatPassword, text: repeatPassword)
+                
+                MainTextField(AuthStrings.repeatPassword, text: repeatPassword, isSecure: true)
                     .submitLabel(.return)
                     .autocorrectionDisabled()
                     .textContentType(.password)
@@ -66,19 +66,19 @@ struct RegistrationScreen: View, NavigationBarHidden {
 // MARK: - Bindings
 
 private extension RegistrationScreen {
-
+    
     var email: Binding<String> {
         Binding(store.state.email.content) {
             store.dispatch(.emailChanged($0))
         }
     }
-
+    
     var password: Binding<String> {
         Binding(store.state.password.content) {
             store.dispatch(.passwordChanged($0))
         }
     }
-
+    
     var repeatPassword: Binding<String> {
         Binding(store.state.repeatPassword.content) {
             store.dispatch(.repeatPasswordChanged($0))

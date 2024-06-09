@@ -29,7 +29,6 @@ struct AuthView<Content: View>: View {
                     ProgressView().tintColor()
                 }
             }
-            .mainTextFieldStyle()
             .screenTitle(screenTitle)
             .frame(maxHeight: .infinity, alignment: .top)
 
