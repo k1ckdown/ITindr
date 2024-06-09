@@ -22,5 +22,5 @@ public struct Profile {
 }
 
 public extension Profile {
-    static let empty = Profile(id: "", name: "", avatarUrl: "", aboutMyself: "", topics: [])
+    static let empty = Profile(id: "", name: "", avatarUrl: nil, aboutMyself: nil, topics: [])
 }
