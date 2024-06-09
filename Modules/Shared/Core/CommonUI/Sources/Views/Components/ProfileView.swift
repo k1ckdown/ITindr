@@ -43,7 +43,7 @@ public struct ProfileView: View {
         Group {
             if let avatarUrl = model.avatarUrl {
                 KFImage(URL(string: avatarUrl))
-                    .placeholder { Images.avatarPlaceholder.swiftUIImage }
+                    .placeholder { Images.avatarPlaceholder.swiftUIImage.resizable() }
                     .resizable()
             } else {
                 Images.avatarPlaceholder.swiftUIImage.resizable()
