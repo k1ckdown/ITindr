@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="TopicCD" representedClassName="TopicCD" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserProfileCD" inverseName="topics" inverseEntity="UserProfileCD"/>
+    </entity>
+    <entity name="UserProfileCD" representedClassName="UserProfileCD" syncable="YES" codeGenerationType="class">
+        <attribute name="aboutMyself" optional="YES" attributeType="String"/>
+        <attribute name="avatarUrl" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="topics" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TopicCD" inverseName="users" inverseEntity="TopicCD"/>
+    </entity>
+</model>
