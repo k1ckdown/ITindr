@@ -58,7 +58,7 @@ final class AppFactory {
         return ProfileRepositoryAssembly(dependencies: dependencies).assemble()
     }()
 
-    private lazy var authRepository: AuthRepositoryProtocol = {
+    private lazy var authRepository: AuthRepository = {
         let repository = AuthRepository(
             networkService: networkService,
             credentialsLocalDataSource: keychainStorage
@@ -74,6 +74,17 @@ final class AppFactory {
 @MainActor
 extension AppFactory {
 
+    func makeAppCoordinator(navigationController: NavigationController) -> AppCoordinator {
+        let coordinator = AppCoordinator(
+            appFactory: self,
+            isLoggedIn: authRepository.isLoggedIn(),
+            navigationController: navigationController
+        )
+
+        authRepository.logOutHandler = { coordinator.goToAuthFlow() }
+        return coordinator
+    }
+
     func makeAuthFlowCoordinatorAssembly() -> AuthFlowCoordinatorAssembly {
         let dependencies = AuthFlow.ModuleDependencies(
             authCoordinatorAssembly: makeAuthCoordinatorAssembly(),
@@ -84,7 +95,6 @@ extension AppFactory {
     }
 
     func makeMainTabBarCoordinatorAssembly() -> MainTabBarCoordinatorAssembly {
-        print(authRepository.isLoggedIn())
         let dependencies = MainTabBar.ModuleDependencies(
             profileCoordinatorAssembly: makeProfileCoordinatorAssembly(),
             chatListCoordinatorAssembly: makeChatListCoordinatorAssembly(),

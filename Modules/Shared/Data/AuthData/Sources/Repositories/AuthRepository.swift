@@ -14,7 +14,7 @@ public final class AuthRepository {
         case unauthorized
     }
 
-    var logOutHandler: (() -> Void)?
+    public var logOutHandler: (() -> Void)?
     private let networkService: NetworkServiceProtocol
     private let credentialsLocalDataSource: AuthCredentialsLocalDataSourceProtocol
 
