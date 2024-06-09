@@ -8,7 +8,7 @@
 struct UserProfileDTO: Decodable {
     let userId: String
     let name: String
-    let avatarUrl: String?
+    let avatar: String?
     let aboutMyself: String?
     let topics: [TopicDTO]
 }

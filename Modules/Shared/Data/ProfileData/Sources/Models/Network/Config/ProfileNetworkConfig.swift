@@ -18,7 +18,7 @@ enum ProfileNetworkConfig: NetworkConfig {
     var endpoint: String {
         switch self {
         case .get, .update: ""
-        case .deleteAvatar: "avatar"
+        case .deleteAvatar: "/avatar"
         }
     }
 

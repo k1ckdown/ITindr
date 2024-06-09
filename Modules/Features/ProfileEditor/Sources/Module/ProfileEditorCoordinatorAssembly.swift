@@ -26,7 +26,7 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         flowFinishHandler: (() -> Void)?
     ) -> ProfileEditorCoordinatorProtocol {
         let content: ProfileEditorCoordinator.Content = { middlewareDelegate in
-            let screen = makeScreen(isNavigationBarHidden: isNavigationBarHidden, middlewareDelegate: middlewareDelegate)
+            let screen = makeScreen(profile: profile, isNavigationBarHidden: isNavigationBarHidden, middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
 
@@ -51,17 +51,17 @@ private extension ProfileEditorCoordinatorAssembly {
         )
     }
 
-    func makeScreen(isNavigationBarHidden: Bool, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
-        let initialState = ProfileEditorState()
+    func makeScreen(profile: Profile, isNavigationBarHidden: Bool, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
         let reducer = ProfileEditorReducer()
         let middleware = ProfileEditorMiddleware(
-            getTopicListUseCase: .init(topicRepository: dependencies.topicRepository),
+            getTopicListUseCase: GetTopicListUseCase(topicRepository: dependencies.topicRepository),
             updateUserAvatarUseCase: UpdateUserAvatarUseCase(profileRepository: dependencies.profileRepository),
+            deleteUserAvatarUseCase: DeleteUserAvatarUseCase(profileRepository: dependencies.profileRepository),
             updateUserProfileUseCase: UpdateUserProfileUseCase(profileRepository: dependencies.profileRepository),
             delegate: middlewareDelegate
         )
 
-        let store = Store(initialState: initialState, reducer: reducer, middleware: middleware)
+        let store = Store(initialState: getInitialState(from: profile), reducer: reducer, middleware: middleware)
 
         return ProfileEditorScreen(isNavBarHidden: isNavigationBarHidden, store: store)
     }

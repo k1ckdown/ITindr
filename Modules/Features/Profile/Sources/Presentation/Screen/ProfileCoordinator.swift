@@ -54,7 +54,7 @@ extension ProfileCoordinator: ProfileMiddlewareDelegate {
             profile: editorProfile,
             isNavigationBarHidden: false,
             navigationController: navigationController,
-            flowFinishHandler: nil
+            flowFinishHandler: { [weak self] in self?.navigationController.popViewController(animated: true) }
         )
         coordinate(to: editorCoordinator)
     }

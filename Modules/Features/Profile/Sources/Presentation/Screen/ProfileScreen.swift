@@ -5,28 +5,59 @@
 //  Created by Ivan Semenov on 09.06.2024.
 //
 
+import UDFKit
 import SwiftUI
 import CommonUI
 
 struct ProfileScreen: View {
 
+    @StateObject private var store: StoreOf<ProfileReducer>
+
+    init(store: StoreOf<ProfileReducer>) {
+        _store = StateObject(wrappedValue: store)
+    }
+
     var body: some View {
+        content
+            .onAppear {
+                store.dispatch(.onAppear)
+            }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch store.state {
+        case .idle, .failed:
+            ZStack { EmptyView() }
+        case .loading:
+            ProgressView().tintColor()
+        case .loaded(let viewData):
+            loadedView(viewData)
+        }
+    }
+}
+
+// MARK: - Views
+
+private extension ProfileScreen {
+
+    func loadedView(_ viewData: ProfileState.ViewData) -> some View {
         FullScrollView {
             VStack {
                 ProfileView(model: ProfileView.Model(
-                    username: "Сергей",
-                    avatarUrl: "https://i.playground.ru/p/_I__FEOa_NDhtQE5VzEEtQ.jpeg",
-                    aboutMyself: "Начинающий программист",
-                    topics: ["Python", "REST", "React JS", "Kotlin", ".NET", "Clean Architecture"].map { .init(id: UUID().uuidString, title: $0) }
+                    username: viewData.username,
+                    avatarUrl: viewData.avatarUrl,
+                    aboutMyself: viewData.aboutMyself,
+                    topics: viewData.topics
                 ))
                 .frame(maxHeight: .infinity, alignment: .top)
 
                 Button {
-                    print("Edit Tapped")
+                    store.dispatch(.editTapped)
                 } label: {
                     HStack(spacing: .zero) {
                         Images.editIcon.swiftUIImage
-                        Text("Редактировать").padding(.leading, Constants.editTitleInsetLeading)
+                        Text("Edit").padding(.leading, Constants.editTitleInsetLeading)
                     }
                 }
                 .mainButtonStyle(isProminent: false)

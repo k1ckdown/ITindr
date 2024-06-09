@@ -18,17 +18,20 @@ final class ProfileEditorMiddleware: Middleware {
 
     private let getTopicListUseCase: GetTopicListUseCase
     private let updateUserAvatarUseCase: UpdateUserAvatarUseCase
+    private let deleteUserAvatarUseCase: DeleteUserAvatarUseCase
     private let updateUserProfileUseCase: UpdateUserProfileUseCase
     private weak var delegate: ProfileEditorMiddlewareDelegate?
 
     init(
         getTopicListUseCase: GetTopicListUseCase,
         updateUserAvatarUseCase: UpdateUserAvatarUseCase,
+        deleteUserAvatarUseCase: DeleteUserAvatarUseCase,
         updateUserProfileUseCase: UpdateUserProfileUseCase,
         delegate: ProfileEditorMiddlewareDelegate?
     ) {
         self.getTopicListUseCase = getTopicListUseCase
         self.updateUserAvatarUseCase = updateUserAvatarUseCase
+        self.deleteUserAvatarUseCase = deleteUserAvatarUseCase
         self.updateUserProfileUseCase = updateUserProfileUseCase
         self.delegate = delegate
     }
@@ -68,7 +71,10 @@ private extension ProfileEditorMiddleware {
             try await updateUserProfileUseCase.execute(profile)
             if let avatar = state.chosenAvatar {
                 try await updateUserAvatarUseCase.execute(avatar)
+            } else if state.avatarUrl == nil {
+                try await deleteUserAvatarUseCase.execute()
             }
+
             await delegate?.goToNext()
         } catch {
             await delegate?.showError(error.localizedDescription)

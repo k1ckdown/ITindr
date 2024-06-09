@@ -29,7 +29,7 @@ struct ProfileEditorState: Equatable {
     }
 
     var hasAvatar: Bool {
-        avatarUrl != nil && chosenAvatar != nil
+        avatarUrl != nil || chosenAvatar != nil
     }
 }
 
