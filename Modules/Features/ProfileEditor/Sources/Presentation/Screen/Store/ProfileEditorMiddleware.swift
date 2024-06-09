@@ -16,7 +16,6 @@ protocol ProfileEditorMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable 
 
 final class ProfileEditorMiddleware: Middleware {
 
-    private var selectedTopicIds = [String]()
     private let getTopicListUseCase: GetTopicListUseCase
     private let updateUserAvatarUseCase: UpdateUserAvatarUseCase
     private let updateUserProfileUseCase: UpdateUserProfileUseCase
@@ -38,8 +37,6 @@ final class ProfileEditorMiddleware: Middleware {
         switch intent {
         case .onAppear:
             return await getTopics()
-        case .topicTapped(let id):
-            handleTopicTap(id: id)
         case .saveTapped:
             await handleSaveTap(state: state)
         default: break
@@ -52,14 +49,6 @@ final class ProfileEditorMiddleware: Middleware {
 // MARK: - Public methods
 
 private extension ProfileEditorMiddleware {
-
-    func handleTopicTap(id: String) {
-        if let index = selectedTopicIds.firstIndex(of: id) {
-            selectedTopicIds.remove(at: index)
-        } else {
-            selectedTopicIds.append(id)
-        }
-    }
 
     func getTopics() async -> ProfileEditorIntent {
         do {
@@ -74,7 +63,7 @@ private extension ProfileEditorMiddleware {
         // TODO: Show error that field is required
         guard state.name.isValid else { return }
 
-        let profile = UserProfileEdit(name: state.name.content, aboutMyself: state.aboutMyself, topics: selectedTopicIds)
+        let profile = UserProfileEdit(name: state.name.content, aboutMyself: state.aboutMyself, topics: state.selectedTopicIds)
         do {
             try await updateUserProfileUseCase.execute(profile)
             if let avatar = state.chosenAvatar {

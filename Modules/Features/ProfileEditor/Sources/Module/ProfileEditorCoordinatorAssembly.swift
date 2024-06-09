@@ -47,7 +47,7 @@ private extension ProfileEditorCoordinatorAssembly {
             name: .init(content: profile.name),
             aboutMyself: profile.aboutMyself,
             avatarUrl: profile.avatarUrl,
-            topics: profile.topics.map { .init(id: $0.id, title: $0.title) }
+            selectedTopicIds: profile.topics.map(\.id)
         )
     }
 

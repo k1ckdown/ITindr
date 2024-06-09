@@ -16,6 +16,7 @@ struct ProfileEditorState: Equatable {
     var avatarUrl: String?
     var chosenAvatar: Resource?
     var topics = [TopicView.Model]()
+    var selectedTopicIds = [String]()
     var photoSourceType: PhotoSourceType?
     var isSourceTypeAlertPresented = false
 

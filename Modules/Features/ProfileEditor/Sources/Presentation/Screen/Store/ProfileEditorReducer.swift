@@ -6,6 +6,8 @@
 //
 
 import UDFKit
+import CommonUI
+import TopicDomain
 
 struct ProfileEditorReducer: Reducer {
 
@@ -13,8 +15,7 @@ struct ProfileEditorReducer: Reducer {
         switch intent {
         case .saveTapped, .onAppear, .topicsLoadFailed: break
         case .topicTapped(let id):
-            guard let index = state.topics.firstIndex(where: { $0.id == id }) else { return }
-            state.topics[index].isSelected.toggle()
+            handleTopicTap(&state, id: id)
         case .choosePhotoTapped:
             state.isSourceTypeAlertPresented = true
         case .deletePhotoTapped:
@@ -31,7 +32,33 @@ struct ProfileEditorReducer: Reducer {
         case .sourceTypeAlertPresented(let isPresented):
             state.isSourceTypeAlertPresented = isPresented
         case .topicsLoaded(let topics):
-            state.topics = topics.map { .init(id: $0.id, title: $0.title) }
+            handleTopicsLoad(&state, topics: topics)
+        }
+    }
+}
+
+// MARK: - Private methods
+
+private extension ProfileEditorReducer {
+
+    func handleTopicsLoad(_ state: inout ProfileEditorState, topics: [Topic]) {
+        let topicViewModels = topics.map { topic in
+            var topicViewModel = TopicView.Model(id: topic.id, title: topic.title)
+            topicViewModel.isSelected = state.selectedTopicIds.contains(where: { $0 == topic.id })
+            return topicViewModel
+        }
+
+        state.topics = topicViewModels
+    }
+
+    func handleTopicTap(_ state: inout ProfileEditorState, id: String) {
+        guard let index = state.topics.firstIndex(where: { $0.id == id }) else { return }
+        state.topics[index].isSelected.toggle()
+
+        if let index = state.selectedTopicIds.firstIndex(of: id) {
+            state.selectedTopicIds.remove(at: index)
+        } else {
+            state.selectedTopicIds.append(id)
         }
     }
 }

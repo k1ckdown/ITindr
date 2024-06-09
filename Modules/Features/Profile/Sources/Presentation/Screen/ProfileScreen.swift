@@ -9,7 +9,7 @@ import SwiftUI
 import CommonUI
 
 struct ProfileScreen: View {
-    
+
     var body: some View {
         FullScrollView {
             VStack {
@@ -20,7 +20,7 @@ struct ProfileScreen: View {
                     topics: ["Python", "REST", "React JS", "Kotlin", ".NET", "Clean Architecture"].map { .init(id: UUID().uuidString, title: $0) }
                 ))
                 .frame(maxHeight: .infinity, alignment: .top)
-                
+
                 Button {
                     print("Edit Tapped")
                 } label: {
@@ -42,11 +42,11 @@ struct ProfileScreen: View {
 // MARK: - Constants
 
 private extension ProfileScreen {
-    
+
     enum Constants {
         static let contentInsetTop: CGFloat = 40
         static let contentInsetHorizontal: CGFloat = 40
-        
+
         static let editTitleInsetLeading: CGFloat = 16
         static let editButtonInsetBottom: CGFloat = 30
         static let editButtonInsetHorizontal: CGFloat = 35
