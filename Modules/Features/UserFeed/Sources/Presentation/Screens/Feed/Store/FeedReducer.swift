@@ -14,6 +14,7 @@ struct FeedReducer: Reducer {
         switch intent {
         case .likeTapped, .rejectTapped, .avatarTapped: break
         case .onAppear:
+            guard case .idle = state else { return }
             state = .loading
         case .usersMatched:
             guard case .loaded(var user) = state else { return }

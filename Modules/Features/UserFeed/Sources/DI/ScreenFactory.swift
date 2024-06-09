@@ -21,7 +21,21 @@ final class ScreenFactory {
 
 @MainActor
 extension ScreenFactory {
-    
+
+    func makeProfileScreen(user: UserProfile) -> ProfileScreen {
+        let reducer = ProfileReducer()
+        let middleware = ProfileMiddleware()
+        let initialState = ProfileState(
+            username: user.name,
+            avatarUrl: user.avatarUrl,
+            aboutMyself: user.aboutMyself,
+            topics: user.topics.map { .init(id: $0.id, title: $0.title) }
+        )
+
+        let store = Store(initialState: initialState, reducer: reducer, middleware: middleware)
+        return ProfileScreen(store: store)
+    }
+
     func makeFeedScreen(middlewareDelegate: FeedMiddlewareDelegate?) -> FeedScreen {
         let reducer = FeedReducer()
         let middleware = FeedMiddleware(
@@ -33,7 +47,7 @@ extension ScreenFactory {
 
         let store = Store(initialState: FeedState.idle, reducer: reducer, middleware: middleware)
         let cancelMatchHandler: ((UserProfile?) -> Void) = { [weak store] in store?.dispatch(.userSelected($0)) }
-        
+
         middleware.cancelMatchHandler = cancelMatchHandler
         return FeedScreen(store: store)
     }

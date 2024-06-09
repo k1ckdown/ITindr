@@ -11,6 +11,7 @@ import ProfileDomain
 
 @MainActor
 protocol FeedMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable {
+    func goToProfile(_ user: UserProfile)
     func showUserMatch(userId: String, cancelHandler: (() -> Void)?)
 }
 
@@ -40,13 +41,16 @@ final class FeedMiddleware: Middleware {
         switch intent {
         case .userSelected, .loadFailed, .usersMatched: break
         case .onAppear:
+            guard case .loading = state else { break }
             return await getUsers()
         case .likeTapped:
             return await likeUser()
         case .rejectTapped:
             await dislikeUser()
             return .userSelected(getNextUser())
-        case .avatarTapped: break
+        case .avatarTapped:
+            guard let currentUser else { break }
+            await delegate?.goToProfile(currentUser)
         }
 
         return nil
@@ -82,7 +86,7 @@ private extension FeedMiddleware {
 
     func dislikeUser() async {
         guard let currentUser else { return }
-
+        
         do {
             try await dislikeUserUseCase.execute(userId: currentUser.id)
         } catch {

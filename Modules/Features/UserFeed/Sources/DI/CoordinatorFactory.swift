@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Navigation
+import ProfileDomain
 import UserMatchInterface
 
 final class CoordinatorFactory {
@@ -22,13 +23,22 @@ final class CoordinatorFactory {
 
 @MainActor
 extension CoordinatorFactory {
-    
+
+    func makeProfileCoordinator(user: UserProfile, navigationController: NavigationController) -> ProfileCoordinator {
+        let content: ProfileCoordinator.Content = {
+            let screen = self.screenFactory.makeProfileScreen(user: user)
+            return UIHostingController(rootView: screen)
+        }
+
+        return ProfileCoordinator(content: content, navigationController: navigationController)
+    }
+
     func makeFeedCoordinator(navigationController: NavigationController) -> UserFeedCoordinator {
         let content: UserFeedCoordinator.Content = { middlewareDelegate in
             let screen = self.screenFactory.makeFeedScreen(middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
-        
+
         return UserFeedCoordinator(
             content: content,
             factory: self,

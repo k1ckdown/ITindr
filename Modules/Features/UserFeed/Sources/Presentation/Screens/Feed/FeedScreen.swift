@@ -59,7 +59,8 @@ private extension FeedScreen {
                     username: user.username,
                     avatarUrl: user.avatarUrl,
                     aboutMyself: user.aboutMyself,
-                    topics: user.topics
+                    topics: user.topics,
+                    avatarTapped: { store.dispatch(.avatarTapped) }
                 )) {
                     store.dispatch(.likeTapped)
                 } rejectHandler: {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Navigation
+import ProfileDomain
 import UserFeedInterface
 import UserMatchInterface
 
@@ -40,6 +41,11 @@ final class UserFeedCoordinator: BaseCoordinator, UserFeedCoordinatorProtocol {
 // MARK: - FeedMiddlewareDelegate
 
 extension UserFeedCoordinator: FeedMiddlewareDelegate {
+
+    func goToProfile(_ user: UserProfile) {
+        let profileCoordinator = factory.makeProfileCoordinator(user: user, navigationController: navigationController)
+        coordinate(to: profileCoordinator)
+    }
 
     func showUserMatch(userId: String, cancelHandler: (() -> Void)?) {
         let userMatchCoordinator = userMatchCoordinatorAssembly.assemble(
