@@ -12,7 +12,7 @@ import ProfileDomain
 
 struct ProfileEditorState: Equatable {
     var name = TextFieldState()
-    var aboutMyself = ""
+    var aboutMyself: String?
     var avatarUrl: String?
     var chosenAvatar: Resource?
     var topics = [TopicView.Model]()

@@ -172,7 +172,7 @@ private extension ProfileEditorScreen {
     }
 
     var aboutMyself: Binding<String> {
-        Binding(store.state.aboutMyself) {
+        Binding(store.state.aboutMyself ?? "") {
             store.dispatch(.aboutMyselfChanged($0))
         }
     }

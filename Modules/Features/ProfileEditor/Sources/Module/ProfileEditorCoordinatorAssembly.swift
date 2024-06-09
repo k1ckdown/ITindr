@@ -20,6 +20,7 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
     }
 
     public func assemble(
+        profile: Profile,
         isNavigationBarHidden: Bool,
         navigationController: NavigationController,
         flowFinishHandler: (() -> Void)?
@@ -35,8 +36,22 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
             navigationController: navigationController
         )
     }
+}
 
-    private func makeScreen(isNavigationBarHidden: Bool, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
+// MARK: - Private methods
+
+private extension ProfileEditorCoordinatorAssembly {
+
+    func getInitialState(from profile: Profile) -> ProfileEditorState {
+        ProfileEditorState(
+            name: .init(content: profile.name),
+            aboutMyself: profile.aboutMyself,
+            avatarUrl: profile.avatarUrl,
+            topics: profile.topics.map { .init(id: $0.id, title: $0.title) }
+        )
+    }
+
+    func makeScreen(isNavigationBarHidden: Bool, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
         let initialState = ProfileEditorState()
         let reducer = ProfileEditorReducer()
         let middleware = ProfileEditorMiddleware(

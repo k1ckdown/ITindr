@@ -48,6 +48,7 @@ private extension AuthFlowCoordinator {
 
     func goToProfileEditor() {
         let profileEditorCoordinator = profileEditorCoordinatorAssembly.assemble(
+            profile: .empty,
             isNavigationBarHidden: true,
             navigationController: navigationController,
             flowFinishHandler: flowFinishHandler
