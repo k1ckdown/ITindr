@@ -25,9 +25,10 @@ public struct UserRepositoryAssembly {
     }
     
     public func assemble() -> UserRepositoryProtocol {
+        let localDataSource = UserLocalDataSource()
         let remoteDataSource = UserRemoteDataSource(networkService: dependencies.networkService)
-        let repository = UserRepository(remoteDataSource: remoteDataSource)
-        
+        let repository = UserRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
+
         return repository
     }
 }

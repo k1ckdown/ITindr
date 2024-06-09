@@ -10,9 +10,11 @@ import ProfileDomain
 
 final class UserRepository {
 
+    private let localDataSource: UserLocalDataSource
     private let remoteDataSource: UserRemoteDataSource
 
-    init(remoteDataSource: UserRemoteDataSource) {
+    init(localDataSource: UserLocalDataSource, remoteDataSource: UserRemoteDataSource) {
+        self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
     }
 }
@@ -36,6 +38,10 @@ extension UserRepository: UserRepositoryProtocol {
 
     func getAllUsers(pagination: Pagination) async throws -> [UserProfile] {
         let userDtos = try await remoteDataSource.fetchAllUsers(pagination: pagination)
+
+        let localUsers = try await localDataSource.fetchAllUsers()
+        print("Local count: \(localUsers.count)")
+
         return userDtos.toDomain()
     }
 }
