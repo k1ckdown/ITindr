@@ -2,7 +2,7 @@
 //  TopicCD+CoreDataProperties.swift
 //  
 //
-//  Created by Ivan Semenov on 09.06.2024.
+//  Created by Ivan Semenov on 10.06.2024.
 //
 //
 
@@ -16,8 +16,8 @@ extension TopicCD {
         return NSFetchRequest<TopicCD>(entityName: "TopicCD")
     }
 
-    @NSManaged public var id: String?
-    @NSManaged public var title: String?
+    @NSManaged public var id: String
+    @NSManaged public var title: String
     @NSManaged public var users: NSSet?
 
 }

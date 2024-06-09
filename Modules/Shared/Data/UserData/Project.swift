@@ -7,6 +7,7 @@ let project = Project.dataFramework(
     domainName: "Profile",
     dependencies: [
         .project(target: "Network", path: "../../Core/Network"),
+        .project(target: "TopicDomain", path: "../../Domain/TopicDomain"),
         .project(target: "UserCoreData", path: "../../Core/UserCoreData")
     ]
 )

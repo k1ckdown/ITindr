@@ -2,7 +2,7 @@
 //  TopicCD+CoreDataClass.swift
 //  
 //
-//  Created by Ivan Semenov on 09.06.2024.
+//  Created by Ivan Semenov on 10.06.2024.
 //
 //
 

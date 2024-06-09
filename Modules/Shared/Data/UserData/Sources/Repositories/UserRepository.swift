@@ -35,13 +35,30 @@ extension UserRepository: UserRepositoryProtocol {
         let userDtos = try await remoteDataSource.fetchUsersFeed()
         return userDtos.toDomain()
     }
-
+    
     func getAllUsers(pagination: Pagination) async throws -> [UserProfile] {
+        let users: [UserProfile]
+
+        let localUsers = try await localDataSource.fetchAllUsers(pagination: pagination)
+        if localUsers.isEmpty {
+            users = try await refreshUsers(pagination: pagination)
+        } else {
+            users = localUsers
+            Task { try await refreshUsers(pagination: pagination) }
+        }
+
+        return users
+    }
+}
+
+// MARK: - Private methods
+
+private extension UserRepository {
+
+    func refreshUsers(pagination: Pagination) async throws -> [UserProfile] {
         let userDtos = try await remoteDataSource.fetchAllUsers(pagination: pagination)
-
-        let localUsers = try await localDataSource.fetchAllUsers()
-        print("Local count: \(localUsers.count)")
-
-        return userDtos.toDomain()
+        let users = userDtos.toDomain()
+        try await localDataSource.saveUserList(users)
+        return users
     }
 }

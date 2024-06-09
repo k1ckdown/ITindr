@@ -4,6 +4,11 @@
         <attribute name="id" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserProfileCD" inverseName="topics" inverseEntity="UserProfileCD"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="UserProfileCD" representedClassName="UserProfileCD" syncable="YES">
         <attribute name="aboutMyself" optional="YES" attributeType="String"/>
@@ -11,5 +16,10 @@
         <attribute name="id" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="topics" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TopicCD" inverseName="users" inverseEntity="TopicCD"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
 </model>

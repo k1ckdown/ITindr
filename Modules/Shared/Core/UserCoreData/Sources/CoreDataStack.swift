@@ -12,20 +12,26 @@ public final class CoreDataStack {
 
     public static let shared = CoreDataStack()
 
+    private lazy var backgroundContext: NSManagedObjectContext = {
+        let context = persistentContainer.newBackgroundContext()
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        return context
+    }()
+
     private lazy var persistentContainer: NSPersistentContainer = {
         guard
             let modelUrl = Bundle.module.url(forResource: Constants.modelName, withExtension: Constants.modelExtension),
             let model = NSManagedObjectModel(contentsOf: modelUrl)
         else { fatalError("Failed to create ManagedObjectModel") }
 
-        let persistentContainer = NSPersistentContainer(name: Constants.modelName, managedObjectModel: model)
-        persistentContainer.loadPersistentStores { _, error in
+        let container = NSPersistentContainer(name: Constants.modelName, managedObjectModel: model)
+        container.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("Unresolved error \(error)")
             }
         }
 
-        return persistentContainer
+        return container
     }()
 
     private init() {}
@@ -36,7 +42,9 @@ public final class CoreDataStack {
 public extension CoreDataStack {
 
     func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        persistentContainer.performBackgroundTask(block)
+        backgroundContext.perform { [weak self] in
+            if let self { block(backgroundContext) }
+        }
     }
 }
 

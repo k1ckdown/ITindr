@@ -2,7 +2,7 @@
 //  UserProfileCD+CoreDataProperties.swift
 //  
 //
-//  Created by Ivan Semenov on 09.06.2024.
+//  Created by Ivan Semenov on 10.06.2024.
 //
 //
 
@@ -18,9 +18,9 @@ extension UserProfileCD {
 
     @NSManaged public var aboutMyself: String?
     @NSManaged public var avatarUrl: String?
-    @NSManaged public var id: String?
-    @NSManaged public var name: String?
-    @NSManaged public var topics: NSSet?
+    @NSManaged public var id: String
+    @NSManaged public var name: String
+    @NSManaged public var topics: NSSet
 
 }
 
