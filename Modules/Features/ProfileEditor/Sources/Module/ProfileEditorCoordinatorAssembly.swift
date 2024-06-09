@@ -19,9 +19,13 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         self.dependencies = dependencies
     }
 
-    public func assemble(navigationController: NavigationController, flowFinishHandler: (() -> Void)?) -> ProfileEditorCoordinatorProtocol {
+    public func assemble(
+        isNavigationBarHidden: Bool,
+        navigationController: NavigationController,
+        flowFinishHandler: (() -> Void)?
+    ) -> ProfileEditorCoordinatorProtocol {
         let content: ProfileEditorCoordinator.Content = { middlewareDelegate in
-            let screen = makeScreen(middlewareDelegate: middlewareDelegate)
+            let screen = makeScreen(isNavigationBarHidden: isNavigationBarHidden, middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
 
@@ -32,7 +36,7 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         )
     }
 
-    private func makeScreen(middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
+    private func makeScreen(isNavigationBarHidden: Bool, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
         let initialState = ProfileEditorState()
         let reducer = ProfileEditorReducer()
         let middleware = ProfileEditorMiddleware(
@@ -44,6 +48,6 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
 
         let store = Store(initialState: initialState, reducer: reducer, middleware: middleware)
 
-        return ProfileEditorScreen(store: store)
+        return ProfileEditorScreen(isNavBarHidden: isNavigationBarHidden, store: store)
     }
 }

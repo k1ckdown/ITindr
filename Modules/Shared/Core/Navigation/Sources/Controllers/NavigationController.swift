@@ -40,7 +40,7 @@ extension NavigationController {
 extension NavigationController: UINavigationControllerDelegate {
 
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        let isNavigationBarHidden = viewController is NavigationBarHidden
+        let isNavigationBarHidden = (viewController as? NavigationBarHidden)?.isNavBarHidden ?? false
         let isTabBarHidden = viewController is TabBarHidden
 
         navigationController.tabBarController?.tabBar.isHidden = isTabBarHidden

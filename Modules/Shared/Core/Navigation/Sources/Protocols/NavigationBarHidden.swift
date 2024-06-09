@@ -7,6 +7,16 @@
 
 import SwiftUI
 
-public protocol NavigationBarHidden {}
+public protocol NavigationBarHidden {
+    var isNavBarHidden: Bool { get }
+}
 
-extension UIHostingController: NavigationBarHidden where Content : NavigationBarHidden {}
+public extension NavigationBarHidden {
+    var isNavBarHidden: Bool { true }
+}
+
+extension UIHostingController: NavigationBarHidden where Content : NavigationBarHidden {
+    public var isNavBarHidden: Bool {
+        rootView.isNavBarHidden
+    }
+}

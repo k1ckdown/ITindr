@@ -15,10 +15,12 @@ typealias Strings = ProfileEditorStrings
 
 struct ProfileEditorScreen: View, NavigationBarHidden {
 
+    private(set) var isNavBarHidden: Bool
     @State private var selectedPhoto: PhotoDetails?
     @StateObject private var store: StoreOf<ProfileEditorReducer>
 
-    init(store: StoreOf<ProfileEditorReducer>) {
+    init(isNavBarHidden: Bool, store: StoreOf<ProfileEditorReducer>) {
+        self.isNavBarHidden = isNavBarHidden
         _store = StateObject(wrappedValue: store)
     }
 
