@@ -35,11 +35,11 @@ extension UserRepository: UserRepositoryProtocol {
         let userDtos = try await remoteDataSource.fetchUsersFeed()
         return userDtos.toDomain()
     }
-    
+
     func getAllUsers(pagination: Pagination) async throws -> [UserProfile] {
         let users: [UserProfile]
-
         let localUsers = try await localDataSource.fetchAllUsers(pagination: pagination)
+
         if localUsers.isEmpty {
             users = try await refreshUsers(pagination: pagination)
         } else {
