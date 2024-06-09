@@ -26,6 +26,7 @@ public struct ProfileView: View {
             VStack {
                 Text(model.username)
                     .font(Fonts.bold24)
+                    .multilineTextAlignment(.center)
 
                 TagLayout(model.topics) {
                     TopicView(model: $0)
@@ -35,7 +36,6 @@ public struct ProfileView: View {
             Text(model.aboutMyself ?? "")
                 .font(Fonts.regular16)
                 .multilineTextAlignment(.center)
-                .padding(.top, model.topics.count == 0 ? 0 : Constants.contentSpacing)
         }
     }
 

@@ -35,7 +35,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
                     
                     textFields
                     
-                    TagLayout(store.state.topics) { model in
+                    TagLayout(store.state.topics, alignment: .leading) { model in
                         TopicView(model: model)
                             .onTapGesture {
                                 store.dispatch(.topicTapped(model.id))

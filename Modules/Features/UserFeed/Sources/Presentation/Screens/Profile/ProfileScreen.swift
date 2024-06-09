@@ -24,6 +24,7 @@ struct ProfileScreen: View, TabBarHidden {
             Text(store.state.username)
                 .font(Fonts.bold24)
                 .foregroundStyle(Colors.appWhite.swiftUIColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             Text(store.state.aboutMyself ?? "")
                 .font(Fonts.regular16)
@@ -31,7 +32,7 @@ struct ProfileScreen: View, TabBarHidden {
                 .foregroundStyle(Colors.appWhite.swiftUIColor)
                 .padding(.top, Constants.aboutMyselfInsetTop)
 
-            TagLayout(store.state.topics) {
+            TagLayout(store.state.topics, alignment: .leading) {
                 TopicView(model: $0)
             }
             .padding(.top, Constants.topicsInsetTop)
@@ -62,7 +63,7 @@ private extension ProfileScreen {
     enum Constants {
         static let aboutMyselfLineLimit = 2
         static let topicsInsetTop: CGFloat = 16
-        static let contentInsetBottom: CGFloat = 35
+        static let contentInsetBottom: CGFloat = 20
         static let aboutMyselfInsetTop: CGFloat = 8
     }
 }

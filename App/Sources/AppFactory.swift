@@ -86,7 +86,7 @@ extension AppFactory {
     func makeMainTabBarCoordinatorAssembly() -> MainTabBarCoordinatorAssembly {
         print(authRepository.isLoggedIn())
         let dependencies = MainTabBar.ModuleDependencies(
-            profileCoordinatorAssembly: ProfileCoordinatorAssembly(),
+            profileCoordinatorAssembly: makeProfileCoordinatorAssembly(),
             chatListCoordinatorAssembly: makeChatListCoordinatorAssembly(),
             userFeedCoordinatorAssembly: makeUserFeedCoordinatorAssembly(),
             userListCoordinatorAssembly: makeUserListCoordinatorAssembly()
@@ -115,8 +115,17 @@ private extension AppFactory {
             topicRepository: topicRepository,
             profileRepository: profileRepository
         )
-        
+
         return ProfileEditorCoordinatorAssembly(dependencies: dependencies)
+    }
+
+    func makeProfileCoordinatorAssembly() -> ProfileCoordinatorAssembly {
+        let dependencies = Profile.ModuleDependencies(
+            profileRepository: profileRepository,
+            profileEditorCoordinatorAssembly: makeProfileEditorCoordinatorAssembly()
+        )
+
+        return ProfileCoordinatorAssembly(dependencies: dependencies)
     }
 
     func makeUserMatchCoordinatorAssembly() -> UserMatchCoordinatorAssembly {
