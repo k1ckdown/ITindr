@@ -6,12 +6,13 @@
 //
 
 import CommonDomain
+import ProfileDomain
 
-public final class UpdateUserAvatarUseCase {
+final class UpdateUserAvatarUseCase {
 
     private let profileRepository: ProfileRepositoryProtocol
 
-    public init(profileRepository: ProfileRepositoryProtocol) {
+    init(profileRepository: ProfileRepositoryProtocol) {
         self.profileRepository = profileRepository
     }
 

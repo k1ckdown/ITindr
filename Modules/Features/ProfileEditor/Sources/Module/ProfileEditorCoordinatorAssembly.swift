@@ -8,7 +8,6 @@
 import UDFKit
 import SwiftUI
 import Navigation
-import ProfileDomain
 import ProfileEditorInterface
 
 public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssemblyProtocol {
