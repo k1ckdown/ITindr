@@ -6,10 +6,10 @@
 //
 
 import CoreData
-import UserCoreData
 import ProfileDomain
 
-extension UserProfileCD {
+public extension UserProfileCD {
+
     convenience init(_ profile: UserProfile, context: NSManagedObjectContext) {
         self.init(context: context)
 
@@ -19,9 +19,7 @@ extension UserProfileCD {
         aboutMyself = profile.aboutMyself
         topics = NSSet(array: profile.topics.map { TopicCD($0, context: context) })
     }
-}
 
-extension UserProfileCD {
     func toDomain() -> UserProfile {
         UserProfile(
             id: id,

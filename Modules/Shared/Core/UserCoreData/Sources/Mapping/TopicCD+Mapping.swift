@@ -7,19 +7,16 @@
 
 import CoreData
 import TopicDomain
-import ProfileDomain
-import UserCoreData
 
-extension TopicCD {
+public extension TopicCD {
+    
     convenience init(_ topic: Topic, context: NSManagedObjectContext) {
         self.init(context: context)
         
         id = topic.id
         title = topic.title
     }
-}
-
-extension TopicCD {
+    
     func toDomain() -> Topic {
         Topic(id: id, title: title)
     }
