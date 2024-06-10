@@ -33,7 +33,6 @@ final class ProfileCoordinator: BaseCoordinator, ProfileCoordinatorProtocol {
         addPopHandler(for: content)
         // TODO: Localize
         content.navigationItem.title = "Profile"
-        content.navigationItem.backButtonTitle = "Back"
         navigationController.pushViewController(content, animated: true)
     }
 }

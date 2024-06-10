@@ -13,7 +13,7 @@ import Navigation
 
 typealias Strings = ProfileEditorStrings
 
-struct ProfileEditorScreen: View, NavigationBarHidden {
+struct ProfileEditorScreen: View, NavigationBarHidden, TabBarHidden {
     
     private(set) var isNavBarHidden: Bool
     @State private var selectedPhoto: PhotoDetails?

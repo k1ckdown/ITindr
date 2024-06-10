@@ -29,7 +29,6 @@ final class UserListCoordinator: BaseCoordinator, UserListCoordinatorProtocol {
         addPopHandler(for: content)
         // TODO: Localize
         content.navigationItem.title = "Users"
-        content.navigationItem.backButtonTitle = "Back"
         navigationController.pushViewController(content, animated: true)
     }
 }

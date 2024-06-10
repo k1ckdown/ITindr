@@ -22,6 +22,7 @@ final class ProfileCoordinator: BaseCoordinator {
         let content = content()
 
         addPopHandler(for: content)
+        navigationController.navigationBar.tintColor = .white
         navigationController.pushViewController(content, animated: true)
     }
 }
