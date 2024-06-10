@@ -17,8 +17,10 @@ extension UserProfileCD {
     }
 
     @NSManaged public var aboutMyself: String?
+    @NSManaged public var avatarData: Data?
     @NSManaged public var avatarUrl: String?
     @NSManaged public var id: String
+    @NSManaged public var isCurrent: Bool
     @NSManaged public var name: String
     @NSManaged public var topics: NSSet
 

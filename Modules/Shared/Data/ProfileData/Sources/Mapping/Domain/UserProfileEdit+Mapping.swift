@@ -13,7 +13,7 @@ extension UserProfileEdit {
         UserProfileEditDTO(
             name: name,
             aboutMyself: aboutMyself,
-            topics: topics
+            topics: topics.map(\.id)
         )
     }
 }

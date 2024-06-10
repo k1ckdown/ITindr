@@ -20,6 +20,7 @@ struct ProfileEditorReducer: Reducer {
             state.isSourceTypeAlertPresented = true
         case .deletePhotoTapped:
             state.avatarUrl = nil
+            state.avatarData = nil
             state.chosenAvatar = nil
         case .avatarChosen(let avatar):
             state.chosenAvatar = avatar

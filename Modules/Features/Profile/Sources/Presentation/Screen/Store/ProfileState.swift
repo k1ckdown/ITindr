@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 09.06.2024.
 //
 
+import Foundation
 import CommonUI
 import ProfileDomain
 
@@ -17,6 +18,7 @@ enum ProfileState: Equatable {
     struct ViewData: Equatable {
         let username: String
         let avatarUrl: String?
+        let avatarData: Data?
         let aboutMyself: String?
         let topics: [TopicView.Model]
     }

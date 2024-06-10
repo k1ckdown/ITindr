@@ -7,6 +7,7 @@
 
 import UDFKit
 import Navigation
+import TopicDomain
 import ProfileDomain
 
 @MainActor
@@ -16,6 +17,7 @@ protocol ProfileEditorMiddlewareDelegate: AnyObject, Sendable, ErrorPresentable 
 
 final class ProfileEditorMiddleware: Middleware {
 
+    private var topics = [Topic]()
     private let getTopicListUseCase: GetTopicListUseCase
     private let updateUserAvatarUseCase: UpdateUserAvatarUseCase
     private let deleteUserAvatarUseCase: DeleteUserAvatarUseCase
@@ -55,7 +57,7 @@ private extension ProfileEditorMiddleware {
 
     func getTopics() async -> ProfileEditorIntent {
         do {
-            let topics = try await getTopicListUseCase.execute()
+            topics = try await getTopicListUseCase.execute()
             return .topicsLoaded(topics)
         } catch {
             return .topicsLoadFailed(error.localizedDescription)
@@ -66,12 +68,13 @@ private extension ProfileEditorMiddleware {
         // TODO: Show error that field is required
         guard state.name.isValid else { return }
 
-        let profile = UserProfileEdit(name: state.name.content, aboutMyself: state.aboutMyself, topics: state.selectedTopicIds)
+        let selectedTopics = topics.filter { state.selectedTopicIds.contains($0.id) }
+        let profile = UserProfileEdit(name: state.name.content, aboutMyself: state.aboutMyself, topics: selectedTopics)
         do {
             try await updateUserProfileUseCase.execute(profile)
             if let avatar = state.chosenAvatar {
                 try await updateUserAvatarUseCase.execute(avatar)
-            } else if state.avatarUrl == nil {
+            } else if state.avatarData == nil, state.avatarUrl == nil {
                 try await deleteUserAvatarUseCase.execute()
             }
 

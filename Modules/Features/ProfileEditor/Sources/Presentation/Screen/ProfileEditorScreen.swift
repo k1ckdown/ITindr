@@ -57,6 +57,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
             .padding(.horizontal)
             .appLogo()
         }
+        .animation(.easeInOut(duration: Constants.tagsAnimationDuration), value: store.state.topics)
         .onAppear {
             store.dispatch(.onAppear)
         }
@@ -67,7 +68,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden {
         .onChange(of: selectedPhoto) {
             guard
                 let photo = $0,
-                let data = photo.image.jpegData(compressionQuality: 0.5)
+                let data = photo.image.jpegData(compressionQuality: Constants.avatarCompressionQuality)
             else { return }
             
             store.dispatch(.avatarChosen(.init(data: data, fileName: photo.fileName)))
@@ -82,14 +83,15 @@ private extension ProfileEditorScreen {
     var avatarView: some View {
         Group {
             if let selectedPhoto, store.state.isAvatarChosen {
-                Image(uiImage: selectedPhoto.image)
-                    .resizable()
+                Image(uiImage: selectedPhoto.image).resizable()
+            } else if let avatarData = store.state.avatarData, let uiImage = UIImage(data: avatarData)  {
+                Image(uiImage: uiImage).resizable()
             } else if let avatarUrl = store.state.avatarUrl {
                 KFImage.url(URL(string: avatarUrl))
                     .placeholder { Images.avatarPlaceholder.swiftUIImage }
                     .resizable()
             } else {
-                Images.avatarPlaceholder.swiftUIImage
+                Images.avatarPlaceholder.swiftUIImage.resizable()
             }
         }
         .frame(width: Constants.photoSize, height: Constants.photoSize)
@@ -197,8 +199,10 @@ private extension ProfileEditorScreen {
         static let photoSize: CGFloat = 88
         static let interestsInsetTop: CGFloat = 24
         static let saveButtonInsetTop: CGFloat = 55
+        static let tagsAnimationDuration: CGFloat = 0.5
         static let choosePhotoInsetLeading: CGFloat = 24
-        
+        static let avatarCompressionQuality: CGFloat = 0.5
+
         enum AboutMyself {
             static let height: CGFloat = 128
             static let cornerRadius: CGFloat = 28

@@ -12,10 +12,12 @@
     </entity>
     <entity name="UserProfileCD" representedClassName="UserProfileCD" syncable="YES">
         <attribute name="aboutMyself" optional="YES" attributeType="String"/>
+        <attribute name="avatarData" optional="YES" attributeType="Binary"/>
         <attribute name="avatarUrl" optional="YES" attributeType="String"/>
         <attribute name="id" attributeType="String"/>
+        <attribute name="isCurrent" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
-        <relationship name="topics" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TopicCD" inverseName="users" inverseEntity="TopicCD"/>
+        <relationship name="topics" toMany="YES" deletionRule="Nullify" destinationEntity="TopicCD" inverseName="users" inverseEntity="TopicCD"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>

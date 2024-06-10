@@ -33,6 +33,7 @@ final class ProfileCoordinator: BaseCoordinator, ProfileCoordinatorProtocol {
         addPopHandler(for: content)
         // TODO: Localize
         content.navigationItem.title = "Profile"
+        content.navigationItem.backButtonTitle = "Back"
         navigationController.pushViewController(content, animated: true)
     }
 }
@@ -47,7 +48,8 @@ extension ProfileCoordinator: ProfileMiddlewareDelegate {
             name: user.name,
             avatarUrl: user.avatarUrl,
             aboutMyself: user.aboutMyself,
-            topics: user.topics.map { .init(id: $0.id, title: $0.title) }
+            topics: user.topics.map { .init(id: $0.id, title: $0.title) },
+            avatarData: user.avatarData
         )
 
         let editorCoordinator = profileEditorCoordinatorAssembly.assemble(

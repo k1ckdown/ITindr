@@ -26,9 +26,9 @@ extension ProfileRemoteDataSource {
         return try await networkService.request(config: networkConfig, authorized: true)
     }
 
-    func updateProfile(_ profile: UserProfileEditDTO) async throws {
+    func updateProfile(_ profile: UserProfileEditDTO) async throws -> UserProfileDTO {
         let networkConfig = ProfileNetworkConfig.update(profile)
-        try await networkService.request(config: networkConfig, authorized: true)
+        return try await networkService.request(config: networkConfig, authorized: true)
     }
 
     func deleteAvatar() async throws {

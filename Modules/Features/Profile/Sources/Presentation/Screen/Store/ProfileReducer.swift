@@ -26,6 +26,7 @@ struct ProfileReducer: Reducer {
         ProfileState.ViewData(
             username: profile.name,
             avatarUrl: profile.avatarUrl,
+            avatarData: profile.avatarData,
             aboutMyself: profile.aboutMyself,
             topics: profile.topics.map { .init(id: $0.id, title: $0.title) }
         )

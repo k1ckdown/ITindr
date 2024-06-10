@@ -59,7 +59,7 @@ private extension UserListReducer {
 
         switch state {
         case .loading:
-            let viewData = UserListState.ViewData(pagination: pagination, users: userViewModels)
+            let viewData = UserListState.ViewData(pagination: nextPage, users: userViewModels)
             state = .loaded(viewData)
         case .loaded(var viewData):
             viewData.pagination = nextPage

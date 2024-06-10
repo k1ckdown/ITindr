@@ -41,7 +41,9 @@ public struct ProfileView: View {
 
     private func avatarView() -> some View {
         Group {
-            if let avatarUrl = model.avatarUrl {
+            if let avatarData = model.avatarData, let uiImage = UIImage(data: avatarData) {
+                Image(uiImage: uiImage).resizable()
+            } else if let avatarUrl = model.avatarUrl {
                 KFImage(URL(string: avatarUrl))
                     .placeholder { Images.avatarPlaceholder.swiftUIImage.resizable() }
                     .resizable()
@@ -62,13 +64,15 @@ public extension ProfileView {
     struct Model {
         let username: String
         let avatarUrl: String?
+        let avatarData: Data?
         let aboutMyself: String?
         let topics: [TopicView.Model]
         let avatarTapped: (() -> Void)?
 
-        public init(username: String, avatarUrl: String?, aboutMyself: String?, topics: [TopicView.Model], avatarTapped: (() -> Void)? = nil) {
+        public init(username: String, avatarUrl: String?, aboutMyself: String?, topics: [TopicView.Model], avatarData: Data? = nil, avatarTapped: (() -> Void)? = nil) {
             self.username = username
             self.avatarUrl = avatarUrl
+            self.avatarData = avatarData
             self.aboutMyself = aboutMyself
             self.topics = topics
             self.avatarTapped = avatarTapped

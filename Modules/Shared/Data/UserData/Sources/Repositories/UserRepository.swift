@@ -40,7 +40,7 @@ extension UserRepository: UserRepositoryProtocol {
         let users: [UserProfile]
         let localUsers = try await localDataSource.fetchAllUsers(pagination: pagination)
 
-        if localUsers.isEmpty {
+        if localUsers.count < 2 {
             users = try await refreshUsers(pagination: pagination)
         } else {
             users = localUsers

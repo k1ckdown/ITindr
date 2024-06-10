@@ -48,7 +48,8 @@ private extension ProfileScreen {
                     username: viewData.username,
                     avatarUrl: viewData.avatarUrl,
                     aboutMyself: viewData.aboutMyself,
-                    topics: viewData.topics
+                    topics: viewData.topics,
+                    avatarData: viewData.avatarData
                 ))
                 .frame(maxHeight: .infinity, alignment: .top)
 

@@ -10,10 +10,12 @@ import ProfileDomain
 
 final class ProfileRepository {
 
-    private var profile: UserProfile?
+    private var profileId: String?
+    private let localDataSource: ProfileLocalDataSource
     private let remoteDataSource: ProfileRemoteDataSource
 
-    init(remoteDataSource: ProfileRemoteDataSource) {
+    init(localDataSource: ProfileLocalDataSource, remoteDataSource: ProfileRemoteDataSource) {
+        self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
     }
 }
@@ -22,30 +24,42 @@ final class ProfileRepository {
 
 extension ProfileRepository: ProfileRepositoryProtocol {
 
+    func getUserId() async throws -> String {
+        if let profileId { return profileId }
+
+        let profile = try await getProfile()
+        self.profileId = profile.id
+
+        return profile.id
+    }
+
     func deleteAvatar() async throws {
+        try await localDataSource.deleteAvatar()
         try await remoteDataSource.deleteAvatar()
     }
 
     func saveAvatar(_ avatar: Resource) async throws {
+        try await localDataSource.updateAvatar(avatar.data)
         try await remoteDataSource.uploadAvatar(avatar)
     }
 
+    func updateProfile(_ profileEdit: UserProfileEdit) async throws {
+        let profileEditDto = profileEdit.toDto()
+        let profile = try await remoteDataSource.updateProfile(profileEditDto)
+        try await localDataSource.saveProfile(profile.toDomain())
+    }
+
     func getProfile() async throws -> UserProfile {
-        let profileDto = try await remoteDataSource.fetchProfile()
-        return profileDto.toDomain()
-    }
+        let profile: UserProfile
+        if let localProfile = try await localDataSource.fetchProfile() {
+            profile = localProfile
+        } else {
+            let remoteProfile = try await remoteDataSource.fetchProfile()
+            profile = remoteProfile.toDomain()
+            Task { try await localDataSource.saveProfile(profile) }
+        }
 
-    func updateProfile(_ profile: UserProfileEdit) async throws {
-        let profileDto = profile.toDto()
-        try await remoteDataSource.updateProfile(profileDto)
-    }
-
-    func getUserId() async throws -> String {
-        if let profile { return profile.id }
-
-        let profileDto = try await remoteDataSource.fetchProfile()
-        profile = profileDto.toDomain()
-
-        return profileDto.userId
+        profileId = profile.id
+        return profile
     }
 }

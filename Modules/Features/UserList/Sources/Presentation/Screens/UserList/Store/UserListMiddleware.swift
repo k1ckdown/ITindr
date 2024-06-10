@@ -71,9 +71,11 @@ private extension UserListMiddleware {
     func checkLoadMoreAvailable(state: State) -> Bool {
         guard
             case .loaded(let viewData) = state,
+            viewData.pagination != .firstPage,
             viewData.isMoreLoading == false,
             viewData.users.count >= viewData.pagination.offset
         else { return false }
+
         return true
     }
 }

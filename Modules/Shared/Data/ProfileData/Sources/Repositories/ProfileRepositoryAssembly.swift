@@ -25,8 +25,9 @@ public struct ProfileRepositoryAssembly {
     }
 
     public func assemble() -> ProfileRepositoryProtocol {
+        let localDataSource = ProfileLocalDataSource()
         let remoteDataSource = ProfileRemoteDataSource(networkService: dependencies.networkService)
-        let repository = ProfileRepository(remoteDataSource: remoteDataSource)
+        let repository = ProfileRepository(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
 
         return repository
     }

@@ -5,6 +5,7 @@
 //  Created by Ivan Semenov on 23.05.2024.
 //
 
+import Foundation
 import CommonUI
 import CommonDomain
 import TopicDomain
@@ -14,6 +15,7 @@ struct ProfileEditorState: Equatable {
     var name = TextFieldState()
     var aboutMyself: String?
     var avatarUrl: String?
+    var avatarData: Data?
     var chosenAvatar: Resource?
     var topics = [TopicView.Model]()
     var selectedTopicIds = [String]()
@@ -29,7 +31,7 @@ struct ProfileEditorState: Equatable {
     }
 
     var hasAvatar: Bool {
-        avatarUrl != nil || chosenAvatar != nil
+        avatarData != nil || chosenAvatar != nil
     }
 }
 
