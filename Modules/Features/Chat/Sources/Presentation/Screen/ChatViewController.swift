@@ -73,6 +73,8 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden, Ke
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+
+        messageTextView.setupPlaceholderLayout()
         sendMessageGradientLayer.frame = sendMessageButton.bounds
     }
 
@@ -168,10 +170,11 @@ private extension ChatViewController {
     func setupMessageTextView() {
         messageToolbar.addSubview(messageTextView)
 
-        // TODO: Placeholder
         messageTextView.delegate = self
         messageTextView.textColor = .black
         messageTextView.font = Fonts.uiRegular16
+        // TODO: Localize
+        messageTextView.placeholder = "Message..."
         messageTextView.tintColor = Colors.accentColor.color
         messageTextView.backgroundColor = Colors.appLightGray.color
         messageTextView.contentInset = Constants.messageViewContentInset
