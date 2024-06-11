@@ -65,7 +65,6 @@ private extension ProfileEditorMiddleware {
     }
 
     func handleSaveTap(state: ProfileEditorState) async {
-        // TODO: Show error that field is required
         guard state.name.isValid else { return }
 
         let selectedTopics = topics.filter { state.selectedTopicIds.contains($0.id) }

@@ -21,15 +21,11 @@ struct ProfileEditorState: Equatable {
     var selectedTopicIds = [String]()
     var photoSourceType: PhotoSourceType?
     var isSourceTypeAlertPresented = false
-
-    var isAvatarChosen: Bool {
-        chosenAvatar != nil
-    }
-
-    var isPhotoPickerPresented: Bool {
-        photoSourceType != nil
-    }
-
+    
+    var isAvatarChosen: Bool { chosenAvatar != nil }
+    var isSaveEnabled: Bool { name.content.isEmpty == false }
+    var isPhotoPickerPresented: Bool { photoSourceType != nil }
+    
     var hasAvatar: Bool {
         avatarData != nil || chosenAvatar != nil
     }

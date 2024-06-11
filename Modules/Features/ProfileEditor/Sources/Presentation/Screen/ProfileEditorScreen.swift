@@ -50,6 +50,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden, TabBarHidden {
                     store.dispatch(.saveTapped)
                 }
                 .mainButtonStyle()
+                .disabled(store.state.isSaveEnabled == false)
                 .padding(.top, Constants.saveButtonInsetTop)
                 .padding(.bottom)
             }
