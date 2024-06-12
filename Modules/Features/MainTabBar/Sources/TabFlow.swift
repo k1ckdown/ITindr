@@ -8,6 +8,8 @@
 import UIKit
 import CommonUI
 
+typealias Strings = MainTabBarStrings
+
 enum TabFlow: Int, CaseIterable {
     case userFeed
     case userList
@@ -18,13 +20,12 @@ enum TabFlow: Int, CaseIterable {
         rawValue
     }
 
-    // TODO: Localize
     var title: String {
         switch self {
-        case .userFeed: "Feed"
-        case .userList: "Users"
-        case .chatList: "Chats"
-        case .profile: "Profile"
+        case .userFeed: Strings.feed
+        case .userList: Strings.users
+        case .chatList: Strings.chats
+        case .profile: Strings.profile
         }
     }
 

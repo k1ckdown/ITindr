@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  MainTabBar
+
+  Created by Ivan Semenov on 12.06.2024.
+  
+*/
+
+"Feed" = "Feed";
+"Users" = "Users";
+"Chats" = "Chats";
+"Profile" = "Profile";
