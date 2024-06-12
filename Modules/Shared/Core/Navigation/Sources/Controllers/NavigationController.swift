@@ -43,8 +43,7 @@ extension NavigationController: UINavigationControllerDelegate {
         let isNavigationBarHidden = (viewController as? NavigationBarHidden)?.isNavBarHidden ?? false
         let isTabBarHidden = viewController is TabBarHidden
 
-        // TODO: Localize
-        viewController.navigationItem.backButtonTitle = "Back"
+        viewController.navigationItem.backButtonTitle = NavigationStrings.back
         navigationController.tabBarController?.tabBar.isHidden = isTabBarHidden
         navigationController.setNavigationBarHidden(isNavigationBarHidden, animated: false)
     }

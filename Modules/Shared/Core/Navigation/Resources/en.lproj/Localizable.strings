@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Navigation
+
+  Created by Ivan Semenov on 12.06.2024.
+  
+*/
+
+"Back" = "Back";
+"Error" = "Error";
+"ErrorOccurred" = "An error has occurred";
