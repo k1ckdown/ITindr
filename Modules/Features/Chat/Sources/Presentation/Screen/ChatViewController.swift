@@ -173,9 +173,8 @@ private extension ChatViewController {
         messageTextView.delegate = self
         messageTextView.textColor = .black
         messageTextView.font = Fonts.uiRegular16
-        // TODO: Localize
-        messageTextView.placeholder = "Message..."
         messageTextView.tintColor = Colors.accentColor.color
+        messageTextView.placeholder = "\(ChatStrings.message)..."
         messageTextView.backgroundColor = Colors.appLightGray.color
         messageTextView.contentInset = Constants.messageViewContentInset
         messageTextView.layer.cornerRadius = Constants.messageViewCornerRadius
@@ -283,15 +282,14 @@ private extension ChatViewController {
     }
 
     func setupSourceTypeAlert() {
-        // TODO: Localize
         let actions = [
-            UIAlertAction(title: "Photos", style: .default, handler: { [weak self] _ in
+            UIAlertAction(title: ChatStrings.photos, style: .default, handler: { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(.library))
             }),
-            UIAlertAction(title: "Camera", style: .default, handler: { [weak self] _ in
+            UIAlertAction(title: ChatStrings.camera, style: .default, handler: { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(.camera))
             }),
-            UIAlertAction(title: "Cancel", style: .cancel, handler: { [weak self] _ in
+            UIAlertAction(title: ChatStrings.cancel, style: .cancel, handler: { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(nil))
             })
         ]
