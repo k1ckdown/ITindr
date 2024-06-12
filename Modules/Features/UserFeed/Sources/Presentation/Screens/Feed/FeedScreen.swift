@@ -48,8 +48,16 @@ private extension FeedScreen {
     }
 
     func placeholderView() -> some View {
-        // TODO: Placeholder
-        Text("No users").frame(maxHeight: .infinity)
+        VStack(spacing: .zero) {
+            Images.startPreview.swiftUIImage
+                .resizable()
+                .scaledToFit()
+                .frame(height: Constants.placeholderImageHeight)
+
+            Text(UserFeedStrings.noUsers)
+                .font(Fonts.bold24)
+                .padding(.top, Constants.noUsersInsetTop)
+        }
     }
 
     func profileView(_ user: FeedState.User) -> some View {
@@ -77,7 +85,9 @@ private extension FeedScreen {
 
     enum Constants {
         static let appLogoInsetTop: CGFloat = 32
+        static let noUsersInsetTop: CGFloat = 60
         static let actionButtonSpacing: CGFloat = 20
         static let actionTitleInsetLeading: CGFloat = 16
+        static let placeholderImageHeight: CGFloat = 200
     }
 }
