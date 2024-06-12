@@ -12,7 +12,7 @@ import Combine
 
 final class ChatListViewController: UIViewController, LoadableView {
 
-    @ObservedObject private var store: ChatListStore
+    private let store: ChatListStore
     private let dataSource: ChatListDataSource
     private var subscriptions = Set<AnyCancellable>()
 
