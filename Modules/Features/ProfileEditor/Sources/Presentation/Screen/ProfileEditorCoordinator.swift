@@ -13,10 +13,12 @@ final class ProfileEditorCoordinator: BaseCoordinator, ProfileEditorCoordinatorP
     typealias Content = (ProfileEditorMiddlewareDelegate) -> UIViewController
 
     private let content: Content
+    private let navigationTitle: String?
     private let flowFinishHandler: (() -> Void)?
 
-    init(content: @escaping Content, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
+    init(content: @escaping Content, navigationTitle: String?, flowFinishHandler: (() -> Void)?, navigationController: NavigationController) {
         self.content = content
+        self.navigationTitle = navigationTitle
         self.flowFinishHandler = flowFinishHandler
         super.init(navigationController: navigationController)
     }
@@ -25,6 +27,7 @@ final class ProfileEditorCoordinator: BaseCoordinator, ProfileEditorCoordinatorP
         let content = content(self)
 
         addPopHandler(for: content)
+        content.navigationItem.title = navigationTitle
         navigationController.pushViewController(content, animated: true)
     }
 }

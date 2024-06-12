@@ -18,21 +18,17 @@ public struct ProfileEditorCoordinatorAssembly: ProfileEditorCoordinatorAssembly
         self.dependencies = dependencies
     }
 
-    public func assemble(
-        profile: Profile,
-        isNavigationBarHidden: Bool,
-        navigationController: NavigationController,
-        flowFinishHandler: (() -> Void)?
-    ) -> ProfileEditorCoordinatorProtocol {
+    public func assemble(config: ProfileEditorConfig) -> ProfileEditorCoordinatorProtocol {
         let content: ProfileEditorCoordinator.Content = { middlewareDelegate in
-            let screen = makeScreen(profile: profile, isNavigationBarHidden: isNavigationBarHidden, middlewareDelegate: middlewareDelegate)
+            let screen = makeScreen(config: config, middlewareDelegate: middlewareDelegate)
             return UIHostingController(rootView: screen)
         }
 
         return ProfileEditorCoordinator(
             content: content,
-            flowFinishHandler: flowFinishHandler,
-            navigationController: navigationController
+            navigationTitle: config.navigationTitle,
+            flowFinishHandler: config.flowFinishHandler,
+            navigationController: config.navigationController
         )
     }
 }
@@ -51,7 +47,7 @@ private extension ProfileEditorCoordinatorAssembly {
         )
     }
 
-    func makeScreen(profile: Profile, isNavigationBarHidden: Bool, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
+    func makeScreen(config: ProfileEditorConfig, middlewareDelegate: ProfileEditorMiddlewareDelegate) -> ProfileEditorScreen {
         let reducer = ProfileEditorReducer()
         let middleware = ProfileEditorMiddleware(
             getTopicListUseCase: GetTopicListUseCase(topicRepository: dependencies.topicRepository),
@@ -61,8 +57,7 @@ private extension ProfileEditorCoordinatorAssembly {
             delegate: middlewareDelegate
         )
 
-        let store = Store(initialState: getInitialState(from: profile), reducer: reducer, middleware: middleware)
-
-        return ProfileEditorScreen(isNavBarHidden: isNavigationBarHidden, store: store)
+        let store = Store(initialState: getInitialState(from: config.profile), reducer: reducer, middleware: middleware)
+        return ProfileEditorScreen(isNavBarHidden: config.isNavigationBarHidden, screenTitle: config.screenTitle, interestsHeader: config.interestsHeader, store: store)
     }
 }

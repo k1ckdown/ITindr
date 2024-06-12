@@ -40,22 +40,38 @@ final class ProfileCoordinator: BaseCoordinator, ProfileCoordinatorProtocol {
 
 extension ProfileCoordinator: ProfileMiddlewareDelegate {
 
-    func goToEditor(_ user: UserProfile) {
-        let editorProfile = Profile(
-            id: user.id,
-            name: user.name,
-            avatarUrl: user.avatarUrl,
-            aboutMyself: user.aboutMyself,
-            topics: user.topics.map { .init(id: $0.id, title: $0.title) },
-            avatarData: user.avatarData
-        )
+    func goToEditor(_ profile: UserProfile) {
+        let editorProfile = getEditorProfile(from: profile)
+        let config = getEditorConfig(with: editorProfile)
+        let editorCoordinator = profileEditorCoordinatorAssembly.assemble(config: config)
 
-        let editorCoordinator = profileEditorCoordinatorAssembly.assemble(
-            profile: editorProfile,
-            isNavigationBarHidden: false,
-            navigationController: navigationController,
-            flowFinishHandler: { [weak self] in self?.navigationController.popViewController(animated: true) }
-        )
         coordinate(to: editorCoordinator)
+    }
+}
+
+// MARK: - Private methods
+
+private extension ProfileCoordinator {
+
+    func getEditorProfile(from profile: UserProfile) -> Profile {
+        Profile(
+            id: profile.id,
+            name: profile.name,
+            avatarUrl: profile.avatarUrl,
+            aboutMyself: profile.aboutMyself,
+            topics: profile.topics.map { .init(id: $0.id, title: $0.title) },
+            avatarData: profile.avatarData
+        )
+    }
+
+    func getEditorConfig(with profile: Profile) -> ProfileEditorConfig {
+        ProfileEditorConfig(
+            profile: profile,
+            screenTitle: ProfileStrings.aboutYourself,
+            interestsHeader: ProfileStrings.interests,
+            navigationTitle: ProfileStrings.editing,
+            flowFinishHandler: { [weak self] in self?.navigationController.popViewController(animated: true) },
+            navigationController: navigationController
+        )
     }
 }

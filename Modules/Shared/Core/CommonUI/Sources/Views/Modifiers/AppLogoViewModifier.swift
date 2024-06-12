@@ -10,12 +10,15 @@ import SwiftUI
 struct AppLogoViewModifier: ViewModifier {
 
     let padding: CGFloat
+    let isShowing: Bool
 
     func body(content: Content) -> some View {
         VStack {
-            Images.appLogo.swiftUIImage
-                .padding(.top)
-                .padding(.bottom, padding)
+            if isShowing {
+                Images.appLogo.swiftUIImage
+                    .padding(.top)
+                    .padding(.bottom, padding)
+            }
 
             content
         }
@@ -23,7 +26,7 @@ struct AppLogoViewModifier: ViewModifier {
 }
 
 public extension View {
-    func appLogo(padding: CGFloat = 40) -> some View {
-        modifier(AppLogoViewModifier(padding: padding))
+    func appLogo(padding: CGFloat = 40, isShowing: Bool = true) -> some View {
+        modifier(AppLogoViewModifier(padding: padding, isShowing: isShowing))
     }
 }

@@ -9,10 +9,5 @@ import Navigation
 
 @MainActor
 public protocol ProfileEditorCoordinatorAssemblyProtocol {
-    func assemble(
-        profile: Profile,
-        isNavigationBarHidden: Bool,
-        navigationController: NavigationController,
-        flowFinishHandler: (() -> Void)?
-    ) -> ProfileEditorCoordinatorProtocol
+    func assemble(config: ProfileEditorConfig) -> ProfileEditorCoordinatorProtocol
 }

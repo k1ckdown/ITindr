@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  AuthFlow
+
+  Created by Ivan Semenov on 12.06.2024.
+  
+*/
+
+"ChooseInterests" = "Укажи интересы";
+"TellAboutYourself" = "Расскажи о себе";

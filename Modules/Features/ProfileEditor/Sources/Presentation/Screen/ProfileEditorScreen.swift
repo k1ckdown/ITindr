@@ -16,11 +16,15 @@ typealias Strings = ProfileEditorStrings
 struct ProfileEditorScreen: View, NavigationBarHidden, TabBarHidden {
     
     private(set) var isNavBarHidden: Bool
+    private let screenTitle: String
+    private let interestsHeader: String
     @State private var selectedPhoto: PhotoDetails?
     @StateObject private var store: StoreOf<ProfileEditorReducer>
     
-    init(isNavBarHidden: Bool, store: StoreOf<ProfileEditorReducer>) {
+    init(isNavBarHidden: Bool, screenTitle: String, interestsHeader: String, store: StoreOf<ProfileEditorReducer>) {
         self.isNavBarHidden = isNavBarHidden
+        self.screenTitle = screenTitle
+        self.interestsHeader = interestsHeader
         _store = StateObject(wrappedValue: store)
     }
     
@@ -41,7 +45,7 @@ struct ProfileEditorScreen: View, NavigationBarHidden, TabBarHidden {
                                 store.dispatch(.topicTapped(model.id))
                             }
                     }
-                    .screenTitle(Strings.chooseInterests)
+                    .screenTitle(interestsHeader)
                     .padding(.top, Constants.interestsInsetTop)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
@@ -54,9 +58,10 @@ struct ProfileEditorScreen: View, NavigationBarHidden, TabBarHidden {
                 .padding(.top, Constants.saveButtonInsetTop)
                 .padding(.bottom)
             }
-            .screenTitle(Strings.tellAboutYourself)
+            .screenTitle(screenTitle)
+            .appLogo(isShowing: isNavBarHidden)
             .padding(.horizontal)
-            .appLogo()
+            .padding(.top, isNavBarHidden ? 0 : Constants.contentInsetTop)
         }
         .animation(.easeInOut(duration: Constants.tagsAnimationDuration), value: store.state.topics)
         .onAppear {
@@ -198,6 +203,7 @@ private extension ProfileEditorScreen {
     
     enum Constants {
         static let photoSize: CGFloat = 88
+        static let contentInsetTop: CGFloat = 32
         static let interestsInsetTop: CGFloat = 24
         static let saveButtonInsetTop: CGFloat = 55
         static let tagsAnimationDuration: CGFloat = 0.5

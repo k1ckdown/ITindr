@@ -47,12 +47,15 @@ private extension AuthFlowCoordinator {
     }
 
     func goToProfileEditor() {
-        let profileEditorCoordinator = profileEditorCoordinatorAssembly.assemble(
+        let config = ProfileEditorConfig(
             profile: .empty,
-            isNavigationBarHidden: true,
-            navigationController: navigationController,
-            flowFinishHandler: flowFinishHandler
+            screenTitle: AuthFlowStrings.tellAboutYourself,
+            interestsHeader: AuthFlowStrings.chooseInterests,
+            flowFinishHandler: flowFinishHandler,
+            navigationController: navigationController
         )
+
+        let profileEditorCoordinator = profileEditorCoordinatorAssembly.assemble(config: config)
         coordinate(to: profileEditorCoordinator)
     }
 }

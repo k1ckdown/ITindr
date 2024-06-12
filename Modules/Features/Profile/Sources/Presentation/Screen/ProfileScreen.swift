@@ -58,7 +58,7 @@ private extension ProfileScreen {
                 } label: {
                     HStack(spacing: .zero) {
                         Images.editIcon.swiftUIImage
-                        Text("Edit").padding(.leading, Constants.editTitleInsetLeading)
+                        Text(ProfileStrings.edit).padding(.leading, Constants.editTitleInsetLeading)
                     }
                 }
                 .mainButtonStyle(isProminent: false)
