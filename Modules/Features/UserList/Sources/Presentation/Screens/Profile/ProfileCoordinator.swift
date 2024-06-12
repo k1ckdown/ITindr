@@ -30,8 +30,7 @@ final class ProfileCoordinator: BaseCoordinator {
         let content = content(self)
         
         addPopHandler(for: content)
-        // TODO: Localize
-        content.navigationItem.title = "Profile"
+        content.navigationItem.title = UserListStrings.profile
         navigationController.pushViewController(content, animated: true)
     }
 }
