@@ -28,7 +28,7 @@ final class ChatViewController: UIViewController, LoadableView, TabBarHidden, Ke
 
     private var attachmentView = UIView()
     private var attachmentImageView = UIImageView()
-    private let sourceTypeAlert = UIAlertController(title: "Select the source type", message: nil, preferredStyle: .alert)
+    private let sourceTypeAlert = UIAlertController(title: ChatStrings.selectSourceType, message: nil, preferredStyle: .alert)
 
     private var messageToolbarHeightConstraint: NSLayoutConstraint?
     private var messageTextViewHeightConstraint: NSLayoutConstraint?
@@ -97,7 +97,7 @@ extension ChatViewController: UITextViewDelegate {
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard 
+        guard
             let image = info[.originalImage] as? UIImage,
             let imageData = image.jpegData(compressionQuality: 0.5)
         else { return }
@@ -283,15 +283,15 @@ private extension ChatViewController {
 
     func setupSourceTypeAlert() {
         let actions = [
-            UIAlertAction(title: ChatStrings.photos, style: .default, handler: { [weak self] _ in
+            UIAlertAction(title: ChatStrings.photos, style: .default) { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(.library))
-            }),
-            UIAlertAction(title: ChatStrings.camera, style: .default, handler: { [weak self] _ in
+            },
+            UIAlertAction(title: ChatStrings.camera, style: .default) { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(.camera))
-            }),
-            UIAlertAction(title: ChatStrings.cancel, style: .cancel, handler: { [weak self] _ in
+            },
+            UIAlertAction(title: ChatStrings.cancel, style: .cancel) { [weak self] _ in
                 self?.store.dispatch(.sourceTypeSelected(nil))
-            })
+            }
         ]
 
         actions.forEach { sourceTypeAlert.addAction($0) }
@@ -360,11 +360,6 @@ private extension ChatViewController {
         }
 
         attachmentView.isHidden = viewData.chosenAttachment == nil
-    }
-
-    func scrollToLastMessage(messageCount: Int) {
-        let lastIndexPath = IndexPath(item: messageCount - 1, section: 0)
-        messageCollectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
     }
 
     func updateMessageText(_ text: String) {
